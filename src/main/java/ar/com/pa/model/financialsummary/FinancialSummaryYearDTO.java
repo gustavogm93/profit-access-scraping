@@ -1,3 +1,3 @@
-package ar.com.pa.model.financial_summary;
+package ar.com.pa.model.financialsummary;
 
 public class FinancialSummaryYearDTO extends FinancialSummaryDTO {}

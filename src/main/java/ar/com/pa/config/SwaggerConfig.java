@@ -2,10 +2,6 @@ package ar.com.pa.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -22,7 +18,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("ar.com.bds.controller"))
+                .apis(RequestHandlerSelectors.basePackage("ar.com.pa.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(metaData());
@@ -30,7 +26,7 @@ public class SwaggerConfig {
 
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
-                .title("backoffice-people-hub")
+                .title("profit-access-API")
                 .description("Spring Boot REST API Example")
                 .version("0.1.0-SNAPSHOT")
                 .build();

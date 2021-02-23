@@ -6,34 +6,18 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ar.com.pa.enums.FinancialSummary;
+import ar.com.pa.enums.financialsummary.FinancialSummary;
 import ar.com.pa.enums.Periods;
 
 
 import ar.com.pa.utils.ValidateUtils;
 
 @Service
-public class ScrappingFormat {
+ class ScrappingFormat {
 	
-	final Logger logger = LoggerFactory.getLogger(ScrappingFormat.class);
+	private final Logger logger = LoggerFactory.getLogger(ScrappingFormat.class);
+	private static FinancialSummary financialSummary;
 	
-	boolean isFinancialSummaryEnum(String text) {
-
-		if(ValidateUtils.isNullOrEmpty(text)) return false;
-
-		FinancialSummary[]financialEnums = FinancialSummary.values(); 
-
-		for(FinancialSummary object :financialEnums) {
-			if(object.getTitle() == text)
-				return true;
-		}
-		return false;
-	}
-	
-
-	/*
-
-	*/
 	
 	public HashMap<String, String> reduceFinancialSummary(Elements elements) {
 		  
@@ -44,7 +28,9 @@ public class ScrappingFormat {
 
 			for (int index = 0; index < elements.size(); index++) {
 
-				if (ValidateUtils.isFinancialSummary(elements.get(index).ownText())) {
+
+					if (financialSummary.isSummary(elements.get(index).ownText())) {
+					
 					values[0] = elements.get(index).ownText();
 
 					for (int j = 1; j <= Periods.Quarter.getMonths(); j++) {
@@ -65,31 +51,6 @@ public class ScrappingFormat {
 			return null;
 		}
 	}
-	/*
-	public void finle(HashMap<String, String> hashMap) {
-		
-		IncomeStatementDTO incomeStatement = new IncomeStatementDTO(); 
-		BalanceSheetDTO balanceSheet = new BalanceSheetDTO();
-		CashFlowStatmentDTO cashFlowStatment = new CashFlowStatmentDTO();
-		FinancialSummaryDTO financialSummary = new FinancialSummaryDTO();
-
-		
-		incomeStatement.setGrossProfit(OperatingIncome);
-		
-	    for (Map.Entry<String, String> entry : hashMap.entrySet()) {
-	        String key = entry.getKey();
-	        String value = entry.getValue();
-	        System.out.println(key);
-	        System.out.println(value);
-	        
-	       
-		    if(key.equalsIgnoreCase(FinancialSummary.TotalRevenue.getByTitle())) {
-		    	
-		    }
-		   
-
-		    }
-	    }*/
 	   
 	
 }
