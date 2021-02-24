@@ -13,6 +13,7 @@ public class MapperElement {
 		return Integer.parseInt(valueToAdd);
 	}
 
+	//MEJORAR PARA QUE SOLO LO HAGA CON UN STRING
 	public static Date convertToDate(String[] value,String[] periods ,int index) {
 		
 		int periodIndex = Integer.parseInt(value[index].substring(0,1));
@@ -20,8 +21,17 @@ public class MapperElement {
 				
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d, u", Locale.ENGLISH);
 	    LocalDate localDatePeriod = LocalDate.parse(date, dateFormatter);
+	    
 	    Date datePeriod = Date.valueOf(localDatePeriod);
 	    
 		return datePeriod;
+	}
+	
+	public static void AAconvert(String date) {
+
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d, u", Locale.ENGLISH);
+	    LocalDate localDatePeriod = LocalDate.parse(date, dateFormatter);
+	    
+	    System.out.println(localDatePeriod);
 	}
 }

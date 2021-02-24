@@ -22,12 +22,7 @@ public class ValidateUtils {
 
     public ValidateUtils() {};
  
-	public static boolean isNullOrEmpty(String str) {
 
-		if (str != null && !str.isEmpty())
-			return false;
-		return true;
-	}
 
 	
 	public void bacMapper(HashMap<String, String> scrappedElements) {
@@ -73,4 +68,15 @@ public class ValidateUtils {
 	}
 
 
+	public static boolean isNumeric(String strNum) {
+	    if (strNum.equalsIgnoreCase("")) {
+	        return true;
+	    }
+	    try {
+	        double d = Double.parseDouble(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
+	}
 }

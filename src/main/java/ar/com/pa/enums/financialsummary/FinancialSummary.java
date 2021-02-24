@@ -2,6 +2,7 @@ package ar.com.pa.enums.financialsummary;
 
 import java.util.Arrays;
 
+
 public enum FinancialSummary implements FinancialSummaryProperty<String>{
 
 	TotalRevenue("Total revenue", FinancialSummaryStatement.incomeStatement),
@@ -45,15 +46,14 @@ public enum FinancialSummary implements FinancialSummaryProperty<String>{
 	public String getTitle() {return title;}
 
 	public FinancialSummaryStatement getStatement() {return statement;}
-
-	public boolean isSummary(String obj) {
+	
+	public static boolean isSummary(String obj) {
 		boolean response = Arrays.asList(FinancialSummary.values()).stream()
 				.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj));
 		return response;
 	}
 
 	public static FinancialSummary getFinancialSummaryByString(String obj) {
-
 		FinancialSummary response = Arrays.asList(FinancialSummary.values()).stream()
 				.filter(item -> item.getTitle().equalsIgnoreCase(obj)).findFirst().get();
 		return response;

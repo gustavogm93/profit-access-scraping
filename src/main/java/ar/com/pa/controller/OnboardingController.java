@@ -2,12 +2,12 @@ package ar.com.pa.controller;
 
 import ar.com.pa.repository.FinancialSummaryRepository;
 import ar.com.pa.services.GetDocument;
-import ar.com.pa.services.LeadsServices;
 import ar.com.pa.services.RestService;
 import ar.com.pa.utils.ValidateUtils;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import org.jsoup.nodes.Document;
@@ -19,22 +19,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/onboarding/stats")
 @Tag(name = "OnboardingState API")
 @Slf4j
+@Data
 public class OnboardingController {	
 
-    @Autowired 
-    private LeadsServices leadser;
+    private GetDocument document;
     
-    @Autowired
-    private RestService rest;
-    
-    @Autowired
-    private GetDocument doke;
-    
-    @Autowired
     private ValidateUtils validate;
     
-    @Autowired
     private FinancialSummaryRepository financialSummaryRepository;
+    
+    @Autowired
+    public OnboardingController(FinancialSummaryRepository financialSummaryRepository, ValidateUtils validateUtils, GetDocument document) {
+		this.financialSummaryRepository = financialSummaryRepository; 
+		this.validate = validateUtils;
+		this.document = document;
+		
+	}
     
 	@io.swagger.v3.oas.annotations.Operation(summary = "Get onboarding state", description = "Get number of people with leads on onboarding state")
 	@ApiResponses(value = {
@@ -47,7 +47,7 @@ public class OnboardingController {
     @GetMapping
     public void findGlobalLeads(){ 
 		
-		doke.getHtmlDocument("https://www.investing.com/equities/bank-of-america-financial-summary");
+		document.getHtmlDocument("https://www.investing.com/equities/bank-of-america-financial-summary");
 		System.out.println("---------------------------------------------------------------------");
 		//doke.getHtmlDocument("https://www.investing.com/equities/coca-cola-co-financial-summary");
 	}

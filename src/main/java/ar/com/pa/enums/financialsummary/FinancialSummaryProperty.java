@@ -5,7 +5,5 @@ import org.springframework.stereotype.Service;
 public interface FinancialSummaryProperty<T> {
 	
 	public abstract T getTitle();
-
-	boolean isSummary(T obj);
-		
+	
 }
