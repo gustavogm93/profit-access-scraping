@@ -47,16 +47,21 @@ public enum FinancialSummary implements FinancialSummaryProperty<String>{
 
 	public FinancialSummaryStatement getStatement() {return statement;}
 	
+	
+	//VA A SER GENERICO Y VA A ESTAR EN LA INTERFACE...
 	public static boolean isSummary(String obj) {
 		boolean response = Arrays.asList(FinancialSummary.values()).stream()
 				.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj));
 		return response;
 	}
 
+	//VA A SER GENERICO Y VA A ESTAR EN LA INTERFACE...
 	public static FinancialSummary getFinancialSummaryByString(String obj) {
 		FinancialSummary response = Arrays.asList(FinancialSummary.values()).stream()
 				.filter(item -> item.getTitle().equalsIgnoreCase(obj)).findFirst().get();
 		return response;
 	}
+	
+	
 
 }

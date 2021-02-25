@@ -45,7 +45,7 @@ public class OnboardingController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error")
 	})	
     @GetMapping
-    public void findGlobalLeads(){ 
+    public void findGlobalLeads() throws Exception{ 
 		
 		document.getHtmlDocument("https://www.investing.com/equities/bank-of-america-financial-summary");
 		System.out.println("---------------------------------------------------------------------");

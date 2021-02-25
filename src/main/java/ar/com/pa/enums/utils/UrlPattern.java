@@ -1,4 +1,4 @@
-package ar.com.pa.enums;
+package ar.com.pa.enums.utils;
 
 public enum UrlPattern {
 	

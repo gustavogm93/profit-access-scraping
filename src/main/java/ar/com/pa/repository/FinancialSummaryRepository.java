@@ -11,4 +11,5 @@ public interface FinancialSummaryRepository extends JpaRepository<FinancialSumma
 	
 	FinancialSummaryDTO save(long i);
 	FinancialSummaryDTO findById(long i);
+	
 }

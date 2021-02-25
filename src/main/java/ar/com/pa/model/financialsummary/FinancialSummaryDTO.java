@@ -44,13 +44,17 @@ public class FinancialSummaryDTO {
 	@Column(name="COMPANY_ID")
 	private int companyId;
 	
-
-	
 	public FinancialSummaryDTO() {}
 	
-	public FinancialSummaryDTO(int companyId, FinancialSummaryStatement statement, FinancialSummary summary) {
-		this.companyId = companyId;
-		this.statement = statement;
+	public FinancialSummaryDTO(FinancialSummary summary, Date periodEnding, int value, int companyId) {
+		this.statement = summary.getStatement();
 		this.summary = summary;
+		this.periodEnding = periodEnding;
+		this.value = value;
+		this.companyId = companyId;
 	}
+	
+	
+	
+	
 }

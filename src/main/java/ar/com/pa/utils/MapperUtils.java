@@ -5,8 +5,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class MapperElement {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class MapperUtils {
+
+    private static Logger logger = LoggerFactory.getLogger(MapperUtils.class);
 
 	public static int convertToValue(String[] value, int index) {
 		String valueToAdd = value[index].substring(2,value[index].length());
@@ -27,11 +31,29 @@ public class MapperElement {
 		return datePeriod;
 	}
 	
-	public static void AAconvert(String date) {
+	public static Date toDate(String date) {
 
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d, u", Locale.ENGLISH);
-	    LocalDate localDatePeriod = LocalDate.parse(date, dateFormatter);
-	    
-	    System.out.println(localDatePeriod);
+		try {
+			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d, u", Locale.ENGLISH);
+			LocalDate localDatePeriod = LocalDate.parse(date, dateFormatter);
+			return java.sql.Date.valueOf(localDatePeriod);
+		}catch (Exception e) {
+			logger.error("Date erronea");
+			return null;
+		}
 	}
+	
+	
+	public static int toCompanyValue(String s) {
+		try {
+			return Integer.parseInt(s);
+		} catch (Exception e) {
+			return -1;
+		}	
+	}
+	
+	
+	
+	
+	
 }
