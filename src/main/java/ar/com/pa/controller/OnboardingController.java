@@ -47,7 +47,7 @@ public class OnboardingController {
     @GetMapping
     public void findGlobalLeads() throws Exception{ 
 		
-		document.getHtmlDocument("https://www.investing.com/equities/bank-of-america-financial-summary");
+		document.getHtmlDocument("https://www.investing.com/equities/apple-computer-inc");
 		System.out.println("---------------------------------------------------------------------");
 		//doke.getHtmlDocument("https://www.investing.com/equities/coca-cola-co-financial-summary");
 	}

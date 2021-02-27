@@ -3,24 +3,16 @@ package ar.com.pa.services;
 
 import java.util.HashMap;
 
-import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.sun.xml.bind.v2.util.QNameMap.Entry;
-
-import ar.com.pa.controller.OnboardingController;
 import ar.com.pa.enums.utils.UrlPattern;
 import ar.com.pa.repository.FinancialSummaryRepository;
-import ar.com.pa.utils.MapperUtils;
-import ar.com.pa.utils.PatternResource;
 import ar.com.pa.utils.ValidateUtils;
 
 
@@ -44,7 +36,7 @@ public class GetDocument {
 		
 			doc = Jsoup.connect(url).get();
 
-			ScrappingFormat scrapping = new ScrappingFormat(100);
+			ScrappingFormat scrapping = new ScrappingFormat();
 			
 			String urlComplete = scrapping.getUrl(doc, UrlPattern.QuarterPeriod);
 			
@@ -53,7 +45,7 @@ public class GetDocument {
 		    Elements tdTag = doc.getElementsByTag("td");
 		    Elements thTag = doc.getElementsByTag("th");
 		    
-		    HashMap<String, String> listHash = scrapping.getFinancialSummary(tdTag, thTag);
+		    scrapping.getFinancialSummary(tdTag, thTag);
 		  
 		   
 	    /*

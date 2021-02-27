@@ -1,23 +1,14 @@
 package ar.com.pa.model.financialsummary;
 
 import java.sql.Date;
-
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import ar.com.pa.enums.financialsummary.FinancialSummary;
 import ar.com.pa.enums.financialsummary.FinancialSummaryStatement;
-import ar.com.pa.mapper.FinancialSummaryConverter;
-import ar.com.pa.mapper.FinancialSummaryStatementConverter;
 import lombok.Data;
 
 @Data
@@ -41,20 +32,15 @@ public class FinancialSummaryDTO {
 	@Column(name="VALUE")
 	private int value;
 	
-	@Column(name="COMPANY_ID")
-	private int companyId;
 	
 	public FinancialSummaryDTO() {}
 	
-	public FinancialSummaryDTO(FinancialSummary summary, Date periodEnding, int value, int companyId) {
+	public FinancialSummaryDTO(FinancialSummary summary, Date periodEnding, int value) {
 		this.statement = summary.getStatement();
 		this.summary = summary;
 		this.periodEnding = periodEnding;
 		this.value = value;
-		this.companyId = companyId;
 	}
-	
-	
-	
+
 	
 }

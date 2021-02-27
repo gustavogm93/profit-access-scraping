@@ -1,18 +1,8 @@
 package ar.com.pa.utils;
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Arrays;
 import org.springframework.stereotype.Service;
-
-
 import ar.com.pa.enums.financialsummary.FinancialSummary;
-import ar.com.pa.model.financialsummary.FinancialSummaryDTO;
-import ar.com.pa.repository.FinancialSummaryRepository;
-
 
 @Service
 public class ValidateUtils {
@@ -25,16 +15,21 @@ public class ValidateUtils {
 	        return true;
 	    }
 	    try {
-	        double d = Double.parseDouble(strNum);
+	        Double.parseDouble(strNum);
 	    } catch (NumberFormatException nfe) {
 	        return false;
 	    }
 	    return true;
 	}
 	
-	public static boolean isSummaryValue(String s) {
-	return FinancialSummary.isSummary(s) || ValidateUtils.isNumOrEmpty(s);
+	public static boolean isSummaryModelValue(String s) {
+	return isSummaryObject(s) || ValidateUtils.isNumOrEmpty(s);
 	}
 	
 	
+	public static boolean isSummaryObject(String obj) {
+		boolean response = Arrays.asList(FinancialSummary.values()).stream()
+				.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj));
+		return response;
+	}
 }

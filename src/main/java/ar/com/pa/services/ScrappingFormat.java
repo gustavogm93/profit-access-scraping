@@ -2,25 +2,14 @@ package ar.com.pa.services;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import ar.com.pa.enums.financialsummary.FinancialSummary;
 import ar.com.pa.enums.utils.UrlPattern;
 import ar.com.pa.model.financialsummary.FinancialSummaryDTO;
@@ -34,38 +23,21 @@ public class ScrappingFormat {
 	private final Logger logger = LoggerFactory.getLogger(ScrappingFormat.class);
 
 	private FinancialSummary summary;
-	private HashMap<String, String> financialSummaryMap = new HashMap<>();
 	private List<Date> quarterPeriodList = new ArrayList<>();
-	private List <FinancialSummaryDTO> financialSummaryList = new ArrayList<>();
-	private int companyId;
 	private int index = 0;
-	public ScrappingFormat(int companyId) {
-		this.companyId = companyId;
-	}
+	public ScrappingFormat() {}
 	
-	public HashMap<String, String> getFinancialSummary(Elements elements, Elements periods) {	
+	public void getFinancialSummary(Elements elements, Elements periods) {	
+		
 		logger.info("Scrapping financial Summary into HashMap and return it");
+	
+		this.quarterPeriodList = getQuarterPeriodDate(periods);
+		
+		List<String> validElements = getValidElements(elements);
 
-		quarterPeriodList = periods.stream().map(Element::ownText)
-				.filter(PatternResource::dateStringPattern)
-				.map(MapperUtils::toDate)
-				.distinct()
-				.collect(Collectors.toList());
+		List <FinancialSummaryDTO> financialSummaryList = getFinancialSummaryList(validElements);
 		
-		
-		List<String> lista= elements.stream().map(Element::ownText)
-						.filter(ValidateUtils::isSummaryValue).collect(Collectors.toList());
-		
-		
-		elements.stream().map(Element::ownText)
-						.filter(ValidateUtils::isSummaryValue)
-				        .forEach(this::fillFinancialSummary);
-
-		
-		System.out.println(financialSummaryList.toString());
-		
-		return this.financialSummaryMap;
-		
+	
 	}
 	
 	public String getUrl(Document document, UrlPattern period) {
@@ -77,26 +49,52 @@ public class ScrappingFormat {
 		return PatternResource.getFinancialSummaryUrl(companyCode, period);
 	}
 	
-	public void fillFinancialSummary(String element) {
+	
+	public List<String> getValidElements(Elements e) {
 
+		List<String> validElements = e.stream().map(Element::ownText)
+											   .filter(ValidateUtils::isSummaryModelValue)
+											   .collect(Collectors.toList());
+
+		
+		return validElements;
+	}
+	public List<Date> getQuarterPeriodDate(Elements p) {
+		
+	  return p.stream().map(Element::ownText)
+					   .distinct()
+					   .filter(PatternResource::dateStringPattern)
+					   .map(MapperUtils::toDate)
+					   .collect(Collectors.toList());
+		
+		
+	}
+	
+	public List <FinancialSummaryDTO> getFinancialSummaryList(List<String> validElements){
+		
+	 return validElements.stream()
+						 .map(this::getFinancialSummary)
+						 .filter(Objects::nonNull)
+						 .collect(Collectors.toList());
+								 	 
+								 	 
+	}
+	
+	public FinancialSummaryDTO getFinancialSummary(String element) {
+	
 		if (ValidateUtils.isNumOrEmpty(element)) {
 
 			FinancialSummaryDTO financialSummaryDTO = new FinancialSummaryDTO(this.summary, quarterPeriodList.get(this.index),
-																			  MapperUtils.toCompanyValue(element),this.companyId);
-			
-			financialSummaryList.add(financialSummaryDTO);
+																			  MapperUtils.toCompanyValue(element));
+
 			this.index++;
+			return financialSummaryDTO;
 		} else {
 			this.summary = FinancialSummary.getFinancialSummaryByString(element);
 			this.index = 0;
+			return null;
 		}
 		
 		}
-
-
-	public int getId() {return companyId;}
-	public void setcompanyId(int id) {this.companyId = id;}
-	
-	
 
 }

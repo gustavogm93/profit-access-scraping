@@ -2,8 +2,7 @@ package ar.com.pa.enums.financialsummary;
 
 import java.util.Arrays;
 
-
-public enum FinancialSummary implements FinancialSummaryProperty<String>{
+public enum FinancialSummary implements FinancialSummaryProperty<String> {
 
 	TotalRevenue("Total revenue", FinancialSummaryStatement.incomeStatement),
 	GrossProfit("Gross Profit", FinancialSummaryStatement.incomeStatement),
@@ -32,7 +31,6 @@ public enum FinancialSummary implements FinancialSummaryProperty<String>{
 	CashFlowShare("Cash Flow/Share", FinancialSummaryStatement.cashFlowStatement),
 	RevenueShare("Revenue/Share", FinancialSummaryStatement.cashFlowStatement),
 	OperatingCashFlow("Operating Cash Flow", FinancialSummaryStatement.cashFlowStatement);
-	
 
 	private String title;
 	private FinancialSummaryStatement statement;
@@ -43,25 +41,18 @@ public enum FinancialSummary implements FinancialSummaryProperty<String>{
 	}
 
 	@Override
-	public String getTitle() {return title;}
-
-	public FinancialSummaryStatement getStatement() {return statement;}
-	
-	
-	//VA A SER GENERICO Y VA A ESTAR EN LA INTERFACE...
-	public static boolean isSummary(String obj) {
-		boolean response = Arrays.asList(FinancialSummary.values()).stream()
-				.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj));
-		return response;
+	public String getTitle() {
+		return title;
 	}
 
-	//VA A SER GENERICO Y VA A ESTAR EN LA INTERFACE...
+	public FinancialSummaryStatement getStatement() {
+		return statement;
+	}
+
 	public static FinancialSummary getFinancialSummaryByString(String obj) {
 		FinancialSummary response = Arrays.asList(FinancialSummary.values()).stream()
 				.filter(item -> item.getTitle().equalsIgnoreCase(obj)).findFirst().get();
 		return response;
 	}
-	
-	
 
 }
