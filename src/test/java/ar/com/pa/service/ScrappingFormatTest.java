@@ -50,6 +50,8 @@ public class ScrappingFormatTest {
 	}
 
 	
+
+	
 	@Test
 	void getValidElementsTest() {
 		
@@ -72,11 +74,11 @@ public class ScrappingFormatTest {
 			
 			List<String> mockedList = Lists.newArrayList(ScrappingFormatConstant.mockPeriods);  
 			
-			ImmutableList<Date> mockQuarterPeriodList = ImmutableList.copyOf(mockedList.stream()
-																						 .distinct()
-																						 .filter(PatternResource::dateStringPattern)
-																						 .map(MapperUtils::toDate)
-																						 .collect(Collectors.toList())); 
+		ImmutableList<Date> mockQuarterPeriodList = ImmutableList.copyOf(mockedList.stream()
+																.distinct()
+																.filter(PatternResource::dateStringPattern)
+																.map(MapperUtils::toDate)
+																.collect(Collectors.toList()));
 
 
 			 List<Date> quarterPeriodDates = scrappingMock.getQuarterPeriodDate(getQuarterPeriodDates());
