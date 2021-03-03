@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ar.com.pa.enums.utils.UrlPattern;
-import ar.com.pa.repository.FinancialSummaryRepository;
 import ar.com.pa.utils.ValidateUtils;
 
 
@@ -20,7 +19,7 @@ import ar.com.pa.utils.ValidateUtils;
 public class GetDocument {
 	
     @Autowired
-    private FinancialSummaryRepository financialSummaryRepository;
+    private ScrappingFormat scrapping;
     
     @Autowired
     ValidateUtils validateUtils;
@@ -35,8 +34,6 @@ public class GetDocument {
 			//PatternResource.dateStringPattern();
 		
 			doc = Jsoup.connect(url).get();
-
-			ScrappingFormat scrapping = new ScrappingFormat();
 			
 			String urlComplete = scrapping.getUrl(doc, UrlPattern.QuarterPeriod);
 			

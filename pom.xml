@@ -23,7 +23,9 @@
 	</distributionManagement>
 
 	<dependencies>
-
+	
+	
+<!-- 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -39,17 +41,19 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.23</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>4.1.2</version>
-		</dependency>
-		<dependency>
+				<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>1.4.200</version>
 			<scope>test</scope>
 		</dependency>
+		-->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -162,6 +166,19 @@
 			<version>5.8.0-M1</version>
 			<scope>test</scope>
 		</dependency>
+		
+	<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-mongodb</artifactId>
+    <version>2.4.3</version>
+</dependency>
+	
+	<dependency>
+	    <groupId>org.springframework.data</groupId>
+	    <artifactId>spring-data-mongodb</artifactId>
+	    <version>3.1.5</version>
+	</dependency>
 
 		<dependency>
 			<groupId>com.google.guava</groupId>

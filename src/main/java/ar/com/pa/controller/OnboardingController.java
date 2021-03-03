@@ -1,18 +1,13 @@
 package ar.com.pa.controller;
 
-import ar.com.pa.repository.FinancialSummaryRepository;
 import ar.com.pa.services.GetDocument;
-import ar.com.pa.services.RestService;
+
 import ar.com.pa.utils.ValidateUtils;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-
-import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,11 +21,8 @@ public class OnboardingController {
     
     private ValidateUtils validate;
     
-    private FinancialSummaryRepository financialSummaryRepository;
     
-    @Autowired
-    public OnboardingController(FinancialSummaryRepository financialSummaryRepository, ValidateUtils validateUtils, GetDocument document) {
-		this.financialSummaryRepository = financialSummaryRepository; 
+    public OnboardingController(ValidateUtils validateUtils, GetDocument document) {
 		this.validate = validateUtils;
 		this.document = document;
 		

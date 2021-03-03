@@ -54,5 +54,11 @@ public enum FinancialSummary implements FinancialSummaryProperty<String> {
 				.filter(item -> item.getTitle().equalsIgnoreCase(obj)).findFirst().get();
 		return response;
 	}
-
+	
+	public static FinancialSummaryStatement getFinancialSummaryStatementByString(String obj) {
+		FinancialSummary financialSummary = Arrays.asList(FinancialSummary.values()).stream()
+				.filter(item -> item.getTitle().equalsIgnoreCase(obj)).findFirst().get();
+		
+		return financialSummary.getStatement();
+	}
 }

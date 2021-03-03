@@ -6,10 +6,15 @@ public enum UrlPattern {
 	YearPeriod("Annual"),
 	QuarterPeriod("Interim");
 
-	private String pattern;
+	private String text;
 	
-	UrlPattern(String pattern){this.pattern = pattern;}
+	UrlPattern(String pattern){this.text = pattern;}
 
-	public String getPattern() {return pattern;}
+	public String getText() {return text;}
+	
+	public static boolean isAnnual(UrlPattern s){
+	return UrlPattern.YearPeriod.equals(s);
+	}
+	
 	
 }

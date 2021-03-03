@@ -14,8 +14,8 @@ public class PatternResource {
 	}
 	
 	public static String getFinancialSummaryUrl(String codeCompany, UrlPattern period) {
-		String url = UrlPattern.UrlPeriod.getPattern().replace("#", codeCompany)
-													  .concat(period.getPattern());
+		String url = UrlPattern.UrlPeriod.getText().replace("#", codeCompany)
+													  .concat(period.getText());
 		
 		return url;
 	}

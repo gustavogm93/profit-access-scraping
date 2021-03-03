@@ -52,7 +52,9 @@ public class MapperUtils {
 		}	
 	}
 	
-	
+	public static String addFormat(String old, String next) {
+		return String.format("%s %s", old, next);
+	}
 	
 	
 	
