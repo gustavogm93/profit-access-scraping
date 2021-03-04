@@ -19,7 +19,7 @@ import ar.com.pa.utils.ValidateUtils;
 public class GetDocument {
 	
     @Autowired
-    private ScrappingFormat scrapping;
+    private Scrapping scrapping;
     
     @Autowired
     ValidateUtils validateUtils;
@@ -31,8 +31,7 @@ public class GetDocument {
 	    
 		try {
 			
-			//PatternResource.dateStringPattern();
-		
+			//FINANCIAL SUMMARY
 			doc = Jsoup.connect(url).get();
 			
 			String urlComplete = scrapping.getUrl(doc, UrlPattern.QuarterPeriod);
@@ -42,9 +41,18 @@ public class GetDocument {
 		    Elements tdTag = doc.getElementsByTag("td");
 		    Elements thTag = doc.getElementsByTag("th");
 		    
-		    scrapping.getFinancialSummary(tdTag, thTag);
-		  
+		    scrapping.saveSummary(tdTag, thTag);
+
 		   
+		    //INCOME STATEMENT
+		    
+			doc = Jsoup.connect(url).get();
+			
+			String urlComplete2 = scrapping.getUrl(doc, UrlPattern.QuarterPeriod);
+			
+			doc = Jsoup.connect(urlComplete2).get();
+		    
+		    
 	    /*
 	    HashMap<String, String> listMock = new HashMap<String, String>();
 	    listMock.put("Total Revenue", "1:5470 2:4881 3:3533 4:4010");

@@ -17,16 +17,12 @@ public class MapperUtils {
 		return Integer.parseInt(valueToAdd);
 	}
 
-	//MEJORAR PARA QUE SOLO LO HAGA CON UN STRING
 	public static Date convertToDate(String[] value,String[] periods ,int index) {
 		
 		int periodIndex = Integer.parseInt(value[index].substring(0,1));
 		String date = periods[periodIndex - 1];
-				
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d, u", Locale.ENGLISH);
-	    LocalDate localDatePeriod = LocalDate.parse(date, dateFormatter);
-	    
-	    Date datePeriod = Date.valueOf(localDatePeriod);
+
+	    Date datePeriod = toDate(date);
 	    
 		return datePeriod;
 	}
@@ -44,7 +40,7 @@ public class MapperUtils {
 	}
 	
 	
-	public static int toCompanyValue(String s) {
+	public static int stringToNum(String s) {
 		try {
 			return Integer.parseInt(s);
 		} catch (Exception e) {
