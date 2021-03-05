@@ -10,7 +10,7 @@ public class ValidateUtils {
     public ValidateUtils() {};
  
 
-	public static boolean isNumOrEmpty(String strNum) {
+	public boolean isNumOrEmpty(String strNum) {
 	    if (strNum.equalsIgnoreCase("")) {
 	        return true;
 	    }
@@ -22,12 +22,12 @@ public class ValidateUtils {
 	    return true;
 	}
 	
-	public static boolean isSummaryModelValue(String s) {
-	return isSummaryObject(s) || ValidateUtils.isNumOrEmpty(s);
+	public boolean isSummaryModelValue(String s) {
+	return isSummaryObject(s) || isNumOrEmpty(s);
 	}
 	
 	
-	public static boolean isSummaryObject(String obj) {
+	public boolean isSummaryObject(String obj) {
 		boolean response = Arrays.asList(FinancialSummary.values()).stream()
 				.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj));
 		return response;

@@ -5,16 +5,16 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+import ar.com.pa.model.financialsummary.Company;
 
-import ar.com.pa.model.financialsummary.CompanyDTO;
 
 @Repository
-public interface CompanyRepository extends MongoRepository<CompanyDTO, String>{
+public interface CompanyRepository extends MongoRepository<Company, String>{
 	
 
-	Optional<CompanyDTO> findById(String id);
+	Optional<Company> findById(String id);
 
-	CompanyDTO save(String id);
+	Company save(String id);
 	
 
 }

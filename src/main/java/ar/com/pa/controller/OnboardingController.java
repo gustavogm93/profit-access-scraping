@@ -1,5 +1,7 @@
 package ar.com.pa.controller;
 
+import ar.com.pa.model.financialsummary.FinancialSummary;
+import ar.com.pa.model.financialsummary.Summary;
 import ar.com.pa.services.GetDocument;
 
 import ar.com.pa.utils.ValidateUtils;
@@ -8,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,13 +19,13 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "OnboardingState API")
 @Slf4j
 @Data
-public class OnboardingController {	
+public class OnboardingController <T extends Summary> {	
 
     private GetDocument document;
     
     private ValidateUtils validate;
     
-    
+    @Autowired
     public OnboardingController(ValidateUtils validateUtils, GetDocument document) {
 		this.validate = validateUtils;
 		this.document = document;

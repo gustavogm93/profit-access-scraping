@@ -1,49 +1,53 @@
 package ar.com.pa.services;
 
 
-import java.util.HashMap;
-
-
+import ar.com.pa.model.financialsummary.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import ar.com.pa.enums.utils.UrlPattern;
-import ar.com.pa.utils.ValidateUtils;
 
 
-@Service
+@Component
 public class GetDocument {
-	
-    @Autowired
-    private Scrapping scrapping;
+
     
     @Autowired
-    ValidateUtils validateUtils;
+    @Qualifier("Financial")
+    ScrappingImplement<FinancialSummary> s;
+    
+    @Autowired
+    @Qualifier("Balance")
+    ScrappingImplement<BalanceSheet> sa;
     
     private static Logger logger = LoggerFactory.getLogger(GetDocument.class);
+    
+
     
 	public void getHtmlDocument(String url) throws Exception {
 	    Document doc = null;
 	    
 		try {
-			
+	
 			//FINANCIAL SUMMARY
 			doc = Jsoup.connect(url).get();
-			
-			String urlComplete = scrapping.getUrl(doc, UrlPattern.QuarterPeriod);
+				
+
+			String urlComplete = s.getUrl(doc, UrlPattern.QuarterPeriod);
 			
 			doc = Jsoup.connect(urlComplete).get();
 			    
 		    Elements tdTag = doc.getElementsByTag("td");
 		    Elements thTag = doc.getElementsByTag("th");
 		    
-		    scrapping.saveSummary(tdTag, thTag);
-
-		   
+		    s.saveSummary(tdTag, thTag);
+		   // sa.saveSummary(tdTag, thTag);
+		   /*
 		    //INCOME STATEMENT
 		    
 			doc = Jsoup.connect(url).get();
@@ -51,7 +55,7 @@ public class GetDocument {
 			String urlComplete2 = scrapping.getUrl(doc, UrlPattern.QuarterPeriod);
 			
 			doc = Jsoup.connect(urlComplete2).get();
-		    
+		    */
 		    
 	    /*
 	    HashMap<String, String> listMock = new HashMap<String, String>();

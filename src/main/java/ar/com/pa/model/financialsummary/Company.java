@@ -2,10 +2,13 @@ package ar.com.pa.model.financialsummary;
 
 import java.util.Date;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Component;
+
 import lombok.Data;
 
 @Data
 @Document(collection="Company")
+@Component
 public class Company <T extends Summary> implements CompanyI<T>{
 
 	String id;
@@ -16,8 +19,8 @@ public class Company <T extends Summary> implements CompanyI<T>{
 	BalanceSheet balanceSheetYear;	
 	BalanceSheet balanceSheetQuarter;
 		
-	cashFlowStatement cashFlowStatementYear;
-	cashFlowStatement cashFlowStatementQuarter;
+	CashFlowStatement cashFlowStatementYear;
+	CashFlowStatement cashFlowStatementQuarter;
 	
 	String state;
 	
@@ -33,7 +36,7 @@ public class Company <T extends Summary> implements CompanyI<T>{
 		else if (summaryYear instanceof BalanceSheet obj)
 			this.balanceSheetYear = obj;	
 		
-		else if( summaryYear instanceof cashFlowStatement obj)
+		else if( summaryYear instanceof CashFlowStatement obj)
 			this.cashFlowStatementYear = obj;		
 		
 	}
@@ -48,7 +51,7 @@ public class Company <T extends Summary> implements CompanyI<T>{
 		else if (summaryQuarter instanceof BalanceSheet obj)
 			this.balanceSheetQuarter = obj;	
 		
-		else if( summaryQuarter instanceof cashFlowStatement obj)
+		else if( summaryQuarter instanceof CashFlowStatement obj)
 			this.cashFlowStatementQuarter = obj;		
 		
 	}
