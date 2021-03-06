@@ -20,7 +20,7 @@ public class GetDocument {
 
     
     @Autowired
-    ScrappingImplement scrappingImplement;
+    ScrappingFetch ScrappingFetch;
     
     private static Logger logger = LoggerFactory.getLogger(GetDocument.class);
     
@@ -33,18 +33,16 @@ public class GetDocument {
 
 			CompanyOperation companyConstant = new CompanyOperation("bank-of-america");	
 			
-			String companyCode = scrappingImplement.generateCompanyCodeUrl(companyConstant.getTitle());
+			String companyCode = ScrappingFetch.generateCompanyCodeUrl(companyConstant.getTitle());
 			
 			Summaries[] summaries = Summaries.values();
 			
-			String summaryUrl = scrappingImplement.generateSummaryUrl(companyCode, summaries[0]);
+			String summaryUrl = ScrappingFetch.generateSummaryUrl(companyCode, summaries[0]);
 			
-			Elements valueElements = scrappingImplement.getElementsByTag(summaryUrl, "Td");
-			Elements periodElements = scrappingImplement.getElementsByTag(summaryUrl, "Th");
+			Elements periodElements = ScrappingFetch.getElementsByTag(summaryUrl, "Th");
 
-			
-		    
-		    s.saveSummary(tdTag, thTag);
+			ScrappingFetch.saveSummary(periodElements, null, null);
+		
 		   // sa.saveSummary(tdTag, thTag);
 		   /*
 		    //INCOME STATEMENT

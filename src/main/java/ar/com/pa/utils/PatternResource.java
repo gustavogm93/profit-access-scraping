@@ -15,19 +15,7 @@ public class PatternResource {
 		return Pattern.compile("-?\\d+(\\.\\d+)?");
 	}
 	
-	public static String getStandardUrl(String codeCompany, Summaries SummaryCode) {
 
-		StringBuilder summaryUrl = new StringBuilder();
-		
-		summaryUrl.append(ScrappingConstant.fixUrl); 
-		
-		if(SummaryCode == Summaries.FS) 
-			 summaryUrl.append(ScrappingConstant.urlFs.replace("#", codeCompany));
-		else
-			summaryUrl.append(ScrappingConstant.urlNotFs.replace("#", codeCompany).replace("$", SummaryCode.toString()));
-			 
-		return summaryUrl.toString();
-	}
 	
 	public static boolean dateStringPattern(String s) {
 

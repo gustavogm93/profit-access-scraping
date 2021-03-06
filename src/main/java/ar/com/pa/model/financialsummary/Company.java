@@ -16,12 +16,14 @@ public class Company{
 	String code;
 	String title;
 	
-	FinancialSummary financialSummary;	
+	FinancialSummaryDTO financialSummary;	
 	
-	BalanceSheet balanceSheet;	
+	BalanceSheetDTO balanceSheet;	
 		
-	CashFlowStatement cashFlowStatement;
+	CashFlowStatementDTO cashFlowStatement;
 
+	IncomeStatementDTO incomeStatement; 
+	
 	Date lastUpdate;
 
 	

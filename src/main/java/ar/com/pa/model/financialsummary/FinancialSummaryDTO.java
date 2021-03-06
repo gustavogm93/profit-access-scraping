@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import ar.com.pa.model.Instrument;
 
 @Component
-public class FinancialSummary implements Summary{
+public class FinancialSummaryDTO implements Summary{
 		
 	 public List<Instrument> instrumentList;
 
@@ -23,12 +23,12 @@ public class FinancialSummary implements Summary{
 		return this.instrumentList;
 	}
 
-	public FinancialSummary(List<Instrument> instrumentList) {
+	public FinancialSummaryDTO(List<Instrument> instrumentList) {
 		super();
 		this.instrumentList = instrumentList;
 	}
 
-	public FinancialSummary() {
+	public FinancialSummaryDTO() {
 		super();
 	}
 }

@@ -1,15 +1,12 @@
 package ar.com.pa.model.financialsummary;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
-
 import ar.com.pa.model.Instrument;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
-public class BalanceSheet implements Summary{
+public class CashFlowStatementDTO implements Summary{
 	
  public List<Instrument> instrumentList;
 
@@ -23,13 +20,14 @@ public List<Instrument> getSummary() {
 	return this.instrumentList;
 }
 
-public BalanceSheet(List<Instrument> instrumentList) {
+public CashFlowStatementDTO(List<Instrument> instrumentList) {
 	super();
 	this.instrumentList = instrumentList;
 }
 
-public BalanceSheet() {
+public CashFlowStatementDTO() {
 	super();
 }
+
 
 }

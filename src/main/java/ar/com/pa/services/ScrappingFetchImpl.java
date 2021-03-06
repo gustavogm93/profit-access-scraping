@@ -2,14 +2,10 @@ package ar.com.pa.services;
 
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.sql.Date;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,82 +14,64 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import com.google.common.reflect.TypeToken;
-
 import ar.com.pa.enums.financialsummary.FinancialSummary;
 import ar.com.pa.enums.utils.ScrappingConstant;
 import ar.com.pa.enums.utils.Summaries;
 import ar.com.pa.model.CompanyOperation;
 import ar.com.pa.model.Instrument;
+import ar.com.pa.model.financialsummary.BalanceSheetDTO;
+import ar.com.pa.model.financialsummary.CashFlowStatementDTO;
 import ar.com.pa.model.financialsummary.Company;
-import ar.com.pa.model.financialsummary.Summary;
-import ar.com.pa.repository.CompanyRepository;
+import ar.com.pa.model.financialsummary.FinancialSummaryDTO;
+import ar.com.pa.model.financialsummary.IncomeStatementDTO;
+
 import ar.com.pa.repository.CompanyRepositoryFilter;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
 import ar.com.pa.utils.ValidateUtils;
 
 @Component
-public class ScrappingImplement implements Scrapping{
+public class ScrappingFetchImpl implements ScrappingFetch{
 
-	private final Logger logger = LoggerFactory.getLogger(ScrappingImplement.class);
-	
-	
-	@Autowired
+	private final Logger logger = LoggerFactory.getLogger(ScrappingFetchImpl.class);
+
 	public ValidateUtils validateUtils;
-	
+
     public CompanyRepositoryFilter companyRepository;
-    
+    	
+    public FinancialSummary financialSummary;
 
-
-	 
-    public static List<Date> quarterPeriodList;
-    public static FinancialSummary financialSummary;
     public static int dateIndex = 0;
 
-    //FinancialSummaryYear lo reciba
-    @Autowired
-	public ScrappingImplement(CompanyRepositoryFilter companyRepository, T financialSummaryYear,Optional<List<Instrument>> instrumentList) {
-    	
-		this.companyRepository = companyRepository;
-		this.summary = financialSummaryYear;
-
-		this.instrumentList = new ArrayList<>();
-	}
-    
-/*
-	public ScrappingImplement(CompanyRepository companyRepository, T financialSummaryYear,
-			, Optional<List<Instrument>> instrumentList) {
-		this.companyRepository = companyRepository;
-		summaryYear = financialSummaryYear;
-		summaryQuarter = financialSummaryQuarter;
-		this.instrumentList = new ArrayList<>();
-	}*/
-   
-	public ScrappingImplement() {}
+	@Autowired
+	public ScrappingFetchImpl(ValidateUtils validateUtils, CompanyRepositoryFilter companyRepository,
+		FinancialSummary financialSummary) {
+	super();
+	this.validateUtils = validateUtils;
+	this.companyRepository = companyRepository;
+	this.financialSummary = financialSummary;
+}
 
 
-	public void saveSummary(Elements elements, Elements periods ) {
+	public void saveSummary(Elements periods, Company company, Summaries summarie ) {
 
 		logger.info("Scrapping financial Summary into HashMap and return it");
 		
-		quarterPeriodList = getQuarterPeriodDate(periods);
-
-		Company company = new Company();
+		List<Date> intervalTimeList = getQuarterPeriodDate(periods);
 		
-		getSummaryByPeriod(elements);
+		List<Instrument> instrumentList = new ArrayList<>();
+
+		Elements elements = getElementsByTag(generateSummaryUrl(company.getCode(), summarie), "TD");
 		
-
-		company.setSummaryQuarter(summaryQuarter);
-
+		getSummaryByPeriod(elements, instrumentList, intervalTimeList, summarie);
+		
+		saveSummaryInCompany(company, instrumentList, summarie);
 		
 		xd(instrumentList);
 		System.out.println("----");
 
 
-		companyRepository.save(company);
+		//companyRepository.save(company);
 		
 
 	}
@@ -160,41 +138,40 @@ public class ScrappingImplement implements Scrapping{
 		
 	}
 	
-	
-	public void getSummaryByPeriod(Elements e,FinancialSummary financialSummary,List<Instrument> instrumentList, Summary summaryPerYear) {
+	@Override
+	public void getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<Date> intervalTimeList, Summaries summaryPerYear) {
 
+		
 		e.stream()
 		.map(Element::ownText)
 		.filter(validateUtils::isSummaryModelValue)
-		.forEach((element) -> {					
+		.forEach((element) -> {		
+			
 					if (validateUtils.isSummaryObject(element)) {
+						
 						financialSummary = FinancialSummary.getFinancialSummaryByString(element);
 						dateIndex = 0;
-					} else 
-						instrumentList.add(fillInstrument(element));
+					} else {
+						instrumentList.add(fillInstrument(element, intervalTimeList));
+					}
 				});
-
-		summaryPerYear.setSummary(instrumentList);
 
 	}
 
+	
 	@Override
-	public Instrument fillInstrument(String instrumentValue)
+	public Instrument fillInstrument(String instrumentValue, List<Date> intervalTimeList)
 	{
 		
 		Instrument instrumentToAdd = new Instrument();
 		instrumentToAdd.setTitle(financialSummary.getTitle());
 		instrumentToAdd.setValue(MapperUtils.stringToNum(instrumentValue));
-		instrumentToAdd.setPeriodEnding(quarterPeriodList.get(dateIndex));
+		instrumentToAdd.setPeriodEnding(intervalTimeList.get(dateIndex));
 		
 		dateIndex++;
 		
 		return instrumentToAdd;
 	}
-	
-	
-	
-	
 	  public static void xd(List<Instrument> instru) {
 		 for(Instrument A:instru) {
 			 System.out.println(A.toString());
@@ -210,13 +187,42 @@ public class ScrappingImplement implements Scrapping{
 
 	}
 
-	@Override
-	public String getUrl(Document document, Summaries period) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public void saveSummaryInCompany(Company company, List<Instrument> instrumentList,Summaries summarie) {
+	
+		switch(summarie) {
+		
+		case FS -> {
+			FinancialSummaryDTO FinancialSummary = new FinancialSummaryDTO();
+			FinancialSummary.setSummary(instrumentList);
+			company.setFinancialSummary(FinancialSummary);
+		}
+		case INC -> {
+			IncomeStatementDTO incomeStatement = new IncomeStatementDTO();
+			incomeStatement.setSummary(instrumentList);
+			company.setIncomeStatement(incomeStatement);
+		}
+		case BAL -> {
+			BalanceSheetDTO balanceSheet = new BalanceSheetDTO();
+			balanceSheet.setSummary(instrumentList);
+			company.setBalanceSheet(balanceSheet);
+		}
+
+		case CAS -> {
+			CashFlowStatementDTO cashFlowStatement = new CashFlowStatementDTO();
+			cashFlowStatement.setSummary(instrumentList);
+			company.setCashFlowStatement(cashFlowStatement);
+		}
+		}
+	}
+
 	}
 
 
 
 
-}
+
+
+
+
+	
