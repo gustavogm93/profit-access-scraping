@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import ar.com.pa.model.Instrument;
 
 @Component
-@Qualifier("Financial")
 public class FinancialSummary implements Summary{
 		
 	 public List<Instrument> instrumentList;

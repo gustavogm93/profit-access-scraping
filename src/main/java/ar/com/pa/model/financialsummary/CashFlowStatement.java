@@ -6,8 +6,6 @@ import ar.com.pa.model.Instrument;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-@Component
-@Qualifier("CashFlow")
 public class CashFlowStatement implements Summary{
 	
  public List<Instrument> instrumentList;

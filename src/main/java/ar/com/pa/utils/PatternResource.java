@@ -5,7 +5,9 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
-import ar.com.pa.enums.utils.UrlPattern;
+import ar.com.pa.enums.utils.ScrappingConstant;
+import ar.com.pa.enums.utils.Summaries;
+
 @Service
 public class PatternResource {
 
@@ -13,11 +15,18 @@ public class PatternResource {
 		return Pattern.compile("-?\\d+(\\.\\d+)?");
 	}
 	
-	public static String getFinancialSummaryUrl(String codeCompany, UrlPattern period) {
-		String url = UrlPattern.UrlFinancial.getText().replace("#", codeCompany)
-													  .concat(period.getText());
+	public static String getStandardUrl(String codeCompany, Summaries SummaryCode) {
+
+		StringBuilder summaryUrl = new StringBuilder();
 		
-		return url;
+		summaryUrl.append(ScrappingConstant.fixUrl); 
+		
+		if(SummaryCode == Summaries.FS) 
+			 summaryUrl.append(ScrappingConstant.urlFs.replace("#", codeCompany));
+		else
+			summaryUrl.append(ScrappingConstant.urlNotFs.replace("#", codeCompany).replace("$", SummaryCode.toString()));
+			 
+		return summaryUrl.toString();
 	}
 	
 	public static boolean dateStringPattern(String s) {

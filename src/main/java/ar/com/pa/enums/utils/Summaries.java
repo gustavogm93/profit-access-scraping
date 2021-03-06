@@ -1,6 +1,6 @@
 package ar.com.pa.enums.utils;
 
-public enum Summary{
+public enum Summaries{
 
 	FS,INC,BAL,CAS
 }

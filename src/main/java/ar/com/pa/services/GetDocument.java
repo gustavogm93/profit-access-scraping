@@ -1,6 +1,8 @@
 package ar.com.pa.services;
 
 
+import ar.com.pa.enums.utils.Summaries;
+import ar.com.pa.model.CompanyOperation;
 import ar.com.pa.model.financialsummary.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import ar.com.pa.enums.utils.UrlPattern;
+
 
 
 @Component
@@ -18,32 +20,29 @@ public class GetDocument {
 
     
     @Autowired
-    @Qualifier("Financial")
-    ScrappingImplement<FinancialSummary> s;
-    
-    @Autowired
-    @Qualifier("Balance")
-    ScrappingImplement<BalanceSheet> sa;
+    ScrappingImplement scrappingImplement;
     
     private static Logger logger = LoggerFactory.getLogger(GetDocument.class);
     
 
     
 	public void getHtmlDocument(String url) throws Exception {
-	    Document doc = null;
+
 	    
 		try {
-	
-			//FINANCIAL SUMMARY
-			doc = Jsoup.connect(url).get();
-				
 
-			String urlComplete = s.getUrl(doc, UrlPattern.QuarterPeriod);
+			CompanyOperation companyConstant = new CompanyOperation("bank-of-america");	
 			
-			doc = Jsoup.connect(urlComplete).get();
-			    
-		    Elements tdTag = doc.getElementsByTag("td");
-		    Elements thTag = doc.getElementsByTag("th");
+			String companyCode = scrappingImplement.generateCompanyCodeUrl(companyConstant.getTitle());
+			
+			Summaries[] summaries = Summaries.values();
+			
+			String summaryUrl = scrappingImplement.generateSummaryUrl(companyCode, summaries[0]);
+			
+			Elements valueElements = scrappingImplement.getElementsByTag(summaryUrl, "Td");
+			Elements periodElements = scrappingImplement.getElementsByTag(summaryUrl, "Th");
+
+			
 		    
 		    s.saveSummary(tdTag, thTag);
 		   // sa.saveSummary(tdTag, thTag);

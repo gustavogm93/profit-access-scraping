@@ -1,6 +1,7 @@
 package ar.com.pa.services;
 
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Date;
 
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -20,17 +23,20 @@ import org.springframework.stereotype.Service;
 import com.google.common.reflect.TypeToken;
 
 import ar.com.pa.enums.financialsummary.FinancialSummary;
-import ar.com.pa.enums.utils.UrlPattern;
+import ar.com.pa.enums.utils.ScrappingConstant;
+import ar.com.pa.enums.utils.Summaries;
+import ar.com.pa.model.CompanyOperation;
 import ar.com.pa.model.Instrument;
 import ar.com.pa.model.financialsummary.Company;
 import ar.com.pa.model.financialsummary.Summary;
 import ar.com.pa.repository.CompanyRepository;
+import ar.com.pa.repository.CompanyRepositoryFilter;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
 import ar.com.pa.utils.ValidateUtils;
 
 @Component
-public class ScrappingImplement <T extends Summary> implements Scrapping<T>{
+public class ScrappingImplement implements Scrapping{
 
 	private final Logger logger = LoggerFactory.getLogger(ScrappingImplement.class);
 	
@@ -38,12 +44,9 @@ public class ScrappingImplement <T extends Summary> implements Scrapping<T>{
 	@Autowired
 	public ValidateUtils validateUtils;
 	
-    public CompanyRepository companyRepository;
+    public CompanyRepositoryFilter companyRepository;
     
-    public T summaryYear;
-    public T summaryQuarter;
-	
-    public List<Instrument> instrumentList;
+
 
 	 
     public static List<Date> quarterPeriodList;
@@ -52,11 +55,11 @@ public class ScrappingImplement <T extends Summary> implements Scrapping<T>{
 
     //FinancialSummaryYear lo reciba
     @Autowired
-	public ScrappingImplement(CompanyRepository companyRepository, T financialSummaryYear,
-			T financialSummaryQuarter, Optional<List<Instrument>> instrumentList) {
+	public ScrappingImplement(CompanyRepositoryFilter companyRepository, T financialSummaryYear,Optional<List<Instrument>> instrumentList) {
+    	
 		this.companyRepository = companyRepository;
-		summaryYear = financialSummaryYear;
-		summaryQuarter = financialSummaryQuarter;
+		this.summary = financialSummaryYear;
+
 		this.instrumentList = new ArrayList<>();
 	}
     
@@ -78,7 +81,7 @@ public class ScrappingImplement <T extends Summary> implements Scrapping<T>{
 		
 		quarterPeriodList = getQuarterPeriodDate(periods);
 
-		Company<T> company = new Company<T>();
+		Company company = new Company();
 		
 		getSummaryByPeriod(elements);
 		
@@ -94,17 +97,71 @@ public class ScrappingImplement <T extends Summary> implements Scrapping<T>{
 		
 
 	}
+	
+	@Override
+	public String getCompanyCode(CompanyOperation companyOperation, Summaries summaryCode) {
 
-	public String getUrl(Document document, UrlPattern period) {
+		Document doc;
+		try {
+			doc = Jsoup.connect(generateCompanyCodeUrl(companyOperation.getTitle())).get();
+			
+			Element element = doc.select("div[data-pair-id]").first();
 
-		Element element = document.select("div[data-pair-id]").first();
-
-		String companyCode = element.attr("data-pair-id");
-
-		return PatternResource.getFinancialSummaryUrl(companyCode, period);
+			String companyCode = element.attr("data-pair-id");
+		
+			 return companyCode;
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+			return null;
+			
+		}
 	}
+	
+	@Override
+	public String generateCompanyCodeUrl(String companyTitle) {
+		
+		StringBuilder companyCode = new StringBuilder();
+		
+		companyCode.append(ScrappingConstant.codeUrl);
+		
+		return companyCode.toString();
+		
+	}
+	
+	@Override
+	public String generateSummaryUrl(String codeCompany, Summaries summaryCode) {
 
-	public void getSummaryByPeriod(Elements e) {
+		StringBuilder summaryUrl = new StringBuilder();
+		
+		summaryUrl.append(ScrappingConstant.fixUrl); 
+		
+		if(summaryCode == Summaries.FS) 
+			 summaryUrl.append(ScrappingConstant.urlFs.replace("#", codeCompany));
+		else
+			summaryUrl.append(ScrappingConstant.urlNotFs.replace("#", codeCompany).replace("$", summaryCode.toString()));
+			 
+		return summaryUrl.toString();
+	}
+	
+	@Override
+	public Elements getElementsByTag(String urlSummary, String tag) {
+
+		Document doc;
+		
+			try {
+				doc = Jsoup.connect(urlSummary).get();	
+				Elements summaryElements = doc.getElementsByTag(tag);
+				
+				return summaryElements;
+			} catch (Exception e) {
+				return null;
+			}
+		
+	}
+	
+	
+	public void getSummaryByPeriod(Elements e,FinancialSummary financialSummary,List<Instrument> instrumentList, Summary summaryPerYear) {
 
 		e.stream()
 		.map(Element::ownText)
@@ -117,7 +174,7 @@ public class ScrappingImplement <T extends Summary> implements Scrapping<T>{
 						instrumentList.add(fillInstrument(element));
 				});
 
-		summaryQuarter.setSummary(instrumentList);
+		summaryPerYear.setSummary(instrumentList);
 
 	}
 
@@ -144,17 +201,19 @@ public class ScrappingImplement <T extends Summary> implements Scrapping<T>{
 		 }
 	    }
 	  
-	  
-	  @SuppressWarnings("serial")
-	  private final TypeToken<T> typeToken = new TypeToken<T>(getClass()) {};
-	  private final Type type = typeToken.getType();
-	  public Type getType() {return type;}
+
 	  
 	public List<Date> getQuarterPeriodDate(Elements p) {
 
 		return p.stream().map(Element::ownText).distinct().filter(PatternResource::dateStringPattern)
 				.map(MapperUtils::toDate).collect(Collectors.toList());
 
+	}
+
+	@Override
+	public String getUrl(Document document, Summaries period) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

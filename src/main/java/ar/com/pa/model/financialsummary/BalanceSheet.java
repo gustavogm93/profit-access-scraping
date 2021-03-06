@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 
 import ar.com.pa.model.Instrument;
 
-@Component
-@Qualifier("Balance")
+
 public class BalanceSheet implements Summary{
 	
  public List<Instrument> instrumentList;
