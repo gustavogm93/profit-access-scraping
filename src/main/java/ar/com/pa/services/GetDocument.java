@@ -28,56 +28,26 @@ public class GetDocument {
     
 	public void getHtmlDocument(String url) throws Exception {
 
-	    
 		try {
 
-			CompanyOperation companyConstant = new CompanyOperation("bank-of-america");	
-			
+			CompanyOperation companyConstant = new CompanyOperation("bank-of-america");
+
 			String companyCode = ScrappingFetch.generateCompanyCodeUrl(companyConstant.getTitle());
-			
+
 			Summaries[] summaries = Summaries.values();
-			
+
 			String summaryUrl = ScrappingFetch.generateSummaryUrl(companyCode, summaries[0]);
-			
+
 			Elements periodElements = ScrappingFetch.getElementsByTag(summaryUrl, "Th");
 
-			ScrappingFetch.saveSummary(periodElements, null, null);
-		
-		   // sa.saveSummary(tdTag, thTag);
-		   /*
-		    //INCOME STATEMENT
-		    
-			doc = Jsoup.connect(url).get();
-			
-			String urlComplete2 = scrapping.getUrl(doc, UrlPattern.QuarterPeriod);
-			
-			doc = Jsoup.connect(urlComplete2).get();
-		    */
-		    
-	    /*
-	    HashMap<String, String> listMock = new HashMap<String, String>();
-	    listMock.put("Total Revenue", "1:5470 2:4881 3:3533 4:4010");
-	    listMock.put("Total Assets", "1:23214 2:56252 3:39993 4:44270");
-	   
-	    
-	    for (Map.Entry<String, String> entry : listHash.entrySet()) {
-	        String key = entry.getKey();
-	        Object value = entry.getValue();
-	        System.out.println("key: " +key);
-	        System.out.println("value: " +value);
-	        
-	        System.out.println("--------------------");
-	    }
-	     */
-	    //validateUtils.bacMapper(listMock);
-	    
-	
-}catch (Exception e) {
-	 logger.error("Error log message");
-	throw new Exception(e.getMessage());
-}
+			Company company = new Company();
+
+			ScrappingFetch.run(periodElements, company, summaries[0]);
+
+		} catch (Exception e) {
+			logger.error("Error log message");
+			throw new Exception(e.getMessage());
+		}
 	}
-	
-	
 
 }

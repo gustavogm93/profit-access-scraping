@@ -1,6 +1,5 @@
 package ar.com.pa.controller;
 
-import ar.com.pa.model.financialsummary.FinancialSummary;
 import ar.com.pa.model.financialsummary.Summary;
 import ar.com.pa.services.GetDocument;
 

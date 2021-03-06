@@ -53,7 +53,7 @@ public class ScrappingFetchImpl implements ScrappingFetch{
 }
 
 
-	public void saveSummary(Elements periods, Company company, Summaries summarie ) {
+	public void run(Elements periods, Company company, Summaries summarie ) {
 
 		logger.info("Scrapping financial Summary into HashMap and return it");
 		
@@ -65,7 +65,7 @@ public class ScrappingFetchImpl implements ScrappingFetch{
 		
 		getSummaryByPeriod(elements, instrumentList, intervalTimeList, summarie);
 		
-		saveSummaryInCompany(company, instrumentList, summarie);
+		saveSummaryCompany(company, instrumentList, summarie);
 		
 		xd(instrumentList);
 		System.out.println("----");
@@ -188,7 +188,7 @@ public class ScrappingFetchImpl implements ScrappingFetch{
 	}
 
 	
-	public void saveSummaryInCompany(Company company, List<Instrument> instrumentList,Summaries summarie) {
+	public void saveSummaryCompany(Company company, List<Instrument> instrumentList,Summaries summarie) {
 	
 		switch(summarie) {
 		

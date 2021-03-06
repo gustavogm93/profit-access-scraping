@@ -6,11 +6,12 @@ import org.jsoup.select.Elements;
 import ar.com.pa.enums.utils.Summaries;
 import ar.com.pa.model.CompanyOperation;
 import ar.com.pa.model.Instrument;
+import ar.com.pa.model.financialsummary.Company;
 
 
 public interface ScrappingFetch{ 
 
-	//public void saveSummary(Elements elements, Elements periods, Company<T> company);
+	public void run(Elements periods, Company company, Summaries summarie );
 	
 	public void getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<Date> intervalTimeList, Summaries summaryPerYear);
 	
@@ -25,4 +26,6 @@ public interface ScrappingFetch{
 	public Elements getElementsByTag(String urlSummary, String tag);
 
 	public Instrument fillInstrument(String instrumentValue, List<Date> intervalTimeList);
+	
+	public void saveSummaryCompany(Company company, List<Instrument> instrumentList,Summaries summarie);
 }
