@@ -3,9 +3,6 @@ package ar.com.pa.model.financialsummary;
 import java.util.List;
 import ar.com.pa.model.Instrument;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
 public class CashFlowStatementDTO implements Summary{
 	
  public List<Instrument> instrumentList;

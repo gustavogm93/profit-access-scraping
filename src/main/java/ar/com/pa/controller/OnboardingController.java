@@ -1,7 +1,8 @@
 package ar.com.pa.controller;
 
+import ar.com.pa.model.FetchOperation;
 import ar.com.pa.model.financialsummary.Summary;
-import ar.com.pa.services.GetDocument;
+import ar.com.pa.services.CompanyService;
 
 import ar.com.pa.utils.ValidateUtils;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,14 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @Data
 public class OnboardingController <T extends Summary> {	
 
-    private GetDocument document;
-    
-    private ValidateUtils validate;
+    private CompanyService companyService;
     
     @Autowired
-    public OnboardingController(ValidateUtils validateUtils, GetDocument document) {
-		this.validate = validateUtils;
-		this.document = document;
+    public OnboardingController(CompanyService companyService) {
+		this.companyService = companyService;
 		
 	}
     
@@ -41,8 +39,9 @@ public class OnboardingController <T extends Summary> {
 	})	
     @GetMapping
     public void findGlobalLeads() throws Exception{ 
-		
-		document.getHtmlDocument("https://www.investing.com/equities/apple-computer-inc");
+		FetchOperation fetchOperation = new FetchOperation();
+		fetchOperation.setCode("da");
+		companyService.saveFromScratch(fetchOperation);
 		System.out.println("---------------------------------------------------------------------");
 		//doke.getHtmlDocument("https://www.investing.com/equities/coca-cola-co-financial-summary");
 	}

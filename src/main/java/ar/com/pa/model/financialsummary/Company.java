@@ -3,7 +3,7 @@ package ar.com.pa.model.financialsummary;
 import java.util.Date;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
-
+import ar.com.pa.model.FetchOperation;
 import lombok.Data;
 
 @Data
@@ -12,9 +12,8 @@ import lombok.Data;
 public class Company{
 
 	String id;
-	String state;
-	String code;
-	String title;
+	String name;
+	FetchOperation fetchOperation;
 	
 	FinancialSummaryDTO financialSummary;	
 	
@@ -26,5 +25,6 @@ public class Company{
 	
 	Date lastUpdate;
 
-	
+	public Company() {}
+
 }

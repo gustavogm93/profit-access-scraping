@@ -8,11 +8,9 @@ import org.springframework.stereotype.Repository;
 import ar.com.pa.model.financialsummary.Company;
 
 
-@SuppressWarnings("rawtypes")
 @Repository
 public interface CompanyRepository extends MongoRepository<Company, String>{
 	
-
 	Optional<Company> findById(String id);
 	
 	Optional<Company> findByCode(String id);

@@ -1,16 +1,18 @@
 package ar.com.pa.utils;
 
 import java.util.Arrays;
+
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
 import ar.com.pa.enums.financialsummary.FinancialSummary;
 
-@Service
 public class ValidateUtils {
 
     public ValidateUtils() {};
  
 
-	public boolean isNumOrEmpty(String strNum) {
+	public static boolean isNumOrEmpty(String strNum) {
 	    if (strNum.equalsIgnoreCase("")) {
 	        return true;
 	    }
@@ -22,12 +24,12 @@ public class ValidateUtils {
 	    return true;
 	}
 	
-	public boolean isSummaryModelValue(String s) {
+	public static boolean isSummaryModelValue(String s) {
 	return isSummaryObject(s) || isNumOrEmpty(s);
 	}
 	
 	
-	public boolean isSummaryObject(String obj) {
+	public static boolean isSummaryObject(String obj) {
 		boolean response = Arrays.asList(FinancialSummary.values()).stream()
 				.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj));
 		return response;

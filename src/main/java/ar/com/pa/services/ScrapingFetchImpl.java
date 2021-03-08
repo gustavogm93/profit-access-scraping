@@ -3,8 +3,10 @@ package ar.com.pa.services;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,76 +14,53 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ar.com.pa.enums.financialsummary.FinancialSummary;
 import ar.com.pa.enums.utils.ScrappingConstant;
-import ar.com.pa.enums.utils.Summaries;
-import ar.com.pa.model.CompanyOperation;
+import ar.com.pa.enums.utils.SummaryType;
 import ar.com.pa.model.Instrument;
-import ar.com.pa.model.financialsummary.BalanceSheetDTO;
-import ar.com.pa.model.financialsummary.CashFlowStatementDTO;
 import ar.com.pa.model.financialsummary.Company;
-import ar.com.pa.model.financialsummary.FinancialSummaryDTO;
-import ar.com.pa.model.financialsummary.IncomeStatementDTO;
-
-import ar.com.pa.repository.CompanyRepositoryFilter;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
 import ar.com.pa.utils.ValidateUtils;
 
-@Component
-public class ScrappingFetchImpl implements ScrappingFetch{
+@Service
+public class ScrapingFetchImpl implements ScrapingFetch{
 
-	private final Logger logger = LoggerFactory.getLogger(ScrappingFetchImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(ScrapingFetchImpl.class);
+	
+    private FinancialSummary financialSummary;
 
-	public ValidateUtils validateUtils;
+    private static int dateIndex = 0;
 
-    public CompanyRepositoryFilter companyRepository;
-    	
-    public FinancialSummary financialSummary;
+	public ScrapingFetchImpl() {};
 
-    public static int dateIndex = 0;
-
-	@Autowired
-	public ScrappingFetchImpl(ValidateUtils validateUtils, CompanyRepositoryFilter companyRepository,
-		FinancialSummary financialSummary) {
-	super();
-	this.validateUtils = validateUtils;
-	this.companyRepository = companyRepository;
-	this.financialSummary = financialSummary;
-}
-
-
-	public void run(Elements periods, Company company, Summaries summarie ) {
+	public void run(List<Date> summaryPeriods, Company company, SummaryType summaryType, String url) {
 
 		logger.info("Scrapping financial Summary into HashMap and return it");
+	
+		List<Instrument> instrumentsPerSummary = new ArrayList<>();
 		
-		List<Date> intervalTimeList = getQuarterPeriodDate(periods);
+		Elements scrapingElements = getElementsByTag(url, "Td");
 		
-		List<Instrument> instrumentList = new ArrayList<>();
-
-		Elements elements = getElementsByTag(generateSummaryUrl(company.getCode(), summarie), "TD");
+		getSummaryByPeriod(scrapingElements, instrumentsPerSummary, summaryPeriods, summaryType);
 		
-		getSummaryByPeriod(elements, instrumentList, intervalTimeList, summarie);
+		saveSummaryCompany(company, instrumentsPerSummary, summaryType);
 		
-		saveSummaryCompany(company, instrumentList, summarie);
-		
-		xd(instrumentList);
+		xd(instrumentsPerSummary);
 		System.out.println("----");
 
 
 		//companyRepository.save(company);
 		
-
 	}
 	
 	@Override
-	public String getCompanyCode(CompanyOperation companyOperation, Summaries summaryCode) {
+	public String getScrapingCodeByCompanyTitle(String companyTitle) {
 
 		Document doc;
 		try {
-			doc = Jsoup.connect(generateCompanyCodeUrl(companyOperation.getTitle())).get();
+			doc = Jsoup.connect(generateCompanyCodeUrl(companyTitle)).get();
 			
 			Element element = doc.select("div[data-pair-id]").first();
 
@@ -102,25 +81,46 @@ public class ScrappingFetchImpl implements ScrappingFetch{
 		StringBuilder companyCode = new StringBuilder();
 		
 		companyCode.append(ScrappingConstant.codeUrl);
+		companyCode.append(companyTitle);
 		
 		return companyCode.toString();
 		
 	}
 	
 	@Override
-	public String generateSummaryUrl(String codeCompany, Summaries summaryCode) {
+	public Entry<SummaryType, String> buildSummaryUrl(String codeCompany, SummaryType summaryCode) {
 
 		StringBuilder summaryUrl = new StringBuilder();
 		
 		summaryUrl.append(ScrappingConstant.fixUrl); 
 		
-		if(summaryCode == Summaries.FS) 
+		if(summaryCode == SummaryType.FS) 
 			 summaryUrl.append(ScrappingConstant.urlFs.replace("#", codeCompany));
 		else
 			summaryUrl.append(ScrappingConstant.urlNotFs.replace("#", codeCompany).replace("$", summaryCode.toString()));
 			 
-		return summaryUrl.toString();
+		Entry<SummaryType, String> urlList = new AbstractMap.SimpleEntry<SummaryType, String>(summaryCode, summaryUrl.toString());
+	
+		return urlList;
 	}
+	
+	
+	public Entry<SummaryType, String> buildScrapingSummdaryUrl(String codeCompany, SummaryType summaryCode) {
+
+		StringBuilder summaryUrl = new StringBuilder();
+		
+		summaryUrl.append(ScrappingConstant.fixUrl); 
+		
+		if(summaryCode == SummaryType.FS) 
+			 summaryUrl.append(ScrappingConstant.urlFs.replace("#", codeCompany));
+		else
+			summaryUrl.append(ScrappingConstant.urlNotFs.replace("#", codeCompany).replace("$", summaryCode.toString()));
+			 
+		Entry<SummaryType, String> urlList = new AbstractMap.SimpleEntry<SummaryType, String>(summaryCode, summaryUrl.toString());
+	
+		return urlList;
+	}
+	
 	
 	@Override
 	public Elements getElementsByTag(String urlSummary, String tag) {
@@ -139,15 +139,15 @@ public class ScrappingFetchImpl implements ScrappingFetch{
 	}
 	
 	@Override
-	public void getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<Date> intervalTimeList, Summaries summaryPerYear) {
+	public void getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<Date> intervalTimeList, SummaryType summaryPerYear) {
 
 		
 		e.stream()
 		.map(Element::ownText)
-		.filter(validateUtils::isSummaryModelValue)
+		.filter(ValidateUtils::isSummaryModelValue)
 		.forEach((element) -> {		
 			
-					if (validateUtils.isSummaryObject(element)) {
+					if (ValidateUtils.isSummaryObject(element)) {
 						
 						financialSummary = FinancialSummary.getFinancialSummaryByString(element);
 						dateIndex = 0;
@@ -180,7 +180,7 @@ public class ScrappingFetchImpl implements ScrappingFetch{
 	  
 
 	  
-	public List<Date> getQuarterPeriodDate(Elements p) {
+	public List<Date> getPeriods(Elements p) {
 
 		return p.stream().map(Element::ownText).distinct().filter(PatternResource::dateStringPattern)
 				.map(MapperUtils::toDate).collect(Collectors.toList());
@@ -188,39 +188,40 @@ public class ScrappingFetchImpl implements ScrappingFetch{
 	}
 
 	
-	public void saveSummaryCompany(Company company, List<Instrument> instrumentList,Summaries summarie) {
-	
+	public void saveSummaryCompany(Company company, List<Instrument> instrumentList,SummaryType summaryType) {
+	/*
 		switch(summarie) {
 		
-		case FS -> {
+		case FS->{
 			FinancialSummaryDTO FinancialSummary = new FinancialSummaryDTO();
 			FinancialSummary.setSummary(instrumentList);
 			company.setFinancialSummary(FinancialSummary);
 		}
-		case INC -> {
+		case INC-> {
 			IncomeStatementDTO incomeStatement = new IncomeStatementDTO();
 			incomeStatement.setSummary(instrumentList);
 			company.setIncomeStatement(incomeStatement);
 		}
-		case BAL -> {
+		case BAL-> {
 			BalanceSheetDTO balanceSheet = new BalanceSheetDTO();
 			balanceSheet.setSummary(instrumentList);
 			company.setBalanceSheet(balanceSheet);
 		}
 
-		case CAS -> {
+		case CAS ->{
 			CashFlowStatementDTO cashFlowStatement = new CashFlowStatementDTO();
 			cashFlowStatement.setSummary(instrumentList);
 			company.setCashFlowStatement(cashFlowStatement);
 		}
-		}
+		}*/
 	}
 
+		
 	}
 
 
 
-
+	
 
 
 
