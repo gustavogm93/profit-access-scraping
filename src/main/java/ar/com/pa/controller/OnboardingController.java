@@ -1,5 +1,6 @@
 package ar.com.pa.controller;
 
+import ar.com.pa.model.CompanyOperationMessage;
 import ar.com.pa.model.FetchOperation;
 import ar.com.pa.model.financialsummary.Summary;
 import ar.com.pa.services.CompanyService;
@@ -39,9 +40,10 @@ public class OnboardingController <T extends Summary> {
 	})	
     @GetMapping
     public void findGlobalLeads() throws Exception{ 
-		FetchOperation fetchOperation = new FetchOperation();
-		fetchOperation.setCode("da");
-		companyService.saveFromScratch(fetchOperation);
+		CompanyOperationMessage companyOperationMessage = new CompanyOperationMessage();
+		companyOperationMessage.setTitle("Bank-of-america");
+		companyOperationMessage.setScrappingCode("243");
+		companyService.saveFromScratch(companyOperationMessage);
 		System.out.println("---------------------------------------------------------------------");
 		//doke.getHtmlDocument("https://www.investing.com/equities/coca-cola-co-financial-summary");
 	}

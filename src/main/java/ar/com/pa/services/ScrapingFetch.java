@@ -1,9 +1,11 @@
 package ar.com.pa.services;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import ar.com.pa.enums.utils.SummaryType;
 import ar.com.pa.model.Instrument;
@@ -12,21 +14,21 @@ import ar.com.pa.model.financialsummary.Company;
 
 public interface ScrapingFetch{ 
 
-	public void run(List<Date> summaryPeriods, Company company, SummaryType summaryType, String url);
+	public void run(List<LocalDate> summaryPeriodTime, Company company, SummaryType summaryType, Document doc);
 	
-	public void getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<Date> intervalTimeList, SummaryType summaryPerYear);
+	public List<Instrument> getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<LocalDate> intervalTimeList, SummaryType summaryPerYear);
 	
-	public List<Date> getPeriods(Elements p);
+	public List<LocalDate> getPeriods(Elements p);
 		
-	public Entry<SummaryType, String> buildSummaryUrl(String codeCompany, SummaryType summaryCode);
+	public String buildSummaryUrl(String codeCompany, SummaryType summaryCode);
 
 	public String generateCompanyCodeUrl(String companyTitle);
 	
 	public String getScrapingCodeByCompanyTitle(String companyCode);
 	
-	public Elements getElementsByTag(String urlSummary, String tag);
+	public Elements getElementsByTag(String tag, Document doc);
 
-	public Instrument fillInstrument(String instrumentValue, List<Date> intervalTimeList);
+	public Instrument fillInstrument(String instrumentValue, List<LocalDate> intervalTimeList);
 	
 	public void saveSummaryCompany(Company company, List<Instrument> instrumentList,SummaryType summarie);
 }

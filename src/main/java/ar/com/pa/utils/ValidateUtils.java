@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import ar.com.pa.enums.financialsummary.FinancialSummary;
+import ar.com.pa.enums.utils.SummaryType;
 
 public class ValidateUtils {
 
@@ -24,12 +25,12 @@ public class ValidateUtils {
 	    return true;
 	}
 	
-	public static boolean isSummaryModelValue(String s) {
-	return isSummaryObject(s) || isNumOrEmpty(s);
+	public static boolean isSummaryModelValue(String s, SummaryType summaryPerYear) {
+	return isSummaryObject(s, summaryPerYear) || isNumOrEmpty(s);
 	}
 	
-	
-	public static boolean isSummaryObject(String obj) {
+	//DEBE FILTRAR POR TYPE SUMMARY
+	public static boolean isSummaryObject(String obj,SummaryType summaryPerYear) {
 		boolean response = Arrays.asList(FinancialSummary.values()).stream()
 				.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj));
 		return response;

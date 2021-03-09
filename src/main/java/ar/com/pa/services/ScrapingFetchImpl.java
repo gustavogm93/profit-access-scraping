@@ -3,9 +3,11 @@ package ar.com.pa.services;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
@@ -19,7 +21,11 @@ import ar.com.pa.enums.financialsummary.FinancialSummary;
 import ar.com.pa.enums.utils.ScrappingConstant;
 import ar.com.pa.enums.utils.SummaryType;
 import ar.com.pa.model.Instrument;
+import ar.com.pa.model.financialsummary.BalanceSheetDTO;
+import ar.com.pa.model.financialsummary.CashFlowStatementDTO;
 import ar.com.pa.model.financialsummary.Company;
+import ar.com.pa.model.financialsummary.FinancialSummaryDTO;
+import ar.com.pa.model.financialsummary.IncomeStatementDTO;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
 import ar.com.pa.utils.ValidateUtils;
@@ -29,21 +35,21 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 
 	private final Logger logger = LoggerFactory.getLogger(ScrapingFetchImpl.class);
 	
-    private FinancialSummary financialSummary;
+	private String titleSummary = "";
 
     private static int dateIndex = 0;
 
 	public ScrapingFetchImpl() {};
 
-	public void run(List<Date> summaryPeriods, Company company, SummaryType summaryType, String url) {
+	public void run(List<LocalDate> summaryPeriodTime, Company company, SummaryType summaryType, Document doc) {
 
 		logger.info("Scrapping financial Summary into HashMap and return it");
 	
 		List<Instrument> instrumentsPerSummary = new ArrayList<>();
 		
-		Elements scrapingElements = getElementsByTag(url, "Td");
+		Elements scrapingElements = getElementsByTag("Td", doc);
 		
-		getSummaryByPeriod(scrapingElements, instrumentsPerSummary, summaryPeriods, summaryType);
+		getSummaryByPeriod(scrapingElements, instrumentsPerSummary, summaryPeriodTime, summaryType);
 		
 		saveSummaryCompany(company, instrumentsPerSummary, summaryType);
 		
@@ -88,7 +94,7 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 	}
 	
 	@Override
-	public Entry<SummaryType, String> buildSummaryUrl(String codeCompany, SummaryType summaryCode) {
+	public String buildSummaryUrl(String codeCompany, SummaryType summaryCode) {
 
 		StringBuilder summaryUrl = new StringBuilder();
 		
@@ -98,37 +104,16 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 			 summaryUrl.append(ScrappingConstant.urlFs.replace("#", codeCompany));
 		else
 			summaryUrl.append(ScrappingConstant.urlNotFs.replace("#", codeCompany).replace("$", summaryCode.toString()));
-			 
-		Entry<SummaryType, String> urlList = new AbstractMap.SimpleEntry<SummaryType, String>(summaryCode, summaryUrl.toString());
-	
-		return urlList;
-	}
-	
-	
-	public Entry<SummaryType, String> buildScrapingSummdaryUrl(String codeCompany, SummaryType summaryCode) {
 
-		StringBuilder summaryUrl = new StringBuilder();
-		
-		summaryUrl.append(ScrappingConstant.fixUrl); 
-		
-		if(summaryCode == SummaryType.FS) 
-			 summaryUrl.append(ScrappingConstant.urlFs.replace("#", codeCompany));
-		else
-			summaryUrl.append(ScrappingConstant.urlNotFs.replace("#", codeCompany).replace("$", summaryCode.toString()));
-			 
-		Entry<SummaryType, String> urlList = new AbstractMap.SimpleEntry<SummaryType, String>(summaryCode, summaryUrl.toString());
 	
-		return urlList;
+		return summaryUrl.toString();
 	}
-	
-	
+
+		
 	@Override
-	public Elements getElementsByTag(String urlSummary, String tag) {
+	public Elements getElementsByTag(String tag, Document doc) {
 
-		Document doc;
-		
 			try {
-				doc = Jsoup.connect(urlSummary).get();	
 				Elements summaryElements = doc.getElementsByTag(tag);
 				
 				return summaryElements;
@@ -139,32 +124,35 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 	}
 	
 	@Override
-	public void getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<Date> intervalTimeList, SummaryType summaryPerYear) {
-
+	public List<Instrument> getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<LocalDate> summaryPeriodTime, SummaryType summaryPerYear) {
+	
 		
-		e.stream()
-		.map(Element::ownText)
-		.filter(ValidateUtils::isSummaryModelValue)
-		.forEach((element) -> {		
+		List<String> valuesPerSummary = e.stream().map(Element::ownText)
+												  .filter((s) -> ValidateUtils.isSummaryModelValue(s, summaryPerYear))
+												  .collect(Collectors.toList());
+		
+		valuesPerSummary.forEach((element) -> {		
 			
-					if (ValidateUtils.isSummaryObject(element)) {
-						
-						financialSummary = FinancialSummary.getFinancialSummaryByString(element);
+			//bloque generico
+					if (ValidateUtils.isSummaryObject(element, summaryPerYear)) {
+						//TIENE QUE SER GENERICO
+						titleSummary = element;
 						dateIndex = 0;
 					} else {
-						instrumentList.add(fillInstrument(element, intervalTimeList));
+						instrumentList.add(fillInstrument(element, summaryPeriodTime));
 					}
 				});
 
+		return instrumentList;
 	}
 
 	
 	@Override
-	public Instrument fillInstrument(String instrumentValue, List<Date> intervalTimeList)
+	public Instrument fillInstrument(String instrumentValue, List<LocalDate> intervalTimeList)
 	{
 		
 		Instrument instrumentToAdd = new Instrument();
-		instrumentToAdd.setTitle(financialSummary.getTitle());
+		instrumentToAdd.setTitle(titleSummary);
 		instrumentToAdd.setValue(MapperUtils.stringToNum(instrumentValue));
 		instrumentToAdd.setPeriodEnding(intervalTimeList.get(dateIndex));
 		
@@ -179,14 +167,32 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 	    }
 	  
 
-	  
-	public List<Date> getPeriods(Elements p) {
+	  @Override  
+	public List<LocalDate> getPeriods(Elements p) {
 
 		return p.stream().map(Element::ownText).distinct().filter(PatternResource::dateStringPattern)
 				.map(MapperUtils::toDate).collect(Collectors.toList());
 
 	}
 
+	public List<SummaryType> getSummariesToScrap(Company company) {
+		List<SummaryType> listSummary = new ArrayList<>();
+		
+		if (Objects.isNull(company.getFinancialSummary()))
+			listSummary.add(SummaryType.FS);
+		
+		if (Objects.isNull(company.getBalanceSheet()))
+			listSummary.add(SummaryType.BAL);
+
+		if (Objects.isNull(company.getCashFlowStatement()))
+			listSummary.add(SummaryType.CAS);
+
+		if (Objects.isNull(company.getIncomeStatement()))
+			listSummary.add(SummaryType.INC);
+
+		return listSummary;
+
+	}
 	
 	public void saveSummaryCompany(Company company, List<Instrument> instrumentList,SummaryType summaryType) {
 	/*

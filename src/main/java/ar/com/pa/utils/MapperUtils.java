@@ -17,22 +17,22 @@ public class MapperUtils {
 		return Integer.parseInt(valueToAdd);
 	}
 
-	public static Date convertToDate(String[] value,String[] periods ,int index) {
+	public static LocalDate convertToDate(String[] value,String[] periods ,int index) {
 		
 		int periodIndex = Integer.parseInt(value[index].substring(0,1));
 		String date = periods[periodIndex - 1];
 
-	    Date datePeriod = toDate(date);
+		LocalDate localDatePeriod = LocalDate.parse(date);
 	    
-		return datePeriod;
+		return localDatePeriod;
 	}
 	
-	public static Date toDate(String date) {
+	public static LocalDate toDate(String date) {
 
 		try {
 			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d, u", Locale.ENGLISH);
 			LocalDate localDatePeriod = LocalDate.parse(date, dateFormatter);
-			return java.sql.Date.valueOf(localDatePeriod);
+			return localDatePeriod;
 		}catch (Exception e) {
 			logger.error("Date erronea");
 			return null;
