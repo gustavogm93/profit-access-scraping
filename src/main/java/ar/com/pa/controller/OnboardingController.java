@@ -5,7 +5,7 @@ import ar.com.pa.model.FetchOperation;
 import ar.com.pa.model.financialsummary.Summary;
 import ar.com.pa.services.CompanyService;
 
-import ar.com.pa.utils.ValidateUtils;
+import ar.com.pa.utils.ValidateUtilsImpl;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;

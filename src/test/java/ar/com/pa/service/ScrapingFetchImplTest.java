@@ -23,7 +23,7 @@ import ar.com.pa.service.mock.constantMock;
 import ar.com.pa.services.ScrapingFetchImpl;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
-import ar.com.pa.utils.ValidateUtils;
+import ar.com.pa.utils.ValidateUtilsImpl;
 
 
 public class ScrapingFetchImplTest {

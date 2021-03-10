@@ -1,10 +1,8 @@
 package ar.com.pa.services;
 
-import java.sql.Date;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map.Entry;
-
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import ar.com.pa.enums.utils.SummaryType;

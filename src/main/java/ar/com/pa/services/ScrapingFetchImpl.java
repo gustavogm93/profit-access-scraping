@@ -2,15 +2,11 @@ package ar.com.pa.services;
 
 
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,15 +15,10 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ar.com.pa.enums.financialsummary.FinancialSummary;
 import ar.com.pa.enums.utils.ScrappingConstant;
 import ar.com.pa.enums.utils.SummaryType;
 import ar.com.pa.model.Instrument;
-import ar.com.pa.model.financialsummary.BalanceSheetDTO;
-import ar.com.pa.model.financialsummary.CashFlowStatementDTO;
 import ar.com.pa.model.financialsummary.Company;
-import ar.com.pa.model.financialsummary.FinancialSummaryDTO;
-import ar.com.pa.model.financialsummary.IncomeStatementDTO;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
 import ar.com.pa.utils.ValidateUtils;
@@ -40,9 +31,13 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 	private String titleSummary = "";
 
     private static int dateIndex = 0;
-
+      
+    private ValidateUtils validateUtils;
+    
+    private MapperUtils mapperUtils;
+    
 	public ScrapingFetchImpl() {};
-
+	
 	public void run(List<LocalDate> summaryPeriodTime, Company company, SummaryType summaryType, Document doc) {
 
 		logger.info("Scrapping financial Summary into HashMap and return it");
@@ -159,13 +154,13 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 		 */
 
 		List<String> valuesPerSummary = values.stream()
-										      .filter((s) -> ValidateUtils.isSummaryModelValue(s, summaryPerYear))
+										      .filter((s) -> validateUtils.isSummaryModelValue(s, summaryPerYear))
 										      .collect(Collectors.toList());
 		valuesPerSummary.forEach((f)-> System.out.println(f));
 		
 		valuesPerSummary.forEach((element) -> {
 
-			if (ValidateUtils.isSummaryObject(element, summaryPerYear)) {
+			if (validateUtils.isSummaryObject(element, summaryPerYear)) {
 
 				titleSummary = element;
 				dateIndex = 0;
@@ -180,13 +175,13 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 	public List<Instrument> getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<LocalDate> summaryPeriodTime, SummaryType summaryPerYear) {
 
 		List<String> valuesPerSummary = e.stream().map(Element::ownText)
-												  .filter((s) -> ValidateUtils.isSummaryModelValue(s, summaryPerYear))
+												  .filter((s) -> validateUtils.isSummaryModelValue(s, summaryPerYear))
 												  .collect(Collectors.toList());
 		
 		valuesPerSummary.forEach((element) -> {		
 			
 			//bloque generico
-					if (ValidateUtils.isSummaryObject(element, summaryPerYear)) {
+					if (validateUtils.isSummaryObject(element, summaryPerYear)) {
 						//TIENE QUE SER GENERICO
 						titleSummary = element;
 						dateIndex = 0;
@@ -205,7 +200,7 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 		
 		Instrument instrumentToAdd = new Instrument();
 		instrumentToAdd.setTitle(titleSummary);
-		instrumentToAdd.setValue(MapperUtils.stringToNum(instrumentValue));
+		instrumentToAdd.setValue(mapperUtils.stringToNum(instrumentValue));
 		instrumentToAdd.setPeriodEnding(intervalTimeList.get(dateIndex));
 		
 		dateIndex++;
@@ -225,7 +220,7 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 		if (summaryType == SummaryType.FS) {
 
 			return p.stream().map(Element::ownText).distinct().filter(PatternResource::dateStringPattern)
-					.map(MapperUtils::toDate).collect(Collectors.toList());
+					.map(mapperUtils::toDate).collect(Collectors.toList());
 		}
 
 		List<LocalDate> dateElements = new ArrayList<>();
@@ -234,11 +229,11 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 
 			if (p.get(i).select("span").size() > 0) {
 
-				if (ValidateUtils.isDate(p.get(i).select("span").first().ownText())) {
+				if (validateUtils.isDate(p.get(i).select("span").first().ownText())) {
 					String year = p.get(i).select("span").first().ownText();
 					String month = p.get(i).select("div").first().ownText();
 
-					dateElements.add(MapperUtils.convertToFormatDate(year, month));
+					dateElements.add(mapperUtils.convertToDateYYYY_MM_DD(year, month));
 
 				}
 			}
