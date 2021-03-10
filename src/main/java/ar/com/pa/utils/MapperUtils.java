@@ -40,6 +40,17 @@ public class MapperUtils {
 	}
 	
 	
+	public static LocalDate convertToFormatDate(String year, String month) {
+		
+		String[] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"};
+		int day = Integer.parseInt(month.substring(3,5));
+		String monthWord = months[day - 1];
+		String date = String.format("%s %d, %s",monthWord, day, year);
+		
+		return toDate(date);
+		
+	}
+	
 	public static int stringToNum(String s) {
 		try {
 			return Integer.parseInt(s);

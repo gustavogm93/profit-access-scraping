@@ -61,14 +61,14 @@ public class CompanyService {
 
 			for (int i = 0; i < summaries.size(); i++) {
 
-				String url = ScrapingFetch.buildSummaryUrl(company.getFetchOperation().getCode(), summaries.get(i));
+				String url = ScrapingFetch.buildSummaryUrl(company.getFetchOperation().getCode(), summaries.get(1));
 				
 				Document doc = Jsoup.connect(url).get();
 				
 				if (i == 0) { //Esto deberia ser => ScrapingFetch.GetPeriodDate
 							 // Si falla la fecha deberia hacer un BREAK, y esperar 1 minuto;
 					Elements periodElements = ScrapingFetch.getElementsByTag("Th", doc);
-					summaryPeriodTime.addAll(ScrapingFetch.getPeriods(periodElements));
+					summaryPeriodTime.addAll(ScrapingFetch.getPeriods(periodElements, summaries.get(1)));
 				}
 
 				//NO HACE FALTA
@@ -77,7 +77,7 @@ public class CompanyService {
 				
 				Elements scrapingElements = ScrapingFetch.getElementsByTag("Td", doc);
 				
-				List<Instrument> listInstrument = ScrapingFetch.getSummaryByPeriod(scrapingElements, instrumentsPerSummary, summaryPeriodTime, summaries.get(i));
+				List<Instrument> listInstrument = ScrapingFetch.getNotFinancialSummaryByPeriod(scrapingElements, instrumentsPerSummary, summaryPeriodTime, summaries.get(1));
 				Gson gson = new Gson();
 				
 				String jsonInString = gson.toJson(listInstrument);

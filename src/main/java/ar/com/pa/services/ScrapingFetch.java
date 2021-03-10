@@ -18,7 +18,7 @@ public interface ScrapingFetch{
 	
 	public List<Instrument> getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<LocalDate> intervalTimeList, SummaryType summaryPerYear);
 	
-	public List<LocalDate> getPeriods(Elements p);
+	public List<LocalDate> getPeriods(Elements p, SummaryType summaryType);
 		
 	public String buildSummaryUrl(String codeCompany, SummaryType summaryCode);
 

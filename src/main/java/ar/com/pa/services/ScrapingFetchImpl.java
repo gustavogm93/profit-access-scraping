@@ -6,6 +6,8 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Map.Entry;
@@ -123,10 +125,60 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 		
 	}
 	
+	
+	
+	
+	
+	
+
+	public List<Instrument> getNotFinancialSummaryByPeriod(Elements e, List<Instrument> instrumentList,
+			List<LocalDate> summaryPeriodTime, SummaryType summaryPerYear) {
+
+		LinkedHashSet<String> values = new LinkedHashSet<>();
+		e.forEach((a) -> {
+
+			if (a.select("span").size() > 0) {
+				values.add(a.select("span").first().ownText());
+			} else {
+				values.add(a.ownText());
+
+			}
+		});
+
+		/*
+		 * TO SAVE----------------------
+		 * 
+		 * List<String> strlist =
+		 * values.stream().filter(ValidateUtils::isString).collect(Collectors.toList());
+		 * 
+		 * for(String a: strlist) { String consta = a.replace(" " ,""); consta =
+		 * consta.replaceAll("([,'][a-z]{0,})|([-.])", ""); consta =
+		 * consta.replaceAll(("\\(([^)]+)\\)"), ""); consta = consta.replaceAll("[&/]",
+		 * "And"); System.out.print(consta + "("); System.out.print("\""+a+"\"");
+		 * System.out.print("),"); System.out.print("\n"); }
+		 */
+
+		List<String> valuesPerSummary = values.stream()
+										      .filter((s) -> ValidateUtils.isSummaryModelValue(s, summaryPerYear))
+										      .collect(Collectors.toList());
+		valuesPerSummary.forEach((f)-> System.out.println(f));
+		
+		valuesPerSummary.forEach((element) -> {
+
+			if (ValidateUtils.isSummaryObject(element, summaryPerYear)) {
+
+				titleSummary = element;
+				dateIndex = 0;
+			} else {
+				instrumentList.add(fillInstrument(element, summaryPeriodTime));
+			}
+		});
+		return instrumentList;
+	}
+	
 	@Override
 	public List<Instrument> getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<LocalDate> summaryPeriodTime, SummaryType summaryPerYear) {
-	
-		
+
 		List<String> valuesPerSummary = e.stream().map(Element::ownText)
 												  .filter((s) -> ValidateUtils.isSummaryModelValue(s, summaryPerYear))
 												  .collect(Collectors.toList());
@@ -168,10 +220,30 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 	  
 
 	  @Override  
-	public List<LocalDate> getPeriods(Elements p) {
+	public List<LocalDate> getPeriods(Elements p, SummaryType summaryType) {
 
-		return p.stream().map(Element::ownText).distinct().filter(PatternResource::dateStringPattern)
-				.map(MapperUtils::toDate).collect(Collectors.toList());
+		if (summaryType == SummaryType.FS) {
+
+			return p.stream().map(Element::ownText).distinct().filter(PatternResource::dateStringPattern)
+					.map(MapperUtils::toDate).collect(Collectors.toList());
+		}
+
+		List<LocalDate> dateElements = new ArrayList<>();
+
+		for (int i = 0; i < p.size(); i++) {
+
+			if (p.get(i).select("span").size() > 0) {
+
+				if (ValidateUtils.isDate(p.get(i).select("span").first().ownText())) {
+					String year = p.get(i).select("span").first().ownText();
+					String month = p.get(i).select("div").first().ownText();
+
+					dateElements.add(MapperUtils.convertToFormatDate(year, month));
+
+				}
+			}
+		}
+		return dateElements;
 
 	}
 
