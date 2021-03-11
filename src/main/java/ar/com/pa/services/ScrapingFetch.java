@@ -12,13 +12,13 @@ import ar.com.pa.model.financialsummary.Company;
 
 public interface ScrapingFetch{ 
 
-	public void run(List<LocalDate> summaryPeriodTime, Company company, SummaryType summaryType, Document doc);
+	public void run(List<LocalDate> summaryPeriodTime, Company company, Document doc);
 	
-	public List<Instrument> getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<LocalDate> intervalTimeList, SummaryType summaryPerYear);
+	public List<Instrument> getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<LocalDate> intervalTimeList);
 	
-	public List<LocalDate> getPeriods(Elements p, SummaryType summaryType);
+	public List<LocalDate> getPeriods(Elements p);
 		
-	public String buildSummaryUrl(String codeCompany, SummaryType summaryCode);
+	public String buildSummaryUrl(String codeCompany);
 
 	public String generateCompanyCodeUrl(String companyTitle);
 	
@@ -28,5 +28,5 @@ public interface ScrapingFetch{
 
 	public Instrument fillInstrument(String instrumentValue, List<LocalDate> intervalTimeList);
 	
-	public void saveSummaryCompany(Company company, List<Instrument> instrumentList,SummaryType summarie);
+	public void saveSummaryCompany(Company company, List<Instrument> instrumentList);
 }

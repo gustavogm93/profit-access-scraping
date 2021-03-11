@@ -42,7 +42,7 @@ public class OnboardingController <T extends Summary> {
     public void findGlobalLeads() throws Exception{ 
 		CompanyOperationMessage companyOperationMessage = new CompanyOperationMessage();
 		companyOperationMessage.setTitle("Bank-of-america");
-		companyOperationMessage.setScrappingCode("243");
+		companyOperationMessage.setScrappingCode("41535");
 		companyService.saveFromScratch(companyOperationMessage);
 		System.out.println("---------------------------------------------------------------------");
 		//doke.getHtmlDocument("https://www.investing.com/equities/coca-cola-co-financial-summary");

@@ -6,28 +6,28 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 import ar.com.pa.model.FetchOperation;
+import ar.com.pa.model.Profile;
 import lombok.Data;
 
 @Data
-@Document(collection="Company")
+@Document(collection = "Company")
 @Component
-public class Company{
+public class Company {
 
 	@Id
 	String id;
+	
 	String name;
-	FetchOperation fetchOperation;
-	
-	FinancialSummaryDTO financialSummary;	
-	
-	BalanceSheetDTO balanceSheet;	
-		
-	CashFlowStatementDTO cashFlowStatement;
 
-	IncomeStatementDTO incomeStatement; 
-	
+	Profile profile;
+
+	FetchOperation fetchOperation;
+
+	FinancialSummaryDTO financialSummary;
+
 	Date lastUpdate;
 
-	public Company() {}
+	public Company() {
+	}
 
 }

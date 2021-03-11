@@ -7,7 +7,10 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class MapperUtilsImpl implements MapperUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(MapperUtilsImpl.class);
@@ -41,9 +44,12 @@ public class MapperUtilsImpl implements MapperUtils {
 	}
 
 	@Override
-	public int stringToNum(String s) {
+	public double stringToNum(String s) {
+		if(s.equals("")|| s.equals("-"))
+		return -1;
+		
 		try {
-			return Integer.parseInt(s);
+			return Double.parseDouble(s);
 		} catch (Exception e) {
 			return -1;
 		}

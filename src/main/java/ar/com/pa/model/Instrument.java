@@ -8,7 +8,7 @@ import lombok.Data;
 public class Instrument {
 
 	public String title;
-	public Integer value;
+	public Double value;
 	public LocalDate periodEnding;
 		
 }

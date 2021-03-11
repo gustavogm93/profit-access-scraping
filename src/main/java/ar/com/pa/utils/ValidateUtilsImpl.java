@@ -4,18 +4,17 @@ import java.util.Arrays;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import ar.com.pa.enums.BalanceSheet;
 import ar.com.pa.enums.financialsummary.FinancialSummary;
 import ar.com.pa.enums.utils.SummaryType;
 
+@Component
 public class ValidateUtilsImpl implements ValidateUtils {
 
     public ValidateUtilsImpl() {};
- 
+
 
 	public boolean isNumOrEmpty(String strNum) {
-	    if (strNum.equalsIgnoreCase("")) {
+	    if (strNum.equalsIgnoreCase("") || strNum.equalsIgnoreCase("-")) {
 	        return true;
 	    }
 	    try {
@@ -26,6 +25,7 @@ public class ValidateUtilsImpl implements ValidateUtils {
 	    return true;
 	}
 	
+	//FALTA ACLARAR 
 	public boolean isString(String str) {
 		 if (str.equalsIgnoreCase("")) {
 		        return false;
@@ -46,29 +46,17 @@ public class ValidateUtilsImpl implements ValidateUtils {
 	}
 	
 	
-	public boolean isSummaryModelValue(String s, SummaryType summaryPerYear) {
-	return isSummaryObject(s, summaryPerYear) || isNumOrEmpty(s);
+	public boolean isSummaryModelValue(String string) {
+	return  isNumOrEmpty(string) || isSummaryObject(string) ;
 	}
 	
-	//DEBE FILTRAR POR TYPE SUMMARY
-	public  boolean isSummaryObject(String obj,SummaryType summaryPerYear) {
-		boolean response = false;
-		
-		switch(summaryPerYear) {
-		
-		case FS -> { response = Arrays.asList(FinancialSummary.values()).stream()
-			.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj)); }
-		
-		case BAL -> {
-			response = Arrays.asList(BalanceSheet.values()).stream()
-					.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj)); 
-		}
-		
-		}
-		
-		return response;
-	}
 	
+	public boolean isSummaryObject(String obj) {
+
+		return Arrays.asList(FinancialSummary.values()).stream()
+				.anyMatch(item -> item.getTitle().equalsIgnoreCase(obj));
+
+	}
 	
 	public boolean isDate(String s) {
 
@@ -80,5 +68,7 @@ public class ValidateUtilsImpl implements ValidateUtils {
 
 		return true;
 	}
+
+	
 	
 }
