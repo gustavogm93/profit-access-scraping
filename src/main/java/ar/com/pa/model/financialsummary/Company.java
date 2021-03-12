@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 import ar.com.pa.model.FetchOperation;
-import ar.com.pa.model.Profile;
+import ar.com.pa.model.Industry;
 import lombok.Data;
 
 @Data
@@ -17,13 +17,13 @@ public class Company {
 	@Id
 	String id;
 	
-	String name;
+	String title;
 
-	Profile profile;
+	Industry profile;
 
 	FetchOperation fetchOperation;
 
-	FinancialSummaryDTO financialSummary;
+	FinancialSummary financialSummary;
 
 	Date lastUpdate;
 

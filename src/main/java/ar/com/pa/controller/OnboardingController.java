@@ -2,9 +2,7 @@ package ar.com.pa.controller;
 
 import ar.com.pa.model.CompanyOperationMessage;
 import ar.com.pa.model.FetchOperation;
-import ar.com.pa.model.financialsummary.Summary;
 import ar.com.pa.services.CompanyService;
-
 import ar.com.pa.utils.ValidateUtilsImpl;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "OnboardingState API")
 @Slf4j
 @Data
-public class OnboardingController <T extends Summary> {	
+public class OnboardingController{	
 
     private CompanyService companyService;
     
@@ -41,7 +39,7 @@ public class OnboardingController <T extends Summary> {
     @GetMapping
     public void findGlobalLeads() throws Exception{ 
 		CompanyOperationMessage companyOperationMessage = new CompanyOperationMessage();
-		companyOperationMessage.setTitle("Bank-of-america");
+		companyOperationMessage.setTitle("chimimport-ad-company");
 		companyOperationMessage.setScrappingCode("41535");
 		companyService.saveFromScratch(companyOperationMessage);
 		System.out.println("---------------------------------------------------------------------");

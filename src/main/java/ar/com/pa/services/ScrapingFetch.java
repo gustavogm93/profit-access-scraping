@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import ar.com.pa.enums.utils.SummaryType;
 import ar.com.pa.model.Instrument;
 import ar.com.pa.model.financialsummary.Company;
 
@@ -20,7 +19,9 @@ public interface ScrapingFetch{
 		
 	public String buildSummaryUrl(String codeCompany);
 
-	public String generateCompanyCodeUrl(String companyTitle);
+	public String buildProfileUrl(String companyTitle);
+	
+	public String buildCompanyCodeUrl(String companyTitle);
 	
 	public String getScrapingCodeByCompanyTitle(String companyCode);
 	

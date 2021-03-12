@@ -4,9 +4,8 @@ package ar.com.pa.services;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,8 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ar.com.pa.enums.utils.ScrappingConstant;
-import ar.com.pa.enums.utils.SummaryType;
+import ar.com.pa.model.FetchOperation;
 import ar.com.pa.model.Instrument;
+import ar.com.pa.model.Profile;
 import ar.com.pa.model.financialsummary.Company;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
@@ -32,7 +32,6 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 	private String titleSummary = "";
 
     private static int dateIndex = 4;
-    private static int maxPeriodLength = 4;
     
     private ValidateUtils validateUtils;
     
@@ -76,7 +75,7 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 
 		Document doc;
 		try {
-			doc = Jsoup.connect(generateCompanyCodeUrl(companyTitle)).get();
+			doc = Jsoup.connect(buildCompanyCodeUrl(companyTitle)).get();
 			
 			Element element = doc.select("div[data-pair-id]").first();
 
@@ -91,8 +90,32 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 		}
 	}
 	
+	
+	public HashMap<String,String> getCompanyProfileByCompanyTitle(String companyTitle, Profile profile) {
+		
+		Document doc;
+		try {
+			doc = Jsoup.connect(buildProfileUrl(companyTitle)).get();
+			
+			Element elementIndustry = doc.select(":containsOwn(Industry)").first();
+			Element elementSector = doc.select(":containsOwn(Sector)").first();
+
+			
+			
+			 return profileCompanyScraped;
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+			return null;
+			
+		}
+	}
+	
+	
+	
+	
 	@Override
-	public String generateCompanyCodeUrl(String companyTitle) {
+	public String buildCompanyCodeUrl(String companyTitle) {
 		
 		StringBuilder companyCode = new StringBuilder();
 		
@@ -109,6 +132,16 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 		StringBuilder summaryUrl = new StringBuilder();
 
 		summaryUrl.append(ScrappingConstant.fixUrl.replace("#", codeCompany));
+
+		return summaryUrl.toString();
+	}
+	
+	@Override
+	public String buildProfileUrl(String companyTitle) {
+
+		StringBuilder summaryUrl = new StringBuilder();
+
+		summaryUrl.append(ScrappingConstant.profileURl.replace("#", companyTitle));
 
 		return summaryUrl.toString();
 	}
