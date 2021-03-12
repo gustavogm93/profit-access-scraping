@@ -38,19 +38,19 @@ The architecture of the company's queues consists of two queues, each queue will
  It is the first step, it is responsible for sending the initial message, and the receiver takes
  this message to build the companyOperation Object
  
-   -Message: {companyTitle: “Bank-of-America” }
+   - Message: {companyTitle: “Bank-of-America” }
    
-   -Listener: @JmsListener CompanyOperation.create();
+   - Listener: @JmsListener CompanyOperation.create();
 
 
 
 ### CompanyOperationQueue                                   
-It is responsible for sending CompanyOperation, listener executes according to the status of CompanyOperation 
-for fetch missing or failed summaries and fill Company Object 
+It is responsible for sending CompanyOperation, listener executes according to the status of
+CompanyOperation for fetch missing or failed summaries and fill Company Object 
 
-   -Message: {CompanyCode = 243, CompanyState: FINANCIALSUMMARY_FAILED}
+   - Message: {CompanyCode = 243, CompanyState: FINANCIALSUMMARY_FAILED}
    
-   -Listener @JmsListener Company.save();
+   - Listener @JmsListener Company.save();
    
    
    
