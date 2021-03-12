@@ -39,6 +39,7 @@ The architecture of the company's queues consists of two queues, each queue will
  this message to build the companyOperation Object
  
    -Message: {companyTitle: “Bank-of-America” }
+   
    -Listener: @JmsListener CompanyOperation.create();
 
 
@@ -48,6 +49,7 @@ It is responsible for sending CompanyOperation, listener executes according to t
 for fetch missing or failed summaries and fill Company Object 
 
    -Message: {CompanyCode = 243, CompanyState: FINANCIALSUMMARY_FAILED}
+   
    -Listener @JmsListener Company.save();
    
    
