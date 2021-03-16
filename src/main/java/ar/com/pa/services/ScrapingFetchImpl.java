@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ar.com.pa.enums.utils.ScrappingConstant;
 import ar.com.pa.model.FetchOperation;
+import ar.com.pa.model.Industry;
 import ar.com.pa.model.Instrument;
 import ar.com.pa.model.financialsummary.Company;
 import ar.com.pa.utils.MapperUtils;
