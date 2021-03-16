@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import ar.com.pa.enums.utils.ScrappingConstant;
 import ar.com.pa.model.FetchOperation;
 import ar.com.pa.model.Instrument;
-import ar.com.pa.model.Profile;
 import ar.com.pa.model.financialsummary.Company;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
@@ -91,7 +90,7 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 	}
 	
 	
-	public HashMap<String,String> getCompanyProfileByCompanyTitle(String companyTitle, Profile profile) {
+	public HashMap<String,String> getCompanyProfileByCompanyTitle(String companyTitle, Industry industry) {
 		
 		Document doc;
 		try {

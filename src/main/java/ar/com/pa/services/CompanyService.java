@@ -3,6 +3,7 @@ package ar.com.pa.services;
 
 import ar.com.pa.model.CompanyOperationMessage;
 import ar.com.pa.model.FetchOperation;
+import ar.com.pa.model.Industry;
 import ar.com.pa.model.Instrument;
 import ar.com.pa.model.Profile;
 import ar.com.pa.model.StarterMessage;
@@ -42,7 +43,8 @@ public class CompanyService {
 
 		try {		
 			Company company = new Company();
-			Profile profile = new Profile();
+			Industry profile = new Industry();
+			
 			FetchOperation fetchOperation = new FetchOperation();
 
 			if (Objects.nonNull(companyOperationMessage.getIdCompany())) {}

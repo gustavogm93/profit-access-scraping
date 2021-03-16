@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 import ar.com.pa.model.FetchOperation;
 import ar.com.pa.model.Industry;
+import ar.com.pa.model.Market;
 import lombok.Data;
 
 @Data
@@ -19,7 +20,9 @@ public class Company {
 	
 	String title;
 
-	Industry profile;
+	Market market;
+	
+	Industry industry;
 
 	FetchOperation fetchOperation;
 
