@@ -101,8 +101,7 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 			Element elementSector = doc.select(":containsOwn(Sector)").first();
 
 			
-			
-			 return profileCompanyScraped;
+			 return null;
 		} catch (IOException e) {
 			
 			e.printStackTrace();

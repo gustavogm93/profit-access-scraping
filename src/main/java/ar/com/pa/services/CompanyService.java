@@ -5,7 +5,6 @@ import ar.com.pa.model.CompanyOperationMessage;
 import ar.com.pa.model.FetchOperation;
 import ar.com.pa.model.Industry;
 import ar.com.pa.model.Instrument;
-import ar.com.pa.model.Profile;
 import ar.com.pa.model.StarterMessage;
 import ar.com.pa.model.financialsummary.*;
 import java.time.LocalDate;

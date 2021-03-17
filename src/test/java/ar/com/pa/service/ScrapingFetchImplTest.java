@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import ar.com.pa.model.financialsummary.FinancialSummaryDTO;
+
 import ar.com.pa.service.mock.constantMock;
 import ar.com.pa.services.ScrapingFetchImpl;
 import ar.com.pa.utils.MapperUtils;

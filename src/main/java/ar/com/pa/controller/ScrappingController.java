@@ -2,6 +2,7 @@ package ar.com.pa.controller;
 
 import ar.com.pa.model.CompanyOperationMessage;
 import ar.com.pa.services.CompanyService;
+import ar.com.pa.services.ScrapingConstantImpl;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,17 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/onboarding/stats")
-@Tag(name = "OnboardingState API")
+@RequestMapping("/scrapping")
+@Tag(name = "Scrapping API")
 @Slf4j
 @Data
-public class OnboardingController{	
+public class ScrappingController{	
 
-    private CompanyService companyService;
+    private ScrapingConstantImpl scrapingConstantImpl;
     
     @Autowired
-    public OnboardingController(CompanyService companyService) {
-		this.companyService = companyService;
+    public ScrappingController(ScrapingConstantImpl scrapingConstantImpl) {
+		this.scrapingConstantImpl = scrapingConstantImpl;
 		
 	}
     
@@ -34,16 +35,9 @@ public class OnboardingController{
 			@ApiResponse(responseCode = "500", description = "Internal Server Error")
 	})	
     @GetMapping
-    public void findGlobalLeads() throws Exception{ 
-		/*
-		CompanyOperationMessage companyOperationMessage = new CompanyOperationMessage();
-		companyOperationMessage.setTitle("chimimport-ad-company");
-		companyOperationMessage.setScrappingCode("41535");
-		companyService.saveFromScratch(companyOperationMessage);
-		System.out.println("---------------------------------------------------------------------");
-		//doke.getHtmlDocument("https://www.investing.com/equities/coca-cola-co-financial-summary");
-		
-		*/
+    public void getCountryEnum() throws Exception{ 
+
+		scrapingConstantImpl.getCountryConstant();
 	}
 
 	
