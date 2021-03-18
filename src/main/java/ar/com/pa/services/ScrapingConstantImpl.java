@@ -1,12 +1,11 @@
 package ar.com.pa.services;
 
-import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ImmutableMap;
 
+import ar.com.pa.utils.SerializeImpl;
 import io.vavr.control.Try;
 
 @Service
@@ -31,17 +31,15 @@ public class ScrapingConstantImpl {
 
 		logger.info("Getting Countries Enum");
 
-		ImmutableMap<String, String> immutableMap = ImmutableMap.of("1", "Americas", "2", "Europe", "3", "Asia-Pacific",
-				"4", "Middle-East", "5", "Africa");
+		ImmutableMap<String, String> regionsMap = ImmutableMap.of("1", "Americas", "2", "Europe", "3", "Asia-Pacific",
+																				  "4", "Middle-East", "5", "Africa");
 
 		Try<Document> doc = Try.of(() -> Jsoup.connect("https://www.investing.com/equities/").get());
 
 		doc.onSuccess(data -> {
-
-			for (Entry<String, String> region : immutableMap.entrySet()) {
-				saveCountriesByRegion(data, region);
-			}
-
+			
+			regionsMap.entrySet().stream().forEach((region)-> saveCountriesByRegion(data,region));	
+			
 		});
 
 		doc.onFailure(ex -> {
@@ -53,31 +51,35 @@ public class ScrapingConstantImpl {
 	public void saveCountriesByRegion(Document data, Entry<String, String> region) {
 
 		String idElement = String.format("#cdregion%s", region.getKey());
-		StringBuilder countryAndCode = new StringBuilder();
 
 		Element regionElements = data.select(idElement).first();
 		Elements elements = regionElements.select("a");
 
-		for (Element element : elements) {
-			getCountryEnumFormat(element,countryAndCode);
-		}
+		Set<String> countriesAndCodes = elements.stream().map(this::getCountryEnumFormat).collect(Collectors.toSet());
 
-		System.out.println(countryAndCode.toString());
+		SerializeImpl.save(countriesAndCodes, "d");
 	}
 
-	public void getCountryEnumFormat(Element element, StringBuilder countryAndCode) {
+	public String getCountryEnumFormat(Element element) {
 
 		String urlCountry = element.attr("href");
 		String titleCountry = element.text();
+
+		
 		if (Objects.nonNull(urlCountry) && urlCountry.contains("/equities/")) {
 			
 			String[] matcherUrl = Arrays.copyOfRange(urlCountry.split("/"), 2, 3);
 
-			String enumFormat = String.format("%s(\"%s\"),", titleCountry.replaceAll("\\s", ""), matcherUrl[0]);
+			String enumFormat = String.format("%s(\"%s\"), \n", titleCountry.replaceAll("\\s", ""), matcherUrl[0]);
 
-			countryAndCode.append(enumFormat);
+			return enumFormat;
+		}else {
+			return "";
 		}
 
+	
+		
 	}
+
 	
 }

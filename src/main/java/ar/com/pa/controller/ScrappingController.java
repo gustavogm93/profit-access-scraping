@@ -1,20 +1,17 @@
 package ar.com.pa.controller;
 
-import ar.com.pa.model.CompanyOperationMessage;
-import ar.com.pa.services.CompanyService;
+
 import ar.com.pa.services.ScrapingConstantImpl;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/scrapping")
 @Tag(name = "Scrapping API")
-@Slf4j
 @Data
 public class ScrappingController{	
 
