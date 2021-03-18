@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ImmutableMap;
@@ -23,7 +24,10 @@ import io.vavr.control.Try;
 public class ScrapingConstantImpl {
 
 	private static final Logger logger = LoggerFactory.getLogger(ScrapingConstantImpl.class);
-
+	
+	@Autowired
+	SerializeImpl serializeImpl;
+	
 	public ScrapingConstantImpl() {
 	};
 
@@ -56,8 +60,8 @@ public class ScrapingConstantImpl {
 		Elements elements = regionElements.select("a");
 
 		Set<String> countriesAndCodes = elements.stream().map(this::getCountryEnumFormat).collect(Collectors.toSet());
-
-		SerializeImpl.save(countriesAndCodes, "d");
+		
+		serializeImpl.save(countriesAndCodes, region.getValue());
 	}
 
 	public String getCountryEnumFormat(Element element) {

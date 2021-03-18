@@ -1,7 +1,6 @@
-package ar.com.pa.model.financialsummary;
+package ar.com.pa.model.company;
 
 import java.util.List;
-import ar.com.pa.model.Instrument;
 import lombok.Data;
 
 @Data

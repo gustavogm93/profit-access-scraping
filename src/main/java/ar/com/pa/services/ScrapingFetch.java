@@ -5,9 +5,8 @@ import java.time.LocalDate;
 import java.util.List;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import ar.com.pa.model.Instrument;
-import ar.com.pa.model.financialsummary.Company;
-
+import ar.com.pa.model.company.Instrument;
+import ar.com.pa.model.company.Company;
 
 public interface ScrapingFetch{ 
 

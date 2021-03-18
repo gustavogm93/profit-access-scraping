@@ -1,6 +1,6 @@
 package ar.com.pa.controller;
 
-import ar.com.pa.model.CompanyOperationMessage;
+import ar.com.pa.model.queue.CompanyOperationMessage;
 import ar.com.pa.services.CompanyService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

@@ -1,4 +1,4 @@
-package ar.com.pa.model;
+package ar.com.pa.model.company;
 
 import lombok.Data;
 
@@ -8,6 +8,5 @@ public class Industry {
 	String title;
 	
 	String sector;
-
 
 }

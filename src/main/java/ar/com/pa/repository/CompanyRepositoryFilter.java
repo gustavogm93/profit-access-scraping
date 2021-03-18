@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import ar.com.pa.model.financialsummary.Company;
+import ar.com.pa.model.company.Company;
 
 @Repository
 public class CompanyRepositoryFilter {

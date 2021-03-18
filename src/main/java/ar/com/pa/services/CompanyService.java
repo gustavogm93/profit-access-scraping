@@ -1,12 +1,14 @@
 package ar.com.pa.services;
 
 
-import ar.com.pa.model.CompanyOperationMessage;
-import ar.com.pa.model.FetchOperation;
-import ar.com.pa.model.Industry;
-import ar.com.pa.model.Instrument;
-import ar.com.pa.model.StarterMessage;
-import ar.com.pa.model.financialsummary.*;
+import ar.com.pa.model.company.Flow;
+import ar.com.pa.model.company.Industry;
+import ar.com.pa.model.company.Instrument;
+import ar.com.pa.model.company.Company;
+
+import ar.com.pa.model.queue.CompanyOperationMessage;
+import ar.com.pa.model.queue.StarterMessage;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,17 +46,17 @@ public class CompanyService {
 			Company company = new Company();
 			Industry profile = new Industry();
 			
-			FetchOperation fetchOperation = new FetchOperation();
+			Flow flow = new Flow();
 
 			if (Objects.nonNull(companyOperationMessage.getIdCompany())) {}
 			 /// BUSCAR EN LA BASE DE DATOS E ASIGNARLES EL VALOR A COMPANY Y FETCH
 			else {
-				fetchOperation.setTitle(companyOperationMessage.getTitle());
-				fetchOperation.setCode(companyOperationMessage.getScrappingCode());
-				company.setFetchOperation(fetchOperation);
+				flow.setTitle(companyOperationMessage.getTitle());
+				flow.setCode(companyOperationMessage.getScrappingCode());
+				company.setFetchOperation(flow);
 			}			
 			
-				ScrapingFetch.getCompanyProfileByCompanyTitle(fetchOperation.getTitle(), profile);
+				ScrapingFetch.getCompanyProfileByCompanyTitle(flow.getTitle(), profile);
 
 				List<LocalDate> summaryPeriodTime = new ArrayList<>();
 
@@ -90,7 +92,7 @@ public class CompanyService {
 	
 	public void create(StarterMessage starterMessage) {
 		
-		FetchOperation fetchOperation = new FetchOperation();
+		Flow fetchOperation = new Flow();
 		
 		fetchOperation.setTitle(starterMessage.getCompanyTitle());
 		
@@ -100,7 +102,7 @@ public class CompanyService {
 		sender(fetchOperation);
 	}
 	
-	public void sender(FetchOperation companyOperation) {
+	public void sender(Flow companyOperation) {
 			
 	
 		}

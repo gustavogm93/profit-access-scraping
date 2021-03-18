@@ -1,7 +1,6 @@
-package ar.com.pa.model;
+package ar.com.pa.model.company;
 
 import java.time.LocalDate;
-import java.util.Date;
 import lombok.Data;
 
 @Data

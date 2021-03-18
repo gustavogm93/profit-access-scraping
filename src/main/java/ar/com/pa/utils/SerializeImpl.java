@@ -1,5 +1,6 @@
 package ar.com.pa.utils;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -7,19 +8,27 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import io.vavr.control.Try;
 
-
+@Service
 public class SerializeImpl {
 
-	private static final Logger logger = LoggerFactory.getLogger(SerializeImpl.class);
 	
-	public static void save(Set<String> obj, String path){
+	@Value("${enum.path}")
+	private String enumPath;
+	
+	private final Logger logger = LoggerFactory.getLogger(SerializeImpl.class);
+	
+	public void save(Set<String> obj, String path){
 
-		logger.info(String.format("Save in:%s ", path));
+		logger.info(String.format("Save .txt in:%s ", path));
 		
-		Try<PrintWriter> pw = Try.of(() -> new PrintWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8")));
+		File enumPath = new File(getEnumPath() + path + ".txt");
+	
+		Try<PrintWriter> pw = Try.of(() -> new PrintWriter(new OutputStreamWriter(new FileOutputStream(enumPath), "UTF-8")));
 		
 		pw.onSuccess(data -> {
 
@@ -31,5 +40,9 @@ public class SerializeImpl {
 			logger.error(ex.toString());
 		});
 		
+	}
+
+		public String getEnumPath(){
+		return this.enumPath;
 	}
 }

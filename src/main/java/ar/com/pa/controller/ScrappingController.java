@@ -23,7 +23,7 @@ public class ScrappingController{
 		
 	}
     
-	@io.swagger.v3.oas.annotations.Operation(summary = "Get onboarding state", description = "Get number of people with leads on onboarding state")
+	@io.swagger.v3.oas.annotations.Operation(summary = "", description = "")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized"),

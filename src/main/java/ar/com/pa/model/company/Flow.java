@@ -1,10 +1,8 @@
-package ar.com.pa.model;
+package ar.com.pa.model.company;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import org.jsoup.select.Elements;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import ar.com.pa.enums.utils.SummaryType;
@@ -12,7 +10,7 @@ import lombok.Data;
 
 @Data
 @Document(collection="FetchOperation")
-public class FetchOperation {
+public class Flow {
 	
 String title;
 String code;
@@ -26,6 +24,6 @@ HashMap<SummaryType, String> urlList;
 
 boolean tempError = false;
 
-public FetchOperation() {}
+public Flow() {}
 
 }
