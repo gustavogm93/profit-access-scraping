@@ -1,19 +1,11 @@
 package ar.com.pa.model;
 
-import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Component;
-import lombok.Data;
+public class MarketIndex extends Property{
 
-@Document(collection = "MarketIndex")
-@Component
-@Data
-public class MarketIndex {
+	public MarketIndex() {
+		super();
+	}
 	
-	@Id
-	String id;
-	String country;
-	List<StockIndex> stockIndex;
+	
 }

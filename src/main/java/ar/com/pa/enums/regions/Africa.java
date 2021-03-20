@@ -1,40 +1,47 @@
 package ar.com.pa.enums.regions;
 
-public enum Africa {
+public class Africa extends Regions implements RegionsI {
 	
-	Botswana("botswana"),
+	protected final String Rwanda = "rwanda"; 
 
-	Nigeria("nigeria"),
+	protected final String SouthAfrica = "south-africa"; 
 
-	CoteD_Ivoire("ivory-coast"),
+	protected final String CoteD_Ivoire = "ivory-coast"; 
 
-	SouthAfrica("south-africa"),
+	protected final String Namibia = "namibia"; 
 
-	Tunisia("tunisia"),
+	protected final String Nigeria = "nigeria"; 
 
-	Zambia("zambia"),
+	protected final String Morocco = "morocco"; 
 
-	Kenya("kenya"),
+	protected final String AfricaMarketOverview = "africa"; 
 
-	Rwanda("rwanda"),
+	protected final String Kenya = "kenya"; 
 
-	Tanzania("tanzania"),
+	protected final String Tanzania = "tanzania"; 
 
-	Morocco("morocco"),
+	protected final String Botswana = "botswana"; 
 
-	Zimbabwe("zimbabwe"),
+	protected final String Zimbabwe = "zimbabwe"; 
 
-	Namibia("namibia"),
+	protected final String Zambia = "zambia"; 
 
-	Malawi("malawi"),
+	protected final String Malawi = "malawi"; 
 
-	Uganda("uganda"),
+	protected final String Mauritius = "mauritius"; 
 
-	Mauritius("mauritius");
+	protected final String Tunisia = "tunisia"; 
 
-	public String title;
+	protected final String Uganda = "uganda"; 
 
-	Africa(String title) {
-		this.title = title;
+	Africa(String title) {}
+
+
+
+	@Override
+	public RegionsI getCountries(RegionsI region) {
+		// TODO Auto-generated method stub
+		return null;
 	};
+	
 }

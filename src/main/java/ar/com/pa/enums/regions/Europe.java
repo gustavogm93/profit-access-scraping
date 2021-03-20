@@ -1,80 +1,82 @@
 package ar.com.pa.enums.regions;
 
-public enum Europe {
+public class Europe {
 
-	Spain("spain"),
+	protected final String Ukraine = "ukraine"; 
 
-	UnitedKingdom("united-kingdom"),
+	protected final String Latvia = "latvia"; 
 
-	Slovakia("slovakia"),
+	protected final String Poland = "poland"; 
 
-	Austria("austria"),
+	protected final String UnitedKingdom = "united-kingdom"; 
 
-	Montenegro("montenegro"),
+	protected final String Iceland = "iceland"; 
 
-	Russia("russia"),
+	protected final String Bulgaria = "bulgaria"; 
 
-	Estonia("estonia"),
+	protected final String Hungary = "hungary"; 
 
-	Netherlands("netherlands"),
+	protected final String Spain = "spain"; 
 
-	Cyprus("cyprus"),
+	protected final String CzechRepublic = "czech-republic"; 
 
-	Germany("germany"),
+	protected final String Cyprus = "cyprus"; 
 
-	Iceland("iceland"),
+	protected final String Portugal = "portugal"; 
 
-	Turkey("turkey"),
+	protected final String Slovakia = "slovakia"; 
 
-	Portugal("portugal"),
+	protected final String Serbia = "serbia"; 
 
-	Ukraine("ukraine"),
+	protected final String Romania = "romania"; 
 
-	Greece("greece"),
+	protected final String Montenegro = "montenegro"; 
 
-	Finland("finland"),
+	protected final String Belgium = "belgium"; 
 
-	Hungary("hungary"),
+	protected final String Lithuania = "lithuania"; 
 
-	Sweden("sweden"),
+	protected final String Netherlands = "netherlands"; 
 
-	Italy("italy"),
+	protected final String Ireland = "ireland"; 
 
-	Slovenia("slovenia"),
+	protected final String Sweden = "sweden"; 
 
-	Belgium("belgium"),
+	protected final String Switzerland = "switzerland"; 
 
-	CzechRepublic("czech-republic"),
+	protected final String Estonia = "estonia"; 
 
-	Luxembourg("luxembourg"),
+	protected final String Bosnia_Herzegovina = "bosnia"; 
 
-	Ireland("ireland"),
+	protected final String Luxembourg = "luxembourg"; 
 
-	Croatia("croatia"),
+	protected final String Italy = "italy"; 
 
-	BosniaHerzegovina("bosnia"),
+	protected final String Croatia = "croatia"; 
 
-	Norway("norway"),
+	protected final String EuropeMarketOverview = "europe"; 
 
-	Serbia("serbia"),
+	protected final String Norway = "norway"; 
 
-	Romania("romania"),
+	protected final String Slovenia = "slovenia"; 
 
-	France("france"),
+	protected final String Russia = "russia"; 
 
-	Poland("poland"),
+	protected final String Denmark = "denmark"; 
 
-	Malta("malta"),
+	protected final String France = "france"; 
 
-	Switzerland("switzerland"),
+	protected final String Malta = "malta"; 
 
-	Bulgaria("bulgaria"),
+	protected final String Greece = "greece"; 
 
-	Latvia("latvia"),
+	protected final String Turkey = "turkey"; 
 
-	Denmark("denmark"),
+	protected final String Austria = "austria"; 
 
-	Lithuania("lithuania");
+	protected final String Germany = "germany"; 
+
+	protected final String Finland = "finland"; 
 
 	public String title;
 

@@ -42,6 +42,13 @@ public class SerializeImpl {
 		
 	}
 
+	
+	public void print(Set<String> obj) {
+		
+		obj.stream().forEach(System.out::println);
+	}
+	
+	
 		public String getEnumPath(){
 		return this.enumPath;
 	}

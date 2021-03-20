@@ -1,35 +1,33 @@
 package ar.com.pa.enums.regions;
 
-public enum MiddleEast {
+public class MiddleEast {
 	
-	Israel("israel"), 
+	protected final String Iraq = "iraq"; 
 
-	Jordan("jordan"), 
+	protected final String UnitedArabEmirates = "dubai"; 
 
-	Oman("oman"), 
+	protected final String Israel = "israel"; 
 
-	Kuwait("kuwait"), 
+	protected final String Qatar = "qatar"; 
 
-	Egypt("egypt"), 
+	protected final String Egypt = "egypt"; 
 
-	Qatar("qatar"), 
+	protected final String MiddleEastMarketOverview = "middle-east"; 
 
-	SaudiArabia("saudi-arabia"), 
+	protected final String Kuwait = "kuwait"; 
 
-	Lebanon("lebanon"), 
+	protected final String Oman = "oman"; 
 
-	Iraq("iraq"), 
+	protected final String Jordan = "jordan"; 
 
-	PalestinianTerritory("palestine"), 
+	protected final String SaudiArabia = "saudi-arabia"; 
 
-	UnitedArabEmirates("dubai"), 
+	protected final String Bahrain = "bahrain"; 
 
-	Bahrain("bahrain");
-	
+	protected final String Lebanon = "lebanon"; 
 
-	public String title;
+	protected final String PalestinianTerritory = "palestine"; 
 
-	MiddleEast(String title) {
-		this.title = title;
-	};
+
+	MiddleEast(String title) {};
 }

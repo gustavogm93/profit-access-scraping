@@ -6,7 +6,6 @@ import lombok.Data;
 public class Market {
 
 	String Index; 
-	String Country;
 	String Currency;
 
 	

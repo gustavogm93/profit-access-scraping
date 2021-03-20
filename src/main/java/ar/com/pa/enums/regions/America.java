@@ -1,24 +1,29 @@
 package ar.com.pa.enums.regions;
 
-public enum America {
+public class America {
 
-	Argentina("argentina"), 
+	protected final String CostaRica = "costa-rica"; 
 
-	Mexico("mexico"), 
+	protected final String Colombia = "colombia"; 
 
-	Colombia("colombia"), 
+	protected final String Chile = "chile"; 
 
-	Canada("canada"), 
+	protected final String Venezuela = "venezuela"; 
 
-	Chile("chile"), 
+	protected final String Brazil = "brazil"; 
 
-	Brazil("brazil"), 
+	protected final String Peru = "peru"; 
 
-	UnitedStates("united-states"), 
+	protected final String Argentina = "argentina"; 
 
-	Jamaica("jamaica"), 
+	protected final String Canada = "canada"; 
 
-	Venezuela("venezuela");
+	protected final String UnitedStates = "united-states"; 
+
+	protected final String Mexico = "mexico"; 
+
+	protected final String Jamaica = "jamaica"; 
+
 	
 	public String title;
 	

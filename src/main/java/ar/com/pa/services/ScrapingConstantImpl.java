@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ImmutableMap;
 
+import ar.com.pa.enums.regions.Regions;
 import ar.com.pa.utils.SerializeImpl;
 import io.vavr.control.Try;
 
@@ -56,34 +57,68 @@ public class ScrapingConstantImpl {
 
 		String idElement = String.format("#cdregion%s", region.getKey());
 
-		Element regionElements = data.select(idElement).first();
-		Elements elements = regionElements.select("a");
+		Elements regionElements = data.select(idElement).first().select("a");
 
-		Set<String> countriesAndCodes = elements.stream().map(this::getCountryEnumFormat).collect(Collectors.toSet());
+		Set<String> countriesAndCodes = regionElements.stream().map(this::getCountryEnumFormat).collect(Collectors.toSet());
 		
-		serializeImpl.save(countriesAndCodes, region.getValue());
+		System.out.println("--------------------------------------" + region.getValue());
+		serializeImpl.print(countriesAndCodes);
+		
 	}
 
 	public String getCountryEnumFormat(Element element) {
 
 		String urlCountry = element.attr("href");
 		String titleCountry = element.text();
-
 		
 		if (Objects.nonNull(urlCountry) && urlCountry.contains("/equities/")) {
 			
 			String[] matcherUrl = Arrays.copyOfRange(urlCountry.split("/"), 2, 3);
 
-			String enumFormat = String.format("%s(\"%s\"), \n", titleCountry.replaceAll("\\s", ""), matcherUrl[0]);
+			String enumFormat = String.format("private final String %s = \"%s\"; \n", titleCountry.replaceAll("\\s", ""), matcherUrl[0]);
 
 			return enumFormat;
 		}else {
 			return "";
 		}
 
-	
-		
 	}
+	
+	public void saveMarketIndex(Regions region) {
+		
+		
+		
+			Try<Document> doc = Try.of(() -> Jsoup.connect("https://www.investing.com/equities/argentina").get());
 
+		doc.onSuccess(data -> {
+			
+			Elements regionElements = data.select("#stocksFilter"); 
+			
+			
+		});
+		
+
+	}
+	
+	
+	
+	
+	public void getMarketIndex(Document data) {
+		
+		
+	
+
+		}
+	public void getStockIndex(Document data) {
+		
+		
+		
+
+	}
+	
+	
+
+	
+	
 	
 }
