@@ -1,6 +1,10 @@
 package ar.com.pa.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
@@ -10,5 +14,8 @@ import lombok.Data;
 @Component
 public class RegionDTO {
 
-	Region region;
+	@MongoId(targetType = FieldType.STRING)
+	private String id;
+	private String title;
+	private List<Country> countries = new ArrayList<>();
 }

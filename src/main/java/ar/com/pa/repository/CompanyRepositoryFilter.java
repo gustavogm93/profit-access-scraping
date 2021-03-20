@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import ar.com.pa.model.company.Company;
+import ar.com.pa.model.company.CompanyDTO;
 
 @Repository
 public class CompanyRepositoryFilter {
@@ -20,11 +20,11 @@ public class CompanyRepositoryFilter {
 		this.mongoTemplate = mongoTemplate;
 	}
 
-	public List<Company> findBy( String column , String value ) {
+	public List<CompanyDTO> findBy( String column , String value ) {
 		Query query = new Query();
 		Criteria columnCriteria = Criteria.where( column ).is( value );
 		query.addCriteria( columnCriteria );
-		return this.mongoTemplate.find( query , Company.class );
+		return this.mongoTemplate.find( query , CompanyDTO.class );
 	}
 	
 

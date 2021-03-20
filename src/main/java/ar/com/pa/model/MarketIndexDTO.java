@@ -13,8 +13,8 @@ import lombok.Data;
 public class MarketIndexDTO {
 	
 	@Id
-	String id;
-	String country;
-	String countryCode;
-	List<MarketIndex> stockIndex;
+	private String id;
+	private String country;
+	private String countryCode;
+	private List<MarketIndex> stockIndex;
 }

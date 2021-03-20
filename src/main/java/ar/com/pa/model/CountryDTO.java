@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class CountryDTO {
 
-	Country country;
-	Region region;
-	MarketIndex marketIndex;
+	private State state;
+	private Region region;
+	private MarketIndex marketIndex;
 		
 }

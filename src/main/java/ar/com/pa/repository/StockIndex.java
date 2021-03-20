@@ -5,12 +5,12 @@ import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import ar.com.pa.model.MarketIndex;
-import ar.com.pa.model.company.Company;
+import ar.com.pa.model.MarketIndexDTO;
 
 @Repository
-public interface StockIndex extends MongoRepository<MarketIndex, String>{ 
+public interface StockIndex extends MongoRepository<MarketIndexDTO, String>{ 
 
-	Optional<MarketIndex> findById(String id);
+	Optional<MarketIndexDTO> findById(String id);
 	
-	Company save(String id);
+	MarketIndexDTO save(String id);
 }

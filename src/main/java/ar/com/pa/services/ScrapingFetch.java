@@ -6,11 +6,11 @@ import java.util.List;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import ar.com.pa.model.company.Instrument;
-import ar.com.pa.model.company.Company;
+import ar.com.pa.model.company.CompanyDTO;
 
 public interface ScrapingFetch{ 
 
-	public void run(List<LocalDate> summaryPeriodTime, Company company, Document doc);
+	public void run(List<LocalDate> summaryPeriodTime, CompanyDTO company, Document doc);
 	
 	public List<Instrument> getSummaryByPeriod(Elements e,List<Instrument> instrumentList, List<LocalDate> intervalTimeList);
 	
@@ -28,5 +28,5 @@ public interface ScrapingFetch{
 
 	public Instrument fillInstrument(String instrumentValue, List<LocalDate> intervalTimeList);
 	
-	public void saveSummaryCompany(Company company, List<Instrument> instrumentList);
+	public void saveSummaryCompany(CompanyDTO company, List<Instrument> instrumentList);
 }

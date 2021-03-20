@@ -1,11 +1,10 @@
 package ar.com.pa.services;
-
+//TODO Restructurar los nombres de Scrapping de todos
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.Map.Entry;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,10 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.collect.ImmutableMap;
-
-import ar.com.pa.enums.regions.Regions;
+import com.google.common.collect.ImmutableList;
+import ar.com.pa.enums.RegionConstant;
+import ar.com.pa.model.Country;
+import ar.com.pa.model.RegionDTO;
+import ar.com.pa.repository.RegionRepository;
 import ar.com.pa.utils.SerializeImpl;
 import io.vavr.control.Try;
 
@@ -25,26 +25,28 @@ import io.vavr.control.Try;
 public class ScrapingConstantImpl {
 
 	private static final Logger logger = LoggerFactory.getLogger(ScrapingConstantImpl.class);
-	
-	@Autowired
+
 	SerializeImpl serializeImpl;
-	
-	public ScrapingConstantImpl() {
+
+	RegionRepository regionRepository;
+
+	@Autowired
+	public ScrapingConstantImpl(SerializeImpl serializeImpl, RegionRepository regionRepository) {
+		this.serializeImpl = serializeImpl;
+		this.regionRepository = regionRepository;
 	};
 
 	public void getCountryConstant() {
+		logger.info("Getting countries by regions");
 
-		logger.info("Getting Countries Enum");
-
-		ImmutableMap<String, String> regionsMap = ImmutableMap.of("1", "Americas", "2", "Europe", "3", "Asia-Pacific",
-																				  "4", "Middle-East", "5", "Africa");
+		ImmutableList<RegionConstant> regionsMap = ImmutableList.copyOf(Arrays.asList(RegionConstant.values()));
 
 		Try<Document> doc = Try.of(() -> Jsoup.connect("https://www.investing.com/equities/").get());
 
 		doc.onSuccess(data -> {
-			
-			regionsMap.entrySet().stream().forEach((region)-> saveCountriesByRegion(data,region));	
-			
+
+			regionsMap.stream().forEach((region) -> saveCountriesByRegion(data, region));
+
 		});
 
 		doc.onFailure(ex -> {
@@ -53,72 +55,72 @@ public class ScrapingConstantImpl {
 
 	}
 
-	public void saveCountriesByRegion(Document data, Entry<String, String> region) {
+	public void saveCountriesByRegion(Document data, RegionConstant region) {
 
-		String idElement = String.format("#cdregion%s", region.getKey());
+		RegionDTO regionDTO = new RegionDTO();
+		List<Country> countries = getCountryList(data, region);
+		
+		regionDTO.setId(region.getCode());
+		regionDTO.setTitle(region.getTitle());		
+		regionDTO.setCountries(countries);
+		
+		regionRepository.save(regionDTO);
+	}
+
+	public List<Country> getCountryList(Document data, RegionConstant region) {
+
+		String idElement = String.format("#cdregion%s", region.getCode());
 
 		Elements regionElements = data.select(idElement).first().select("a");
 
-		Set<String> countriesAndCodes = regionElements.stream().map(this::getCountryEnumFormat).collect(Collectors.toSet());
-		
-		System.out.println("--------------------------------------" + region.getValue());
-		serializeImpl.print(countriesAndCodes);
-		
+		return regionElements.stream().map(this::findCountriesByElement).distinct().filter(Objects::nonNull)
+				.collect(Collectors.toList());
+
 	}
 
-	public String getCountryEnumFormat(Element element) {
+	private Country findCountriesByElement(Element element) {
 
 		String urlCountry = element.attr("href");
 		String titleCountry = element.text();
-		
-		if (Objects.nonNull(urlCountry) && urlCountry.contains("/equities/")) {
-			
+
+		Country country = new Country();
+
+		if (Objects.nonNull(urlCountry) && urlCountry.contains("/equities/")
+				&& checkisMarketOverview(titleCountry) == false) {
+
 			String[] matcherUrl = Arrays.copyOfRange(urlCountry.split("/"), 2, 3);
 
-			String enumFormat = String.format("private final String %s = \"%s\"; \n", titleCountry.replaceAll("\\s", ""), matcherUrl[0]);
+			country.setCode(matcherUrl[0]);
+			country.setTitle(titleCountry.replaceAll(" ", ""));
 
-			return enumFormat;
-		}else {
-			return "";
+			return country;
+		} else {
+			return null;
 		}
-
 	}
-	
-	public void saveMarketIndex(Regions region) {
-		
-		
-		
-			Try<Document> doc = Try.of(() -> Jsoup.connect("https://www.investing.com/equities/argentina").get());
+
+	public void saveMarketIndex(RegionDTO region) {
+		// TODO GUARDAR EN MARKET TODOS LOS INDEX
+		Try<Document> doc = Try.of(() -> Jsoup.connect("https://www.investing.com/equities/argentina").get());
 
 		doc.onSuccess(data -> {
-			
-			Elements regionElements = data.select("#stocksFilter"); 
-			
-			
+
+			Elements regionElements = data.select("#stocksFilter");
+
 		});
-		
 
 	}
-	
-	
-	
-	
+
+	public boolean checkisMarketOverview(String s) {
+		return s.contains("Market Overview");
+	}
+
 	public void getMarketIndex(Document data) {
-		
-		
-	
-
-		}
-	public void getStockIndex(Document data) {
-		
-		
-		
 
 	}
-	
-	
 
-	
-	
-	
+	public void getStockIndex(Document data) {
+
+	}
+
 }

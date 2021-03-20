@@ -4,7 +4,7 @@ package ar.com.pa.services;
 import ar.com.pa.model.company.Flow;
 import ar.com.pa.model.company.Industry;
 import ar.com.pa.model.company.Instrument;
-import ar.com.pa.model.company.Company;
+import ar.com.pa.model.company.CompanyDTO;
 
 import ar.com.pa.model.queue.CompanyOperationMessage;
 import ar.com.pa.model.queue.StarterMessage;
@@ -43,7 +43,7 @@ public class CompanyService {
 	public void saveFromScratch(CompanyOperationMessage companyOperationMessage) throws Exception {
 
 		try {		
-			Company company = new Company();
+			CompanyDTO company = new CompanyDTO();
 			Industry profile = new Industry();
 			
 			Flow flow = new Flow();

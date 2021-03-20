@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import ar.com.pa.enums.utils.ScrappingConstant;
 import ar.com.pa.model.company.Industry;
 import ar.com.pa.model.company.Instrument;
-import ar.com.pa.model.company.Company;
+import ar.com.pa.model.company.CompanyDTO;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
 import ar.com.pa.utils.ValidateUtils;
@@ -49,7 +49,7 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 
 
 
-	public void run(List<LocalDate> summaryPeriodTime, Company company, Document doc) {
+	public void run(List<LocalDate> summaryPeriodTime, CompanyDTO company, Document doc) {
 
 		logger.info("Scrapping financial Summary into HashMap and return it");
 	
@@ -109,9 +109,8 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 		}
 	}
 	
-	
-	
-	
+
+
 	@Override
 	public String buildCompanyCodeUrl(String companyTitle) {
 		
@@ -272,7 +271,7 @@ public class ScrapingFetchImpl implements ScrapingFetch{
 	}
 
 	
-	public void saveSummaryCompany(Company company, List<Instrument> instrumentList) {
+	public void saveSummaryCompany(CompanyDTO company, List<Instrument> instrumentList) {
 	/*
 		switch(summarie) {
 		

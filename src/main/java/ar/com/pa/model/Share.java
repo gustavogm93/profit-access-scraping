@@ -1,8 +1,8 @@
 package ar.com.pa.model;
 
-public class Share extends Property{
+public class Share extends State{
 
-	public Share() {
+	private Share() {
 		super();
 	}
 }

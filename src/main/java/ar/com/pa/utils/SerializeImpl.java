@@ -8,14 +8,18 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.constructor.Construct;
 
+import ar.com.pa.repository.RegionRepository;
 import io.vavr.control.Try;
 
 @Service
 public class SerializeImpl {
 
+	private RegionRepository regionRepository;
 	
 	@Value("${enum.path}")
 	private String enumPath;
@@ -52,4 +56,7 @@ public class SerializeImpl {
 		public String getEnumPath(){
 		return this.enumPath;
 	}
+		
+		@Autowired
+		public SerializeImpl() {}
 }

@@ -1,8 +1,8 @@
 package ar.com.pa.model;
 
-public class Region extends Property{
+public class Region extends State{
 
-	public Region() {
+	private Region() {
 		super();
 	}
 	

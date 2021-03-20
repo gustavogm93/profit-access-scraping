@@ -10,6 +10,6 @@ import lombok.Data;
 @Component
 public class ShareDTO {
 
-	Share share;
+	private Share share;
 		
 }
