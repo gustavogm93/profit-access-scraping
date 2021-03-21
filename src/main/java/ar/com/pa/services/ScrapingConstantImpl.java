@@ -99,9 +99,9 @@ public class ScrapingConstantImpl {
 		}
 	}
 
-	public void saveMarketIndex(RegionDTO region) {
+	public void saveMarketIndex( ) {
 		// TODO GUARDAR EN MARKET TODOS LOS INDEX
-		Try<Document> doc = Try.of(() -> Jsoup.connect("https://www.investing.com/equities/argentina").get());
+		Try<Document> doc = Try.of(() -> Jsoup.connect("https://www.investing.com/equities/StocksFilter?noconstruct=1&smlID=10141&sid=&tabletype=price&index_id=13317").get());
 
 		doc.onSuccess(data -> {
 

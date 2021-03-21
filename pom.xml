@@ -177,12 +177,24 @@
 			<version>3.19.0</version>
 			<scope>test</scope>
 		</dependency>
-	<!-- https://mvnrepository.com/artifact/io.vavr/vavr -->
+		<!-- https://mvnrepository.com/artifact/io.vavr/vavr -->
+		<dependency>
+			<groupId>io.vavr</groupId>
+			<artifactId>vavr</artifactId>
+			<version>0.10.3</version>
+		</dependency>
 <dependency>
-    <groupId>io.vavr</groupId>
-    <artifactId>vavr</artifactId>
-    <version>0.10.3</version>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>3.141.59</version>
 </dependency>
+<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver -->
+<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-chrome-driver</artifactId>
+    <version>3.141.59</version>
+</dependency>
+
 
 	</dependencies>
 
