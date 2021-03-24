@@ -2,8 +2,9 @@ package ar.com.pa.model;
 
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Component;
 import lombok.Data;
 
@@ -12,9 +13,9 @@ import lombok.Data;
 @Data
 public class MarketIndexDTO {
 	
-	@Id
+	@MongoId(targetType = FieldType.STRING)
 	private String id;
-	private String country;
+	private String title;
 	private String countryCode;
-	private List<MarketIndex> stockIndex;
+	private List<ShareDTO> stockIndex;
 }

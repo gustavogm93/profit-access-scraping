@@ -1,5 +1,9 @@
 package ar.com.pa.enums;
 
+import java.util.Arrays;
+
+
+import com.google.common.collect.ImmutableList;
 
 public enum RegionConstant {
 
@@ -9,8 +13,13 @@ public enum RegionConstant {
 	 Middle_East("4", "Middle-East"),
 	 Africa("5", "Africa");
 	
-	public String code;
-	public String title;
+	public static final ImmutableList<RegionConstant> values = ImmutableList.copyOf(Arrays.asList(RegionConstant.values()));
+	
+	private final String code;
+	
+	private final String title;
+	
+	
 	
 	public String getCode() {
 		return this.code;

@@ -1,7 +1,6 @@
 package ar.com.pa.controller;
 
 import ar.com.pa.services.ScrapingConstantImpl;
-import ar.com.pa.utils.ChromeDriverD;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,13 +15,12 @@ import org.springframework.web.bind.annotation.*;
 public class ScrappingController{	
 
 	
-	 private ChromeDriverD a;
+
     private ScrapingConstantImpl scrapingConstantImpl;
     
     @Autowired
-    public ScrappingController(ScrapingConstantImpl scrapingConstantImpl, ChromeDriverD a) {
+    public ScrappingController(ScrapingConstantImpl scrapingConstantImpl) {
 		this.scrapingConstantImpl = scrapingConstantImpl;
-		this.a = a;
 		
 	}
     
@@ -37,7 +35,7 @@ public class ScrappingController{
     @GetMapping
     public void getCountryEnum() throws Exception{ 
 		
-		a.getInv();
+		scrapingConstantImpl.dsd();
 		//scrapingConstantImpl.saveMarketIndex();
 	}
 
