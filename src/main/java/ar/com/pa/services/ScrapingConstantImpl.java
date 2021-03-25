@@ -5,7 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+
 import java.util.stream.Collectors;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,12 +28,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import ar.com.pa.enums.RegionConstant;
-import ar.com.pa.model.Country;
-import ar.com.pa.model.CountryDTO;
-import ar.com.pa.model.MarketIndexDTO;
-import ar.com.pa.model.RegionDTO;
+
+import ar.com.pa.model.dto.CountryDTO;
+import ar.com.pa.model.dto.MarketIndexDTO;
+import ar.com.pa.model.dto.RegionDTO;
+import ar.com.pa.model.props.CountryProps;
+import ar.com.pa.model.props.CountryProps.Builder;
+import ar.com.pa.model.props.MainProps;
+import ar.com.pa.model.props.RegionProps;
 import ar.com.pa.repository.RegionRepository;
 import ar.com.pa.utils.SeleniumDriver;
 import ar.com.pa.utils.SerializeImpl;
@@ -39,19 +49,18 @@ public class ScrapingConstantImpl {
 
 	private static final Logger logger = LoggerFactory.getLogger(ScrapingConstantImpl.class);
 
-	SerializeImpl serializeImpl;
+	private RegionRepository regionRepository;
 
-	RegionRepository regionRepository;
-	
-	final SeleniumDriver seleniumDriver;
-	
+	private SeleniumDriver seleniumDriver;
+
 	final static ImmutableList<RegionConstant> regions = RegionConstant.values;
-	
+
+	// TODO regions and countrys collections
+	// TODO element collections
 	final static String urlWeb = "https://www.investing.com/equities/";
-	
+
 	@Autowired
-	public ScrapingConstantImpl(SerializeImpl serializeImpl, RegionRepository regionRepository, SeleniumDriver seleniumDriver) {
-		this.serializeImpl = serializeImpl;
+	public ScrapingConstantImpl(RegionRepository regionRepository, SeleniumDriver seleniumDriver) {
 		this.regionRepository = regionRepository;
 		this.seleniumDriver = seleniumDriver;
 	};
@@ -63,7 +72,7 @@ public class ScrapingConstantImpl {
 
 		doc.onSuccess(data -> {
 
-			regions.stream().forEach((region) -> saveCountriesByRegion(data, region));
+			regions.stream().forEach((region) -> saveRegionDTO(data, region));
 
 		});
 
@@ -73,135 +82,123 @@ public class ScrapingConstantImpl {
 
 	}
 
-	public void saveCountriesByRegion(Document data, RegionConstant region) {
+	public void saveRegionDTO(Document data, RegionConstant regionConstant) {
 
-		RegionDTO regionDTO = new RegionDTO();
-		List<CountryDTO> countries = getCountryList(data, region);
-		
-		regionDTO.setId(region.getCode());
-		regionDTO.setTitle(region.getTitle());		
-		regionDTO.setCountries(countries);
-		
+		List<CountryProps> countries = getCountriesInsideDocument(data, regionConstant);
+
+		RegionProps regionProps = new RegionProps.Builder().code(regionConstant.getCode())
+														   .title(regionConstant.getTitle())
+														   .build();
+
+		RegionDTO regionDTO = new RegionDTO.Builder().props(regionProps)
+													 .countries(countries)
+													 .build();
+
 		regionRepository.save(regionDTO);
+
 	}
 
-	public List<CountryDTO> getCountryList(Document data, RegionConstant region) {
+	public List<CountryProps> getCountriesInsideDocument(Document data, RegionConstant region) {
 
-		String idElement = String.format("#cdregion%s", region.getCode());
+		var idElement = String.format("#cdregion%s", region.getCode());
 
 		Elements regionElements = data.select(idElement).first().select("a");
 
-		return regionElements.stream().filter(this::getCountryElement).map(this::convertToCountry).distinct()
-				.collect(Collectors.toList());
+		return FluentIterable.from(regionElements).filter(isCountryElement).transform(elementToCountryProps).toList();
 
 	}
 
+	private static final Predicate<Element> isCountryElement = element -> {
 
+		var tagAttributeValue = element.attr("href");
+		var tagTextValue = element.text();
 
-	private Boolean getCountryElement(Element element) {
-		String tagAttributeValue = element.attr("href");
-		String tagTextValue = element.text();
+		return (tagAttributeValue.matches("/equities/[a-zA-Z]") && tagTextValue.matches("Market Overview"));
+	};
 
-		if(Objects.isNull(element))
-		return false;
-		
-		if(tagAttributeValue.contains("/equities/") && tagTextValue.contains("Market Overview"))
-			return true;
-		else
-			return false;
+	private static final Function<Element, CountryProps> elementToCountryProps = new Function<Element, CountryProps>() {
 
-	}
-	
-	private CountryDTO convertToCountry(Element element) {
-		
-		String tagAttributeValue = element.attr("href");
-		String tagTextValue = element.text();
-		
-		String codeCountry = tagAttributeValue.substring(0,8);
-		String titleCountry = tagTextValue;
+		public CountryProps apply(Element element) {
+			var tagAttributeValue = element.attr("href");
+			var tagTextValue = element.text();
 
-		//TODO MODELED DE COUNTRY O COUNTRY DTO
-		return new CountryDTO.Builder().code(codeCountry).title(titleCountry).build();
+			var codeCountry = tagAttributeValue.substring(0, 8);
+			var titleCountry = tagTextValue;
 
-	}
-	
-	public void saveMarketIndex( ) {
+			return new CountryProps.Builder().code(codeCountry).title(titleCountry).build();
+		}
+
+	};
+
+	public void saveMarketIndex() {
 		// TODO GUARDAR EN MARKET TODOS LOS INDEX
-		Try<Document> doc = Try.of(() -> Jsoup.connect("https://www.investing.com/equities/StocksFilter?noconstruct=1&smlID=10141&sid=&tabletype=price&index_id=13317").get());
+		Try<Document> doc = Try.of(() -> Jsoup.connect(
+				"https://www.investing.com/equities/StocksFilter?noconstruct=1&smlID=10141&sid=&tabletype=price&index_id=13317")
+				.get());
 
 		doc.onSuccess(data -> {
 
 			Elements regionElements = data.select("#stocksFilter");
 
-		});	
-		
-	}
-	
-	public void dsd() {
-		
-		CountryDTO a = new CountryDTO.Builder().code("250").title("53").build();
-		System.out.println(a);
-		System.out.println(a);
+		});
+
 	}
 
-	
-	public void name() {
-
-		WebDriver chromeDriver = seleniumDriver.get();
-
-		
-
-		
-		
-		List<RegionDTO> regions = regionRepository.findAll();
-
-		RegionDTO region = regions.get(0);
-
-		List<Country> countries = region.getCountries();
-
-		chromeDriver.get(String.format("%s%s", urlWeb, countries.get(0)));
-		
-		//Country For Save MarketIndex Inside Loop
-		Country country = new Country();
-				
-		String idCountry = chromeDriver.findElement(By.id("countryID")).getText();
-		
-		Select select = (Select)chromeDriver.findElement(By.id("stocksFilter"));
-		List<WebElement> a = select.getOptions();
-		List<MarketIndexDTO> marketIndexes = new ArrayList<>(); 
-		
-		for (WebElement webElement : a) {
-			MarketIndexDTO marketIndex = new MarketIndexDTO(); 
-	
-			String idMarketIndex = webElement.getAttribute("id");
-			String titleMarketIndex = webElement.getText();
-			
-			marketIndex.setId(idMarketIndex);
-			marketIndex.setTitle(titleMarketIndex);
-			marketIndex.setCountryCode(idCountry);
-			
-			webElement.click();
-			
-			seleniumDriver.wait(chromeDriver, "cross_rate_markets_stocks_1");
-			
-			WebElement table = chromeDriver.findElement(By.id("cross_rate_markets_stocks_1"));
-			
-			List<WebElement> shareElements = table.findElements(By.className("bold left noWrap elp plusIconTd"));
-			
-			for (WebElement element : shareElements) {
-				String shareTitle = element.findElement(By.tagName("a")).getText();
-				String shareId = element.findElement(By.tagName("span")).getAttribute("data.id");
-				
-				System.out.println(shareTitle);
-				System.out.println(shareId);
-			}
-			
-		}
-		
-		
-	}
-	
-	
+	/*
+	 * public void name() {
+	 * 
+	 * WebDriver chromeDriver = seleniumDriver.get();
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * List<RegionDTO> regions = regionRepository.findAll();
+	 * 
+	 * RegionDTO region = regions.get(0);
+	 * 
+	 * List<Country> countries = region.getCountries();
+	 * 
+	 * chromeDriver.get(String.format("%s%s", urlWeb, countries.get(0)));
+	 * 
+	 * //Country For Save MarketIndex Inside Loop Country country = new Country();
+	 * 
+	 * String idCountry = chromeDriver.findElement(By.id("countryID")).getText();
+	 * 
+	 * Select select = (Select)chromeDriver.findElement(By.id("stocksFilter"));
+	 * List<WebElement> a = select.getOptions(); List<MarketIndexDTO> marketIndexes
+	 * = new ArrayList<>();
+	 * 
+	 * for (WebElement webElement : a) { MarketIndexDTO marketIndex = new
+	 * MarketIndexDTO();
+	 * 
+	 * String idMarketIndex = webElement.getAttribute("id"); String titleMarketIndex
+	 * = webElement.getText();
+	 * 
+	 * marketIndex.setId(idMarketIndex); marketIndex.setTitle(titleMarketIndex);
+	 * marketIndex.setCountryCode(idCountry);
+	 * 
+	 * webElement.click();
+	 * 
+	 * seleniumDriver.wait(chromeDriver, "cross_rate_markets_stocks_1");
+	 * 
+	 * WebElement table =
+	 * chromeDriver.findElement(By.id("cross_rate_markets_stocks_1"));
+	 * 
+	 * List<WebElement> shareElements =
+	 * table.findElements(By.className("bold left noWrap elp plusIconTd"));
+	 * 
+	 * for (WebElement element : shareElements) { String shareTitle =
+	 * element.findElement(By.tagName("a")).getText(); String shareId =
+	 * element.findElement(By.tagName("span")).getAttribute("data.id");
+	 * 
+	 * System.out.println(shareTitle); System.out.println(shareId); }
+	 * 
+	 * }
+	 * 
+	 * 
+	 * }
+	 */
 
 	public boolean checkisMarketOverview(String s) {
 		return s.contains("Market Overview");

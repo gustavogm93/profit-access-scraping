@@ -1,4 +1,4 @@
-package ar.com.pa.model;
+package ar.com.pa.model.props;
 
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -6,16 +6,17 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import lombok.Data;
 
 @Data
-public abstract class State {
+public abstract class MainProps {
 	
 	@MongoId(targetType = FieldType.STRING)
-	final String code;
-	final String title;
+	protected final String code;
+	
+	protected final String title;
 
 	abstract static class Builder<T extends Builder<T>> {
 
-		 String code;
-		 String title;
+		 private String code;
+		 private String title;
 
 		public T code(String code) {
 			this.code = code;
@@ -27,12 +28,13 @@ public abstract class State {
 			return self();
 		}
 
-		abstract State build();
+		abstract MainProps build();
 
 		protected abstract T self();
+		
 	}
 
-	State(Builder<?> builder) {
+	MainProps(Builder<?> builder) {
 		code = builder.code;
 		title = builder.title;
 	}
