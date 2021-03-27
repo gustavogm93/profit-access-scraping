@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-
-import ar.com.pa.model.dto.RegionDTO;
+import ar.com.pa.model.dto.ShareDTO;
 
 @Repository
-public interface RegionRepository extends MongoRepository<RegionDTO, String>{
+public interface ShareRepository extends MongoRepository<ShareDTO, String>{
 		@Override
-		List<RegionDTO> findAll();
+		List<ShareDTO> findAll();
 
 }
+//TODO GENERIC MONGO REPOSITORY

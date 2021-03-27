@@ -1,6 +1,8 @@
 package ar.com.pa.controller;
 
-import ar.com.pa.services.ScrapingConstantImpl;
+
+import ar.com.pa.services.ExtractByJsoupImpl;
+import ar.com.pa.services.ExtractBySeleniumImpl;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,33 +16,31 @@ import org.springframework.web.bind.annotation.*;
 @Data
 public class ScrappingController{	
 
-	
+	 private ExtractByJsoupImpl jsonExtract;
 
-    private ScrapingConstantImpl scrapingConstantImpl;
+    private ExtractBySeleniumImpl seleniumExtract;
     
     @Autowired
-    public ScrappingController(ScrapingConstantImpl scrapingConstantImpl) {
-		this.scrapingConstantImpl = scrapingConstantImpl;
+    public ScrappingController(ExtractBySeleniumImpl scrapingResourcesImpl, ExtractByJsoupImpl jsonExtract) {
+		this.seleniumExtract = scrapingResourcesImpl;
+		this.jsonExtract = jsonExtract;
 		
 	}
     
-	@io.swagger.v3.oas.annotations.Operation(summary = "", description = "")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized"),
-			@ApiResponse(responseCode = "403", description = "Forbidden"),
-			@ApiResponse(responseCode = "404", description = "Not Found"),
-			@ApiResponse(responseCode = "500", description = "Internal Server Error")
-	})	
-    @GetMapping
+
+    @GetMapping("/save")
     public void getCountryEnum() throws Exception{ 
 		
-		scrapingConstantImpl.dsd();
+		jsonExtract.fetchRegion();
 		//scrapingConstantImpl.saveMarketIndex();
 	}
 
-	
-	
+
+    @GetMapping("/geter")
+    public void getCountryEnume() throws Exception{ 
+		seleniumExtract.name();
+		//scrapingConstantImpl.saveMarketIndex();
+	}
 	
 
 	

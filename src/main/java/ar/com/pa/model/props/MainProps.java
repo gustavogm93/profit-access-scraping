@@ -1,19 +1,18 @@
 package ar.com.pa.model.props;
 
-import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.data.mongodb.core.mapping.MongoId;
-
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 
 @Data
 public abstract class MainProps {
 	
-	@MongoId(targetType = FieldType.STRING)
-	protected final String code;
+	public final String code;
 	
-	protected final String title;
+	public final String title;
 
-	abstract static class Builder<T extends Builder<T>> {
+	public abstract static class Builder<T extends Builder<T>> {
 
 		 private String code;
 		 private String title;
@@ -34,7 +33,7 @@ public abstract class MainProps {
 		
 	}
 
-	MainProps(Builder<?> builder) {
+	protected MainProps(Builder<?> builder) {
 		code = builder.code;
 		title = builder.title;
 	}

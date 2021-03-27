@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ar.com.pa.enums.utils.ScrappingConstant;
 import ar.com.pa.model.company.Industry;
 import ar.com.pa.model.company.Instrument;
 import ar.com.pa.model.company.CompanyDTO;

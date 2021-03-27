@@ -1,52 +1,33 @@
 package ar.com.pa.model.dto;
 
 import java.util.List;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Component;
-import ar.com.pa.model.props.CountryProps;
-import ar.com.pa.model.props.RegionProps;
+import org.springframework.data.mongodb.core.mapping.Field;
+import ar.com.pa.model.props.Country;
+import ar.com.pa.model.props.Region;
 import lombok.Data;
 
-@Data
 @Document(collection = "Region")
-@Component
+@Data
 public class RegionDTO {
+	
+	@Id
+	private String id;
+	
+	@Field(name = "properties")
+	private Region properties;
+	
+	@Field(name = "countries")
+	private List<Country> countries;
 
-	private final RegionProps region;
-
-	private final List<CountryProps> countries;
-
-	private RegionDTO(Builder builder) {
-		countries = builder.countries;
-		region = builder.region;
+	public RegionDTO(Region properties, List<Country> countries) {
+		this.properties = properties;
+		this.countries = countries;
 	}
 
-	public static class Builder {
 
-		private RegionProps region;
-		private List<CountryProps> countries;
 
-		public Builder() {
-		}
 
-		public Builder props(RegionProps region) {
-			this.region = region;
-			return self();
-		}
-
-		public Builder countries(List<CountryProps> countries) {
-			this.countries = countries;
-			return self();
-		}
-
-		public RegionDTO build() {
-			return new RegionDTO(this);
-		}
-
-		protected Builder self() {
-			return this;
-		}
-
-	}
-
+	
 }
