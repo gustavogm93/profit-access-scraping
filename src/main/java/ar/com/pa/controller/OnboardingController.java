@@ -1,13 +1,13 @@
 package ar.com.pa.controller;
 
-import ar.com.pa.services.GetDocument;
-
-import ar.com.pa.utils.ValidateUtils;
+import ar.com.pa.model.queue.CompanyOperationMessage;
+import ar.com.pa.services.CompanyService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,16 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "OnboardingState API")
 @Slf4j
 @Data
-public class OnboardingController {	
+public class OnboardingController{	
 
-    private GetDocument document;
+    private CompanyService companyService;
     
-    private ValidateUtils validate;
-    
-    
-    public OnboardingController(ValidateUtils validateUtils, GetDocument document) {
-		this.validate = validateUtils;
-		this.document = document;
+    @Autowired
+    public OnboardingController(CompanyService companyService) {
+		this.companyService = companyService;
 		
 	}
     
@@ -38,12 +35,20 @@ public class OnboardingController {
 	})	
     @GetMapping
     public void findGlobalLeads() throws Exception{ 
-		
-		document.getHtmlDocument("https://www.investing.com/equities/apple-computer-inc");
+		/*
+		CompanyOperationMessage companyOperationMessage = new CompanyOperationMessage();
+		companyOperationMessage.setTitle("chimimport-ad-company");
+		companyOperationMessage.setScrappingCode("41535");
+		companyService.saveFromScratch(companyOperationMessage);
 		System.out.println("---------------------------------------------------------------------");
 		//doke.getHtmlDocument("https://www.investing.com/equities/coca-cola-co-financial-summary");
+		
+		*/
 	}
 
+	
+	
+	
 
 	
 }

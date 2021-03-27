@@ -13,6 +13,6 @@ public class ScrappingFormatConstant {
 			"mocki", "From Invalid Cash", "542352dal","5235235235", "dolar", "margin failed", "github", "pepe", "d020",
 			"Total Money", "T$#%#" };
 
-	public final static String httpUrl = "https://www.investing.com/instruments/Financials/changesummaryreporttypeajax?action=change_report_type&pid=243&financial_id=243&ratios_id=243&period_type=Interim";
+	public final static String httpUrl = "https://www.investing.com/instruments/Financials/changesummaryreporttypeajax?action=change_report_type&pid=243&financial_id=243&ratios_id=243&period_type=Annual";
 
 }
