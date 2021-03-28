@@ -30,3 +30,5 @@ public interface ScrapingFetch{
 	
 	public void saveSummaryCompany(CompanyDTO company, List<Instrument> instrumentList);
 }
+// EXCLUIR A LOS PAISES QUE NO ESTAN EN LA LISTA
+//

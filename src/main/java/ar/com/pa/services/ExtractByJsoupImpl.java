@@ -1,6 +1,4 @@
 package ar.com.pa.services;
-//TODO Restructurar los nombres de Scrapping de todos
-
 import java.util.List;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -16,7 +14,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import ar.com.pa.enums.RegionConstant;
 import ar.com.pa.enums.utils.Url;
-import ar.com.pa.model.Property;
 import ar.com.pa.model.dto.RegionDTO;
 import ar.com.pa.model.props.Country;
 import ar.com.pa.model.props.Region;
@@ -33,7 +30,7 @@ public class ExtractByJsoupImpl {
 	final static ImmutableList<RegionConstant> regions = RegionConstant.values;
 
 	@Autowired
-	public ExtractByJsoupImpl(RegionRepository regionRepository) {
+	private ExtractByJsoupImpl(RegionRepository regionRepository) {
 		this.regionRepository = regionRepository;
 	};
 
@@ -55,7 +52,7 @@ public class ExtractByJsoupImpl {
 
 	}
 
-	public void saveRegionDTO(Document data, RegionConstant regionConstant) {
+	private void saveRegionDTO(Document data, RegionConstant regionConstant) {
 
 		List<Country> countries = getCountriesInsideDocument(data, regionConstant);
 
@@ -67,7 +64,7 @@ public class ExtractByJsoupImpl {
 
 	}
 	
-	public void getRegionDTO() {
+	private void getRegionDTO() {
 
 		List<RegionDTO> regionDTO = regionRepository.findAll();
 		
@@ -76,7 +73,7 @@ public class ExtractByJsoupImpl {
 	}
 	
 
-	public List<Country> getCountriesInsideDocument(Document data, RegionConstant region) {
+	private List<Country> getCountriesInsideDocument(Document data, RegionConstant region) {
 
 		var idElement = String.format("#cdregion%s", region.getCode());
 
@@ -86,12 +83,12 @@ public class ExtractByJsoupImpl {
 
 	}
 
-	private static final Predicate<Element> isCountryElement = element -> {
+	private Predicate<Element> isCountryElement = element -> {
 
 		return (element.attr("href").contains("/equities/") && !element.text().contains("Market Overview"));
 	};
 
-	private static final Function<Element, Country> elementToCountryProps = new Function<Element, Country>() {
+	private Function<Element, Country> elementToCountryProps = new Function<Element, Country>() {
 
 		public Country apply(Element element) {
 
@@ -102,20 +99,5 @@ public class ExtractByJsoupImpl {
 		}
 
 	};
-
-	public void saveMarketIndex() {
-
-		Try<Document> doc = Try.of(() -> Jsoup.connect(
-				"https://www.investing.com/equities/StocksFilter?noconstruct=1&smlID=10141&sid=&tabletype=price&index_id=13317")
-				.get());
-
-		doc.onSuccess(data -> {
-
-			Elements regionElements = data.select("#stocksFilter");
-
-		});
-
-	}
-
 
 }

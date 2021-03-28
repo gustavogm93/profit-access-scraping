@@ -38,7 +38,8 @@ public class ScrappingController{
 
     @GetMapping("/geter")
     public void getCountryEnume() throws Exception{ 
-		seleniumExtract.name();
+    	
+    	seleniumExtract.testingGet();
 		//scrapingConstantImpl.saveMarketIndex();
 	}
 	
