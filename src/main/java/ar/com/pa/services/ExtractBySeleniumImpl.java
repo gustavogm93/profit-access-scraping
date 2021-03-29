@@ -2,11 +2,14 @@ package ar.com.pa.services;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.FindBy;
@@ -21,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import com.google.common.collect.FluentIterable;
+import ar.com.pa.mapper.Mapper;
 import ar.com.pa.enums.utils.Url;
 import ar.com.pa.model.dto.CountryDTO;
 import ar.com.pa.model.dto.FailedRegionDTO;
@@ -38,6 +41,7 @@ import ar.com.pa.repository.MarketIndexRepository;
 import ar.com.pa.repository.RegionRepository;
 import ar.com.pa.repository.ShareRepository;
 import ar.com.pa.utils.Msg;
+import io.vavr.collection.Iterator;
 
 @Component
 public class ExtractBySeleniumImpl {
@@ -83,24 +87,30 @@ public class ExtractBySeleniumImpl {
 		this.failedRepository = failedRepository;
 	}
 
-	public void executorFromScratch() {
+	public void executor() {
 		initializeDriver();
 		logger.info(Msg.seleniumExecutor);
 
-		List<RegionDTO> regions = checkIfExistFailedRegion() ? regionRepository.findAll() : getFailedRegionDTO();
+		List<RegionDTO> regions = checkIfExistFailedRegion() ? getFailedRegionDTO() : regionRepository.findAll();
 		for (RegionDTO region : regions) {
 
-			List<Country> countries = region.getCountries();
+			Set<Country> countries = region.getCountries();
 
-			for (int i = 0; i < countries.size(); i++) {
+			for (Country country : countries) {
 
 				try {
-					startFetchingProcess(countries.get(i), region.getProperties());
+					startFetchingProcess(country, region.getProperties());
 				} catch (Exception e) {
-					saveFailedRegionDTO(region, countries.get(i));
-					logger.error(e.getMessage());
+
+					if (e instanceof WebDriverException exceptionChromeDriver) {
+						saveFailedRegionDTO(region, country);
+						initializeDriver();
+						logger.error(exceptionChromeDriver.getMessage());
+					}
+
 				}
 			}
+
 		}
 		driver.close();
 	}
@@ -163,7 +173,7 @@ public class ExtractBySeleniumImpl {
 			if (idMarketIndex.equalsIgnoreCase("all"))
 				saveSharesDTO(shares);
 
-			MarketIndexDTO marketIndexDTO = new MarketIndexDTO(idCountry, marketIndex, shares);
+			MarketIndexDTO marketIndexDTO = new MarketIndexDTO(idMarketIndex, idCountry, marketIndex, shares);
 
 			MarketIndexDTOList.add(marketIndexDTO);
 
@@ -188,7 +198,8 @@ public class ExtractBySeleniumImpl {
 
 	private void saveSharesDTO(List<Share> shares) {
 
-		List<ShareDTO> shareDTOList = FluentIterable.from(shares).transform(ShareDTO::new).toList();
+		List<ShareDTO> shareDTOList = shares.stream().map(Mapper.shareToShareDTO).collect(Collectors.toList());
+
 		shareRepository.saveAll(shareDTOList);
 	}
 
@@ -203,53 +214,54 @@ public class ExtractBySeleniumImpl {
 		List<MarketIndex> marketIndexList = marketIndexListDTO.stream().map(MarketIndexDTO::getPropierties)
 				.collect(Collectors.toList());
 
-		CountryDTO countryDTO = new CountryDTO(country, region, marketIndexList);
+		CountryDTO countryDTO = new CountryDTO(country.getCode(), country, region, marketIndexList);
 		countryRepository.save(countryDTO);
 	}
 
 	private void saveFailedRegionDTO(RegionDTO region, Country country) {
+		Optional<FailedRegionDTO> failedToUpdate = failedRepository.findById(region.getId());
 
-		FailedRegionDTO failedUpdate = failedRepository.findByRegionCode(region.getProperties().getCode());
+		if (failedToUpdate.isPresent()) {
 
-		if (Objects.nonNull(failedUpdate)) {
+			FailedRegionDTO failedRegionUpdate = failedToUpdate.get();
 
-			failedUpdate.getCountries().add(country);
+			failedRegionUpdate.getCountries().add(country);
 
-			failedRepository.save(failedUpdate);
-			return;
+			failedRepository.save(failedRegionUpdate);
+
+		} else {
+
+			Set<Country> countries = Set.of(country);
+
+			FailedRegionDTO newFailedRegion = new FailedRegionDTO(region.getId(), region.getProperties(), countries);
+
+			failedRepository.save(newFailedRegion);
+
 		}
-		List<Country> countries = List.of(country);
 
-		FailedRegionDTO failedSave = new FailedRegionDTO(region.getProperties(), countries);
-
-		failedRepository.save(failedSave);
 	}
 
 	private boolean checkIfExistFailedRegion() {
 		return failedRepository.count() > 0;
 	}
-	
-	private List<RegionDTO> getFailedRegionDTO() {
-		
-		List<RegionDTO> regions = failedRepository.findAll().stream().map(this::failedToRegion).collect(Collectors.toList());
-		
-			return regions;
-	}
 
-	private RegionDTO failedToRegion(FailedRegionDTO failedRegion) {
-		
-		return new RegionDTO(failedRegion.getProperties(), failedRegion.getCountries());
-		
+	private List<RegionDTO> getFailedRegionDTO() {
+
+		List<RegionDTO> regions = failedRepository.findAll().stream().map(Mapper.failedToRegion)
+				.collect(Collectors.toList());
+
+		return regions;
+
 	}
 
 	public void testingPost() {
-		List<Country> list = new ArrayList<>();
+		Set<Country> list = new HashSet<>();
 
 		Country country = new Country("200", "arg");
 		list.add(country);
 
 		Region region = new Region("1", "America");
-		FailedRegionDTO failedDTO = new FailedRegionDTO(region, list);
+		FailedRegionDTO failedDTO = new FailedRegionDTO("1", region, list);
 
 		failedRepository.save(failedDTO);
 
@@ -258,7 +270,7 @@ public class ExtractBySeleniumImpl {
 	}
 
 	public void testingGet() {
-		System.out.println(checkIfExistFailedRegion());
+		FailedRegionDTO failedUpdate = failedRepository.findByRegionCode("1");
 
 	}
 }

@@ -1,6 +1,7 @@
 package ar.com.pa.model.dto;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,14 +18,15 @@ public class FailedRegionDTO {
 	@Id
 	private String id;
 	
-	@Field(name = "properties")
-	private final Region properties;
+	@Field(name = "region")
+	private final Region region;
 	
 	@Field(name = "countries")
-	private final List<Country> countries;
+	private final Set<Country> countries;
 
-	public FailedRegionDTO(Region properties, List<Country> countries) {
-		this.properties = properties;
+	public FailedRegionDTO(String id, Region region, Set<Country> countries) {
+		this.id = id;
+		this.region = region;
 		this.countries = countries;
 	}
 

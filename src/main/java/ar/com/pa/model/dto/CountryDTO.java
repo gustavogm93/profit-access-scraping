@@ -26,7 +26,8 @@ public class CountryDTO {
 	@Field(name = "MarketIndex")
 	private final List<MarketIndex> marketIndexList;
 
-	public CountryDTO(Country country, Region region, List<MarketIndex> marketIndexList) {
+	public CountryDTO(String id, Country country, Region region, List<MarketIndex> marketIndexList) {
+		this.id = id;
 		this.country = country;
 		this.region = region;
 		this.marketIndexList = marketIndexList;

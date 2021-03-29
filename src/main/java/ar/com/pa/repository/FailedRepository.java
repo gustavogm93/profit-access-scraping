@@ -13,6 +13,6 @@ public interface FailedRepository extends MongoRepository<FailedRegionDTO, Strin
 		List<FailedRegionDTO> findAll();
 		
 		
-		@Query("{ 'regionCode' : ?0 }")
+		@Query("{ 'region' : ?0 }")
 		FailedRegionDTO findByRegionCode(String regionCode);
 }

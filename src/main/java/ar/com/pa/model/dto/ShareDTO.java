@@ -16,8 +16,10 @@ public class ShareDTO {
 	private Share properties;
 	
 
-	public ShareDTO(Share share) {
+	public ShareDTO(String id, Share share) {
+		this.id = id;
 		this.properties = share;
+		
 	}
 	
 	

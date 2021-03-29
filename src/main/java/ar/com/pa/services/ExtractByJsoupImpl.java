@@ -1,5 +1,10 @@
 package ar.com.pa.services;
+
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import org.jsoup.Jsoup;
@@ -10,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import ar.com.pa.enums.RegionConstant;
 import ar.com.pa.enums.utils.Url;
@@ -54,39 +58,41 @@ public class ExtractByJsoupImpl {
 
 	private void saveRegionDTO(Document data, RegionConstant regionConstant) {
 
-		List<Country> countries = getCountriesInsideDocument(data, regionConstant);
+		TreeSet<Country> countries = getCountriesInsideDocument(data, regionConstant);
 
 		Region regionProps = new Region(regionConstant.getCode(), regionConstant.getTitle());
 
-		RegionDTO regionDTO = new RegionDTO(regionProps, countries);
-		
+		RegionDTO regionDTO = new RegionDTO(regionProps.code, regionProps, countries);
+
 		regionRepository.save(regionDTO);
 
 	}
-	
-	private void getRegionDTO() {
+
+	public void getRegionDTO() {
 
 		List<RegionDTO> regionDTO = regionRepository.findAll();
-		
+
 		System.out.println(regionDTO.toString());
 
 	}
-	
 
-	private List<Country> getCountriesInsideDocument(Document data, RegionConstant region) {
+	private TreeSet<Country> getCountriesInsideDocument(Document data, RegionConstant region) {
 
 		var idElement = String.format("#cdregion%s", region.getCode());
 
 		Elements regionElements = data.select(idElement).first().select("a");
 
-		return FluentIterable.from(regionElements).filter(isCountryElement).transform(elementToCountryProps).toList();
+		return regionElements.stream().filter(isCountryElement).map(elementToCountryProps)
+				.collect(Collectors.toCollection(country));
 
 	}
 
-	private Predicate<Element> isCountryElement = element -> {
+	private Comparator<Country> byCode = Comparator.comparing(Country::getCode);
 
-		return (element.attr("href").contains("/equities/") && !element.text().contains("Market Overview"));
-	};
+	private Supplier<TreeSet<Country>> country = () -> new TreeSet<Country>(byCode);
+
+	private Predicate<Element> isCountryElement = (element) -> element.attr("href").contains("/equities/")
+			&& !element.text().contains("Market Overview");
 
 	private Function<Element, Country> elementToCountryProps = new Function<Element, Country>() {
 
@@ -95,9 +101,8 @@ public class ExtractByJsoupImpl {
 			var codeCountry = element.attr("href").split("/")[2];
 			var titleCountry = element.text();
 
-			return new Country(codeCountry, titleCountry);				
+			return new Country(codeCountry, titleCountry);
 		}
 
 	};
-
 }
