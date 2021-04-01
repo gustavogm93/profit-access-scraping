@@ -25,7 +25,8 @@ public class MarketIndexDTO {
 	@Field(name = "Shares")
 	private List<Share> shares;
 	
-	public MarketIndexDTO(String countryId, MarketIndex propierties, List<Share> shares) {
+	public MarketIndexDTO(String id,String countryId, MarketIndex propierties, List<Share> shares) {
+		this.id = id;
 		this.countryId = countryId;
 		this.propierties = propierties;
 		this.shares = shares;

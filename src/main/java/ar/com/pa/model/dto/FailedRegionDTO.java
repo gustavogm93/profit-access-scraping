@@ -6,28 +6,28 @@ import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
 import ar.com.pa.model.props.Country;
 import ar.com.pa.model.props.Region;
 import lombok.Data;
 
-@Document(collection = "Region")
+@Document(collection = "Failed")
 @Data
-public class RegionDTO {
+public class FailedRegionDTO {
 	
 	@Id
 	private String id;
 	
-	@Field(name = "properties")
-	private final Region properties;
+	@Field(name = "region")
+	private final Region region;
 	
 	@Field(name = "countries")
 	private final Set<Country> countries;
 
-	public RegionDTO(String id, Region properties, Set<Country> countries) {
+	public FailedRegionDTO(String id, Region region, Set<Country> countries) {
 		this.id = id;
-		this.properties = properties;
+		this.region = region;
 		this.countries = countries;
 	}
-
 
 }

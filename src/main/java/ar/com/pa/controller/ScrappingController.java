@@ -3,8 +3,6 @@ package ar.com.pa.controller;
 
 import ar.com.pa.services.ExtractByJsoupImpl;
 import ar.com.pa.services.ExtractBySeleniumImpl;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +36,8 @@ public class ScrappingController{
 
     @GetMapping("/geter")
     public void getCountryEnume() throws Exception{ 
-		seleniumExtract.name();
+    	jsonExtract.getRegionDTO();
+    	//seleniumExtract.executor();
 		//scrapingConstantImpl.saveMarketIndex();
 	}
 	
