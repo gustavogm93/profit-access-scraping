@@ -1,6 +1,5 @@
 package ar.com.pa.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import lombok.Data;

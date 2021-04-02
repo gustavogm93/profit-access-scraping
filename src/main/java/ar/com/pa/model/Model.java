@@ -1,7 +1,6 @@
 package ar.com.pa.model;
 
 import java.util.List;
-import com.google.common.base.Function;
 
 import ar.com.pa.model.dto.RegionDTO;
 public interface Model<V, T extends Property> {

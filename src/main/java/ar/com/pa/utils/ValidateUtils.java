@@ -1,7 +1,5 @@
 package ar.com.pa.utils;
 
-import ar.com.pa.enums.utils.SummaryType;
-
 public interface ValidateUtils {
 	
 
@@ -33,8 +31,3 @@ public interface ValidateUtils {
 	public boolean isDate(String s);
 	
 }
-/**
- * Returns the package name of {@code classFullName} according to the Java Language Specification
- * (section 6.7). Unlike {@link Class#getPackage}, this method only parses the class name, without
- * attempting to define the {@link Package} and hence load files.
- */
