@@ -1,7 +1,6 @@
 package ar.com.pa.services;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -45,13 +44,13 @@ public class ExtractByJsoupImpl {
 
 		document.onSuccess(data -> {
 
-			regions.parallelStream().forEach((region) -> saveRegionDTO(data, region));
+			regions.stream().forEach((region) -> saveRegionDTO(data, region));
 
 			logger.info("Save regionDTO");
 		});
 
 		document.onFailure(ex -> {
-			logger.error(ex.toString());
+			logger.error(ex.getMessage());
 		});
 
 	}
@@ -65,14 +64,6 @@ public class ExtractByJsoupImpl {
 		RegionDTO regionDTO = new RegionDTO(regionProps.code, regionProps, countries);
 
 		regionRepository.save(regionDTO);
-
-	}
-
-	public void getRegionDTO() {
-
-		List<RegionDTO> regionDTO = regionRepository.findAll();
-
-		System.out.println(regionDTO.toString());
 
 	}
 
@@ -92,7 +83,7 @@ public class ExtractByJsoupImpl {
 	private Supplier<TreeSet<Country>> country = () -> new TreeSet<Country>(byCode);
 
 	private Predicate<Element> isCountryElement = (element) -> element.attr("href").contains("/equities/")
-			&& !element.text().contains("Market Overview");
+												   			   && !element.text().contains("Market Overview");
 
 	private Function<Element, Country> elementToCountryProps = new Function<Element, Country>() {
 

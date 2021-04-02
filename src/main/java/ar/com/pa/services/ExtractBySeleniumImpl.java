@@ -1,11 +1,11 @@
 package ar.com.pa.services;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -41,7 +41,6 @@ import ar.com.pa.repository.MarketIndexRepository;
 import ar.com.pa.repository.RegionRepository;
 import ar.com.pa.repository.ShareRepository;
 import ar.com.pa.utils.Msg;
-import io.vavr.collection.Iterator;
 
 @Component
 public class ExtractBySeleniumImpl {
@@ -142,21 +141,21 @@ public class ExtractBySeleniumImpl {
 		wait.until(checkForTableShares());
 
 		// Get List MarketIndex
-		List<MarketIndexDTO> MarketIndexDTOList = fetchMarketIndexes();
+		TreeSet<MarketIndexDTO> MarketIndexDTOList = fetchMarketIndexes();
 
 		saveCountryDTO(country, region, MarketIndexDTOList);
 		saveMarketIndexDTO(MarketIndexDTOList);
 
 	}
 
-	private List<MarketIndexDTO> fetchMarketIndexes() {
+	private TreeSet<MarketIndexDTO> fetchMarketIndexes() {
 
 		// Get Options inside Market Index Select
 		List<WebElement> optionsMarketIndex = new Select(selectMarketIndex).getOptions();
 
 		var idCountry = spanCountryId.getAttribute("value");
 
-		List<MarketIndexDTO> MarketIndexDTOList = new ArrayList<>();
+		TreeSet<MarketIndexDTO> MarketIndexDTOList = new TreeSet<>();
 
 		for (WebElement webElement : optionsMarketIndex) {
 
@@ -168,7 +167,7 @@ public class ExtractBySeleniumImpl {
 			webElement.click();
 			wait.until(checkForTableShares());
 
-			List<Share> shares = getSharesByElement();
+			TreeSet<Share> shares = getSharesByElement();
 
 			if (idMarketIndex.equalsIgnoreCase("all"))
 				saveSharesDTO(shares);
@@ -181,9 +180,9 @@ public class ExtractBySeleniumImpl {
 		return MarketIndexDTOList;
 	}
 
-	private List<Share> getSharesByElement() {
+	private TreeSet<Share> getSharesByElement() {
 
-		List<Share> shareList = new ArrayList<>();
+		TreeSet<Share> shareList = new TreeSet<Share>();
 		for (WebElement element : shareElements) {
 
 			String shareTitle = element.findElement(By.tagName("a")).getText();
@@ -196,28 +195,37 @@ public class ExtractBySeleniumImpl {
 		return shareList;
 	}
 
-	private void saveSharesDTO(List<Share> shares) {
+	private void saveSharesDTO(TreeSet<Share> shares) {
 
 		List<ShareDTO> shareDTOList = shares.stream().map(Mapper.shareToShareDTO).collect(Collectors.toList());
 
 		shareRepository.saveAll(shareDTOList);
 	}
 
-	private void saveMarketIndexDTO(List<MarketIndexDTO> marketIndexDTO) {
+	private void saveMarketIndexDTO(TreeSet<MarketIndexDTO> marketIndexDTO) {
 
 		marketIndexRepository.saveAll(marketIndexDTO);
 
 	}
 
-	private void saveCountryDTO(Country country, Region region, List<MarketIndexDTO> marketIndexListDTO) {
+	private void saveCountryDTO(Country country, Region region, TreeSet<MarketIndexDTO> marketIndexListDTO) {
 
-		List<MarketIndex> marketIndexList = marketIndexListDTO.stream().map(MarketIndexDTO::getPropierties)
-				.collect(Collectors.toList());
+		TreeSet<MarketIndex> marketIndexList = new TreeSet<MarketIndex>();
+		for (MarketIndexDTO marketIndexDTO : marketIndexListDTO) {
+			marketIndexList.add(marketIndexDTO.getPropierties());
+		}
+
 
 		CountryDTO countryDTO = new CountryDTO(country.getCode(), country, region, marketIndexList);
 		countryRepository.save(countryDTO);
+		
 	}
 
+	
+	private boolean checkIfExistFailedRegion() {
+		return failedRepository.count() > 0;
+	}
+	
 	private void saveFailedRegionDTO(RegionDTO region, Country country) {
 		Optional<FailedRegionDTO> failedToUpdate = failedRepository.findById(region.getId());
 
@@ -241,10 +249,6 @@ public class ExtractBySeleniumImpl {
 
 	}
 
-	private boolean checkIfExistFailedRegion() {
-		return failedRepository.count() > 0;
-	}
-
 	private List<RegionDTO> getFailedRegionDTO() {
 
 		List<RegionDTO> regions = failedRepository.findAll().stream().map(Mapper.failedToRegion)
@@ -253,8 +257,20 @@ public class ExtractBySeleniumImpl {
 		return regions;
 
 	}
+	
+	public void getRegionDTO() {
 
-	public void testingPost() {
+		List<RegionDTO> regionDTO = regionRepository.findAll();
+
+		System.out.println(regionDTO.toString());
+
+	}
+
+	
+	
+	
+	public void testingFailedRegionPost() {
+		
 		Set<Country> list = new HashSet<>();
 
 		Country country = new Country("200", "arg");

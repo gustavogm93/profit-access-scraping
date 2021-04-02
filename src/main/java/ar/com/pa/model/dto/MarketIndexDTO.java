@@ -1,6 +1,7 @@
 package ar.com.pa.model.dto;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,9 +24,9 @@ public class MarketIndexDTO {
 	private MarketIndex propierties;
 	
 	@Field(name = "Shares")
-	private List<Share> shares;
+	private Set<Share> shares;
 	
-	public MarketIndexDTO(String id,String countryId, MarketIndex propierties, List<Share> shares) {
+	public MarketIndexDTO(String id,String countryId, MarketIndex propierties, Set<Share> shares) {
 		this.id = id;
 		this.countryId = countryId;
 		this.propierties = propierties;

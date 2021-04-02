@@ -1,6 +1,7 @@
 package ar.com.pa.model.dto;
 
-import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -24,9 +25,9 @@ public class CountryDTO {
 	private Region region;
 
 	@Field(name = "MarketIndex")
-	private final List<MarketIndex> marketIndexList;
+	private final Set<MarketIndex> marketIndexList;
 
-	public CountryDTO(String id, Country country, Region region, List<MarketIndex> marketIndexList) {
+	public CountryDTO(String id, Country country, Region region, Set<MarketIndex> marketIndexList) {
 		this.id = id;
 		this.country = country;
 		this.region = region;

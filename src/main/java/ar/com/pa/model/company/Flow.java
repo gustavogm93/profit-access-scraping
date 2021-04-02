@@ -9,7 +9,7 @@ import ar.com.pa.enums.utils.SummaryType;
 import lombok.Data;
 
 @Data
-@Document(collection="FetchOperation")
+@Document(collection="Flow")
 public class Flow {
 	
 String title;
@@ -20,7 +20,6 @@ List<String> intervalTime;
 
 HashMap<SummaryType, Integer> attempts;
 HashMap<SummaryType, String> urlList;
-//HashMap<SummaryType, Elements> elementListFailed;
 
 boolean tempError = false;
 

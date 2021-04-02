@@ -1,4 +1,4 @@
-package ar.com.pa.service;
+package ar.com.pa.service.mock;
 
 public class ScrappingFormatConstant {
 

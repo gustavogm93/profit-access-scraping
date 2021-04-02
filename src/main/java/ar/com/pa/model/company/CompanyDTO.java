@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.stereotype.Component;
 import lombok.Data;
 
@@ -13,20 +14,27 @@ import lombok.Data;
 public class CompanyDTO {
 
 	@Id
-	private String id; //WebCode
+	private String id; 
 	
-	private String title; //Index --> @Indexed
+	@Field(name = "title")
+	private String title; 
 
-	private String Country; //Index --> @Indexed || Posible objeto
+	@Field(name = "Country")
+	private String Country; 
 	
-	private Market market; //Index  --> @Indexed
+	@Field(name = "market")
+	private Market market;
 	
-	private Industry industry; // Industry, Sector ---> @Indexed 
+	@Field(name = "industry")
+	private Industry industry;
 
+	@Field(name = "fetchOperation")
 	private Flow fetchOperation;
 
+	@Field(name = "financialSummary")
 	private FinancialSummary financialSummary;
 
+	@Field(name = "lastUpdate")
 	private Date lastUpdate;
 
 	public CompanyDTO() {

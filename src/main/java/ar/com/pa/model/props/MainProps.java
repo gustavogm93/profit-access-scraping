@@ -1,9 +1,6 @@
 package ar.com.pa.model.props;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
 
 @Data
 public abstract class MainProps {
