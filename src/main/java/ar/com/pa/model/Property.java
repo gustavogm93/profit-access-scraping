@@ -1,11 +1,12 @@
 package ar.com.pa.model;
 
-import org.springframework.data.mongodb.core.mapping.Field;
+import java.util.Comparator;
 
+import org.springframework.data.mongodb.core.mapping.Field;
 import lombok.Data;
 
 @Data
-public class Property {
+public class Property{
 
 
 		@Field(name = "code")
@@ -18,4 +19,8 @@ public class Property {
 		this.code = code;
 		this.title = title;
 	}
+		
+		public static Comparator<Property> byTitle = Comparator.comparing(Property::getTitle);
+
+		
 }

@@ -20,7 +20,7 @@ public class PublishController {
     @PostMapping("/publishMessage")
     public ResponseEntity<String> publishMessage(@RequestBody SystemMessage systemMessage) {
         try {
-            jmsTemplate.convertAndSend("region", systemMessage);
+            jmsTemplate.convertAndSend("america", systemMessage);
 
             return new ResponseEntity<>("Sent.", HttpStatus.OK);
 

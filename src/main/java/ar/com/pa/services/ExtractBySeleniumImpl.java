@@ -1,6 +1,7 @@
 package ar.com.pa.services;
 
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ar.com.pa.mapper.Mapper;
 import ar.com.pa.enums.utils.Url;
+import ar.com.pa.model.Property;
 import ar.com.pa.model.dto.*;
 import ar.com.pa.model.props.*;
 import ar.com.pa.repository.*;
@@ -65,18 +67,16 @@ public class ExtractBySeleniumImpl {
 		this.failedRepository = failedRepository;
 	}
 
-	
-	//SE EJECUTE 
+	// SE EJECUTE
 	public void executor() {
-		initializeDriver();
+
 		logger.info(Msg.seleniumExecutor);
-		
+
 		List<RegionDTO> regions = checkIfExistFailedRegion() ? getFailedRegionDTO() : regionRepository.findAll();
-		for (RegionDTO region : regions) {
 
-			Set<Country> countries = region.getCountries();
+		regions.parallelStream().limit(2).forEach(region -> {
 
-			for (Country country : countries) {
+			region.getCountries().stream().limit(1).forEach(country -> {
 
 				try {
 					startFetchingProcess(country, region.getProperties());
@@ -87,11 +87,11 @@ public class ExtractBySeleniumImpl {
 					logger.error(e.getMessage());
 
 				}
-			}
 
-		}
-		driver.close();
-		
+			});
+			driver.close();
+		});
+
 	}
 
 	private void initializeDriver() {
@@ -109,8 +109,10 @@ public class ExtractBySeleniumImpl {
 
 		return ExpectedConditions.visibilityOf(tableMarket);
 	}
-	
+
 	private void startFetchingProcess(Country country, Region region) {
+
+		initializeDriver();
 
 		logger.info(Msg.compound(country, Msg.fetchingCountry));
 		// Go to Web
@@ -135,7 +137,7 @@ public class ExtractBySeleniumImpl {
 
 		var idCountry = spanCountryId.getAttribute("value");
 
-		TreeSet<MarketIndexDTO> MarketIndexDTOList = new TreeSet<>();
+		TreeSet<MarketIndexDTO> MarketIndexDTOList = new TreeSet<MarketIndexDTO>(MarketIndexDTO.byTitle);
 
 		for (WebElement webElement : optionsMarketIndex) {
 
@@ -149,9 +151,6 @@ public class ExtractBySeleniumImpl {
 
 			TreeSet<Share> shares = getSharesByElement();
 
-			if (idMarketIndex.equalsIgnoreCase("all"))
-				saveSharesDTO(shares);
-
 			MarketIndexDTO marketIndexDTO = new MarketIndexDTO(idMarketIndex, idCountry, marketIndex, shares);
 
 			MarketIndexDTOList.add(marketIndexDTO);
@@ -162,7 +161,7 @@ public class ExtractBySeleniumImpl {
 
 	private TreeSet<Share> getSharesByElement() {
 
-		TreeSet<Share> shareList = new TreeSet<Share>();
+		TreeSet<Share> shareList = new TreeSet<Share>(Property.byTitle);
 		for (WebElement element : shareElements) {
 
 			String shareTitle = element.findElement(By.tagName("a")).getText();
@@ -190,7 +189,7 @@ public class ExtractBySeleniumImpl {
 
 	private void saveCountryDTO(Country country, Region region, TreeSet<MarketIndexDTO> marketIndexListDTO) {
 
-		TreeSet<MarketIndex> marketIndexList = new TreeSet<MarketIndex>();
+		TreeSet<MarketIndex> marketIndexList = new TreeSet<MarketIndex>(Property.byTitle);
 		for (MarketIndexDTO marketIndexDTO : marketIndexListDTO) {
 			marketIndexList.add(marketIndexDTO.getPropierties());
 		}

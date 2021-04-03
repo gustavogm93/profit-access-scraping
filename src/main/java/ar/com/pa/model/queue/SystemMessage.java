@@ -2,11 +2,6 @@ package ar.com.pa.model.queue;
 
 import java.io.Serializable;
 
-/**
- *
- * @author AJ Catambay of Bridging Code
- *
- */
 public class SystemMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,8 +24,17 @@ public class SystemMessage implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
+    
+    
+    
 
-    @Override
+    public SystemMessage(String source, String message) {
+		super();
+		this.source = source;
+		this.message = message;
+	}
+
+	@Override
     public String toString() {
         return "SystemMessage{" +
                 "source='" + source + '\'' +

@@ -1,5 +1,6 @@
 package ar.com.pa.model.dto;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +34,11 @@ public class MarketIndexDTO {
 		this.shares = shares;
 	}
 
-
+	public static Comparator<MarketIndexDTO> byTitle = Comparator.comparing(MarketIndexDTO::getTitle);
+	
+	
+	public String getTitle() {
+		return this.propierties.getTitle();
+	}
 
 }

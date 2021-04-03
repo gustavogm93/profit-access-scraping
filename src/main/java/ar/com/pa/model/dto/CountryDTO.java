@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import ar.com.pa.model.props.Country;
 import ar.com.pa.model.props.MarketIndex;
 import ar.com.pa.model.props.Region;
+import ar.com.pa.model.props.Share;
 import lombok.Data;
 
 @Document(collection = "Country")
@@ -19,11 +20,12 @@ public class CountryDTO {
 	private String id;
 
 	@Field(name = "country")
-	private Country country;
+	private final Country country;
 
 	@Field(name = "region")
-	private Region region;
+	private final Region region;
 
+	
 	@Field(name = "MarketIndex")
 	private final Set<MarketIndex> marketIndexList;
 

@@ -17,8 +17,8 @@ public class RegionMessageConsumer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegionMessageConsumer.class);
 
-    @JmsListener(destination = "region")
+    @JmsListener(destination = "america")
     public void messageListener(SystemMessage systemMessage) {
-        LOGGER.info("Message received! {}", systemMessage);
+        LOGGER.info("Message received! {}, {} <- thread", systemMessage, Thread.currentThread().getName());
     }
 }

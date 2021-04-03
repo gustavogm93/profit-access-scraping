@@ -21,6 +21,7 @@ public class ShareDTO {
 		this.properties = share;
 		
 	}
+
 	
 	
 

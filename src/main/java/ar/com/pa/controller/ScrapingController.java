@@ -30,7 +30,7 @@ public class ScrapingController {
 		jsonExtract.fetchRegion();
 	}
 
-	@GetMapping("/marketIndex")
+	@GetMapping("/get")
 	public void getMarketValuesByRegion() throws Exception {
 		seleniumExtract.executor();
 	}
