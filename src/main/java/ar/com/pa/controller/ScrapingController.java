@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/scrapping")
 @Tag(name = "Scrapping API")
@@ -30,8 +31,11 @@ public class ScrapingController {
 	}
 
 	@GetMapping("/marketIndex")
-	public void getMarketIndex() throws Exception {
-		seleniumExtract.getRegionDTO();
+	public void getMarketValuesByRegion() throws Exception {
+		seleniumExtract.executor();
 	}
 
+	
+	
+	
 }
