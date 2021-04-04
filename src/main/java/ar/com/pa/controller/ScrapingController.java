@@ -4,6 +4,9 @@ import ar.com.pa.services.ExtractByJsoupImpl;
 import ar.com.pa.services.ExtractBySeleniumImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
+
+import java.util.concurrent.ExecutorService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,14 +18,15 @@ import org.springframework.web.bind.annotation.*;
 public class ScrapingController {
 
 	private ExtractByJsoupImpl jsonExtract;
-
+	
 	private ExtractBySeleniumImpl seleniumExtract;
-
+	
+	private final ExecutorService executorService;
 	@Autowired
-	public ScrapingController(ExtractBySeleniumImpl scrapingResourcesImpl, ExtractByJsoupImpl jsonExtract) {
+	public ScrapingController(ExtractBySeleniumImpl scrapingResourcesImpl, ExtractByJsoupImpl jsonExtract, ExecutorService executorService) {
 		this.seleniumExtract = scrapingResourcesImpl;
 		this.jsonExtract = jsonExtract;
-
+		this.executorService = executorService;
 	}
 
 	@GetMapping("/region")
@@ -31,9 +35,12 @@ public class ScrapingController {
 	}
 
 	@GetMapping("/get")
-	public void getMarketValuesByRegion() throws Exception {
-		seleniumExtract.executor();
+	public void fetchStudent(@RequestParam(name = "region") String region)   {
+		seleniumExtract.executor(region);
 	}
+	
+	
+	
 
 	
 	

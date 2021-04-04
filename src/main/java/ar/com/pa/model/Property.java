@@ -21,6 +21,6 @@ public class Property{
 	}
 		
 		public static Comparator<Property> byTitle = Comparator.comparing(Property::getTitle);
-
+		public static Comparator<Property> byCode = Comparator.comparing(Property::getCode);
 		
 }
