@@ -1,4 +1,4 @@
-# Profit Access Scrapping
+# Profit-Access-Scraping-Constants
 This repository contains classes with the purpose of extract financial summaries of companies, process the information and save it in NoSQL Database 
 
 
