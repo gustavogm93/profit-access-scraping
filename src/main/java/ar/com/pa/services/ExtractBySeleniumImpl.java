@@ -10,6 +10,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +42,23 @@ public class ExtractBySeleniumImpl {
 
 	@Value("${chrome.driver}")
 	private String chromeDriverPath;
-	
+
+	@FindBy(how = How.ID, using = "countryID")
+	private WebElement spanCountryId;
+
+	@FindBy(how = How.ID, using = "cross_rate_markets_stocks_1")
+	private WebElement tableMarket;
+
+	@FindBy(how = How.ID, using = "stocksFilter")
+	private WebElement selectMarketIndex;
+
+	@FindBy(how = How.CSS, using = ".bold.left.noWrap.elp.plusIconTd")
+	private List<WebElement> shareElements;
+
+	private static WebDriver driver;
+
+	private static Wait<WebDriver> wait;
+
 	private static final Logger logger = LoggerFactory.getLogger(ExtractBySeleniumImpl.class);
 
 	private ExtractBySeleniumImpl(RegionRepository regionRepository, ShareRepository shareRepository,
@@ -56,9 +75,9 @@ public class ExtractBySeleniumImpl {
 	public void executor(String regionCode) {
 
 		logger.info(Msg.seleniumExecutor);
-		
-		WebDriver driver = getDriver();
-		
+
+		initializeDriver();
+
 		List<RegionDTO> regions = regionRepository.findByTitle(regionCode);
 
 		regions.stream().forEach(region -> {
@@ -77,40 +96,27 @@ public class ExtractBySeleniumImpl {
 			});
 			driver.close();
 		});
-		
+
 	}
 
-	
-	private WebDriver getDriver() {
+	private void initializeDriver() {
+
 		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-		WebDriver driver = new ChromeDriver();
-		return driver;
-	}
-	
-	private Wait<WebDriver> getWait(WebDriver driver) {
-		return new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(10))
+		driver = new ChromeDriver();
+
+		PageFactory.initElements(driver, this);
+
+		wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(10))
 				.pollingEvery(Duration.ofMillis(1200)).ignoring(org.openqa.selenium.NoSuchElementException.class);
 	}
-	
-	private ExpectedCondition<WebElement> checkForTableShares(WebDriver driver) {
 
-		return ExpectedConditions.visibilityOf(driver.findElement(By.id("cross_rate_markets_stocks_1")));
-	}
-	
-	Function<WebDriver, List<WebElement>> expectedTable = new Function<WebDriver, List<WebElement>>() {
-		  public List<WebElement> apply(WebDriver driver) {
-		    return driver.findElements(By.id("cross_rate_markets_stocks_1"));
-		  }
-		};
-	
-	private ExpectedCondition<WebElement> checkForTableShares(Wait wait, WebDriver driver) {
-		
-		return ExpectedConditions.visibilityOf(driver.findElement(By.id("cross_rate_markets_stocks_1")));
+	private ExpectedCondition<WebElement> checkForTableShares() {
+
+		return ExpectedConditions.visibilityOf(tableMarket);
 	}
 
-	
-	private void startFetchingProcess(Country country, Region region,WebDriver driver) throws Exception {
-		
+	private void startFetchingProcess(Country country, Region region, WebDriver driver) throws Exception {
+
 		logger.info(Msg.compound(country, Msg.fetchingCountry));
 		// Go to Web
 		driver.get(String.format("%s%s", Url.equities, country.getCode()));
@@ -132,7 +138,6 @@ public class ExtractBySeleniumImpl {
 		List<WebElement> optionsMarketIndex = new Select(selectMarketIndex).getOptions();
 
 		var idCountry = driver.findElement(By.id("countryID")).getAttribute("value");
-		
 
 		TreeSet<MarketIndexDTO> MarketIndexDTOList = new TreeSet<MarketIndexDTO>(MarketIndexDTO.byTitle);
 		logger.info(Msg.marketIndexList);
@@ -145,7 +150,8 @@ public class ExtractBySeleniumImpl {
 			MarketIndex marketIndex = new MarketIndex(idMarketIndex, titleMarketIndex);
 
 			webElement.click();
-			
+			wait.until(checkForTableShares());
+
 			TreeSet<Share> shares = getSharesByElement(driver);
 
 			MarketIndexDTO marketIndexDTO = new MarketIndexDTO(idMarketIndex, idCountry, marketIndex, shares);
@@ -159,14 +165,7 @@ public class ExtractBySeleniumImpl {
 	private TreeSet<Share> getSharesByElement(WebDriver driver) {
 
 		TreeSet<Share> shareList = new TreeSet<Share>(Property.byTitle);
-		
-		//List<WebElement> shareElements = wait.until(expectedTable);
-		Wait<WebDriver> wait = waitForShares(driver);
-		
-		wait.until(checkForTableShares(driver));
-			
-		List<WebElement> shareElements  = driver.findElements(By.cssSelector(".bold.left.noWrap.elp.plusIconTd"));
-		
+
 		for (WebElement element : shareElements) {
 
 			String shareTitle = element.findElement(By.tagName("a")).getText();
@@ -177,14 +176,6 @@ public class ExtractBySeleniumImpl {
 
 		}
 		return shareList;
-	}
-
-	private Wait<WebDriver> waitForShares(WebDriver driver) {
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(Duration.ofSeconds(10))
-				  .pollingEvery(Duration.ofMillis(1200))
-				  .ignoring(NoSuchElementException.class);
-		return wait;
 	}
 
 	private void saveSharesDTO(TreeSet<Share> shares) {
@@ -200,27 +191,32 @@ public class ExtractBySeleniumImpl {
 
 	}
 
-	private void saveCountryDTO(Country country, Region region, TreeSet<MarketIndexDTO> marketIndexListDTO) throws Exception {
+	private void saveCountryDTO(Country country, Region region, TreeSet<MarketIndexDTO> marketIndexListDTO)
+			throws Exception {
 
 		TreeSet<MarketIndex> marketIndexList = new TreeSet<MarketIndex>(Property.byTitle);
 		for (MarketIndexDTO marketIndexDTO : marketIndexListDTO) {
 			marketIndexList.add(marketIndexDTO.getPropierties());
 		}
-		
-		Optional<MarketIndexDTO> marketIndexOfAllSharesByCountry = marketIndexListDTO.stream().filter(isOverallMarketIndex).findFirst();
-		
-		if(marketIndexOfAllSharesByCountry.isPresent()) {
+
+		Optional<MarketIndexDTO> marketIndexOfAllSharesByCountry = marketIndexListDTO.stream()
+				.filter(isOverallMarketIndex).findFirst();
+
+		if (marketIndexOfAllSharesByCountry.isPresent()) {
 			MarketIndexDTO marketIndexGeneral = marketIndexOfAllSharesByCountry.get();
 			Set<Share> allSharesByCountry = marketIndexGeneral.getShares();
-			CountryDTO countryDTO = new CountryDTO(country.getCode(), country, region, allSharesByCountry, marketIndexList);
+			CountryDTO countryDTO = new CountryDTO(country.getCode(), country, region, allSharesByCountry,
+					marketIndexList);
 			countryRepository.save(countryDTO);
 			return;
 		}
-		
+
 		throw new Exception();
 
 	}
-	public static Predicate<MarketIndexDTO> isOverallMarketIndex = (marketIndex) -> marketIndex.getPropierties().getCode().equalsIgnoreCase("all");
+
+	public static Predicate<MarketIndexDTO> isOverallMarketIndex = (marketIndex) -> marketIndex.getPropierties()
+			.getCode().equalsIgnoreCase("all");
 
 	private boolean checkIfExistFailedRegion() {
 		return failedRepository.count() > 0;

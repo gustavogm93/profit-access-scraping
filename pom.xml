@@ -196,8 +196,18 @@
     <groupId>org.awaitility</groupId>
     <artifactId>awaitility</artifactId>
     <version>3.0.0</version>
+<!-- https://mvnrepository.com/artifact/org.json/json -->
+<!-- https://mvnrepository.com/artifact/org.json/json -->
+
 
 </dependency>
+	<!-- https://mvnrepository.com/artifact/org.json/json -->
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20160810</version>
+</dependency>
+
 <dependency>
     <groupId>org.awaitility</groupId>
     <artifactId>awaitility-proxy</artifactId>
