@@ -4,9 +4,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import org.jsoup.nodes.Element;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.google.common.base.Predicate;
+
 import ar.com.pa.model.props.MarketIndex;
 import ar.com.pa.model.props.Share;
 import lombok.Data;
@@ -35,7 +39,7 @@ public class MarketIndexDTO {
 	}
 
 	public static Comparator<MarketIndexDTO> byTitle = Comparator.comparing(MarketIndexDTO::getTitle);
-	
+
 	
 	public String getTitle() {
 		return this.propierties.getTitle();

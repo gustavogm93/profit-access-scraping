@@ -7,11 +7,7 @@ import org.springframework.stereotype.Component;
 
 import ar.com.pa.model.queue.SystemMessage;
 
-/**
- *
- * @author AJ Catambay of Bridging Code
- *
- */
+
 @Component
 public class RegionMessageConsumer {
 

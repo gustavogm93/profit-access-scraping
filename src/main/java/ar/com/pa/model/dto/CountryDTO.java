@@ -25,14 +25,17 @@ public class CountryDTO {
 	@Field(name = "region")
 	private final Region region;
 
+	@Field(name = "Shares")
+	private Set<Share> shares;
 	
 	@Field(name = "MarketIndex")
 	private final Set<MarketIndex> marketIndexList;
 
-	public CountryDTO(String id, Country country, Region region, Set<MarketIndex> marketIndexList) {
+	public CountryDTO(String id, Country country, Region region,Set<Share> shares ,Set<MarketIndex> marketIndexList) {
 		this.id = id;
 		this.country = country;
 		this.region = region;
+		this.shares = shares;
 		this.marketIndexList = marketIndexList;
 	}
 
