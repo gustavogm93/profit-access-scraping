@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.pa.model.Property;
+import ar.com.pa.model.props.Country;
+import ar.com.pa.model.props.Region;
 import ar.com.pa.model.queue.SystemMessage;
 
 @RestController
@@ -21,8 +23,10 @@ public class PublishController {
     @PostMapping("/publishMessage")
     public ResponseEntity<String> publishMessage(@RequestBody Property systemMessage) {
         try {
-        	
-            jmsTemplate.convertAndSend("region", systemMessage);
+        	Region reg = new Region("12","America");
+        	Country cou = new Country("230","Argentina");
+        	SystemMessage sa = new SystemMessage(cou, reg);
+            jmsTemplate.convertAndSend("region", sa);
 
             return new ResponseEntity<>("Sent.", HttpStatus.OK);
 

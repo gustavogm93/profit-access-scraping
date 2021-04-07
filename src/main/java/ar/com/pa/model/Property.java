@@ -3,8 +3,6 @@ package ar.com.pa.model;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import lombok.Data;
