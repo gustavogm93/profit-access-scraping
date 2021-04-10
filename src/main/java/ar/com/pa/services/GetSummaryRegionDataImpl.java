@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import ar.com.pa.mapper.Mapper;
 import ar.com.pa.enums.utils.Url;
 import ar.com.pa.model.Property;
+import ar.com.pa.model.constant.SummaryMarketIndexData;
 import ar.com.pa.model.dto.*;
 import ar.com.pa.model.props.*;
 import ar.com.pa.model.queue.SystemMessage;
@@ -28,7 +29,7 @@ import ar.com.pa.repository.*;
 import ar.com.pa.utils.Msg;
 
 @Component
-public class ExtractBySeleniumImpl {
+public class GetSummaryRegionDataImpl {
 
 	private RegionRepository regionRepository;
 
@@ -61,7 +62,7 @@ public class ExtractBySeleniumImpl {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExtractBySeleniumImpl.class);
 
-	private ExtractBySeleniumImpl(RegionRepository regionRepository, ShareRepository shareRepository,
+	private GetSummaryRegionDataImpl(RegionRepository regionRepository, ShareRepository shareRepository,
 			MarketIndexRepository marketIndexRepository, CountryRepository countryRepository, JmsTemplate jmsTemplate) {
 		this.regionRepository = regionRepository;
 		this.shareRepository = shareRepository;
@@ -146,42 +147,41 @@ public class ExtractBySeleniumImpl {
 
 		TreeSet<MarketIndexDTO> MarketIndexDTOList = new TreeSet<MarketIndexDTO>(MarketIndexDTO.byTitle);
 		logger.info(Msg.fetchingMarketIndex);
-
+		
+		TreeSet<SummaryMarketIndexData> summaryMarketIndexDataSet =  new TreeSet<SummaryMarketIndexData>(SummaryMarketIndexData.byTitle);
 		for (WebElement webElement : optionsMarketIndex) {
 
 			var idMarketIndex = webElement.getAttribute("id");
 			var titleMarketIndex = webElement.getText();
-
+			
 			MarketIndex marketIndex = new MarketIndex(idMarketIndex, titleMarketIndex);
 
 			webElement.click();
 			wait.until(checkForTableShares());
 			
-			TreeSet<Share> shares = getSharesByElement(driver);
+			Integer shareQuantity = getSharesQuantity(driver);
+			SummaryMarketIndexData summaryMarketIndexDataUnit = new SummaryMarketIndexData(marketIndex, shareQuantity);
+			
 
-			MarketIndexDTO marketIndexDTO = new MarketIndexDTO(idMarketIndex, idCountry, marketIndex, shares);
-
-			MarketIndexDTOList.add(marketIndexDTO);
-
+			summaryMarketIndexDataSet.add(summaryMarketIndexDataUnit);
 		}
 		return MarketIndexDTOList;
 	}
 
-	private TreeSet<Share> getSharesByElement(WebDriver driver) {
-		logger.info(Msg.fetchingShares);
-		TreeSet<Share> shareList = new TreeSet<Share>(Property.byTitle);
+	private Integer getSharesQuantity(WebDriver driver) {
+		Integer shareQuantity = 0;
 	
 		for (WebElement element : shareElements) {
 
 			String shareTitle = element.findElement(By.tagName("a")).getText();
 			String shareId = element.findElement(By.tagName("span")).getAttribute("data-id");
 
-			Share share = new Share(shareId, shareTitle);
-			shareList.add(share);
+			if(!(shareTitle.isEmpty() && shareId.isEmpty()))
+				shareQuantity++;
 
 		}
-		logger.info(Msg.saveShares);
-		return shareList;
+
+		return shareQuantity;
 	}
 
 
