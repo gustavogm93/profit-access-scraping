@@ -26,7 +26,6 @@ public class Property implements Serializable {
 		this.title = checkNotNull(title);
 	}
 
-
 		public static Comparator<Property> byTitle = Comparator.comparing(Property::getTitle);
 		public static Comparator<Property> byCode = Comparator.comparing(Property::getCode);
 		public static Supplier<TreeSet<Country>> newTreeSet= () -> new TreeSet<Country>(byCode);

@@ -15,23 +15,23 @@ import org.springframework.stereotype.Component;
 import com.google.common.collect.ImmutableList;
 import ar.com.pa.enums.RegionConstant;
 import ar.com.pa.enums.utils.Url;
-import ar.com.pa.model.Property;
 import ar.com.pa.model.dto.RegionDTO;
 import ar.com.pa.model.props.Country;
 import ar.com.pa.model.props.Region;
 import ar.com.pa.repository.RegionRepository;
 import io.vavr.control.Try;
+import static ar.com.pa.model.Property.newTreeSet;
 
 @Component
-public class ExtractByJsoupImpl {
+public class GetRegionByJsoup {
 
-	private static final Logger logger = LoggerFactory.getLogger(ExtractByJsoupImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(GetRegionByJsoup.class);
 	private static final ImmutableList<RegionConstant> regions = RegionConstant.values;
 
 	private RegionRepository regionRepository;
 
 	@Autowired
-	private ExtractByJsoupImpl(RegionRepository regionRepository) {
+	private GetRegionByJsoup(RegionRepository regionRepository) {
 		this.regionRepository = regionRepository;
 	};
 
@@ -53,6 +53,8 @@ public class ExtractByJsoupImpl {
 
 	}
 
+
+	
 	private void saveRegionDTO(Document data, RegionConstant regionConstant) {
 
 		TreeSet<Country> countries = getCountriesInsideDocument(data, regionConstant);
@@ -64,6 +66,7 @@ public class ExtractByJsoupImpl {
 		regionRepository.save(regionDTO);
 
 	}
+	
 
 	private TreeSet<Country> getCountriesInsideDocument(Document data, RegionConstant region) {
 
@@ -72,12 +75,12 @@ public class ExtractByJsoupImpl {
 		Elements regionElements = data.select(idElement).first().select("a");
 
 		return regionElements.stream().filter(isCountryElement).map(elementToCountryProps)
-				.collect(Collectors.toCollection(Property.newTreeSet));
+				.collect(Collectors.toCollection(newTreeSet));
 
 	}
 
 	private Predicate<Element> isCountryElement = (element) -> element.attr("href").contains("/equities/")
-												   			   && !element.text().contains("Market Overview");
+			&& !element.text().contains("Market Overview");
 
 	private Function<Element, Country> elementToCountryProps = new Function<Element, Country>() {
 

@@ -1,5 +1,6 @@
 package ar.com.pa.model.dto;
 
+import java.util.Collections;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -12,7 +13,7 @@ import lombok.Data;
 
 @Document(collection = "Region")
 @Data
-public class RegionDTO {
+public class RegionDTO  {
 	
 	@Id
 	private final String id;
@@ -29,5 +30,5 @@ public class RegionDTO {
 		this.countries = checkNotNull(countries);
 	}
 
-
+	
 }

@@ -22,7 +22,7 @@ public class Mapper {
 
 		@Override
 		public ShareDTO apply(Share share) {
-			return new ShareDTO(share.code, share);
+			return new ShareDTO(share.getCode(), share);
 		}
 
 	};

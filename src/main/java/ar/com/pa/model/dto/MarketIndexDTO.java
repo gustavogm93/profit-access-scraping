@@ -1,21 +1,23 @@
 package ar.com.pa.model.dto;
 
-import java.util.Comparator;
-import java.util.Set;
-import org.springframework.data.annotation.Id;
 import static com.google.common.base.Preconditions.checkNotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.annotation.Id;
 import ar.com.pa.model.props.MarketIndex;
 import ar.com.pa.model.props.Share;
+import java.util.Comparator;
+import java.util.Set;
+
 import lombok.Data;
+
 
 @Document(collection = "MarketIndex")
 @Data
 public class MarketIndexDTO {
 	
 	@Id
-	private String id;
+	private final String id;
 	
 	@Field(name = "CountryId")
 	private final String countryId;
