@@ -1,8 +1,6 @@
 package ar.com.pa.services;
 
-import java.util.Comparator;
 import java.util.TreeSet;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.google.common.collect.ImmutableList;
 import ar.com.pa.enums.RegionConstant;
 import ar.com.pa.enums.utils.Url;
+import ar.com.pa.model.Property;
 import ar.com.pa.model.dto.RegionDTO;
 import ar.com.pa.model.props.Country;
 import ar.com.pa.model.props.Region;
@@ -27,10 +26,9 @@ import io.vavr.control.Try;
 public class ExtractByJsoupImpl {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtractByJsoupImpl.class);
+	private static final ImmutableList<RegionConstant> regions = RegionConstant.values;
 
 	private RegionRepository regionRepository;
-
-	final static ImmutableList<RegionConstant> regions = RegionConstant.values;
 
 	@Autowired
 	private ExtractByJsoupImpl(RegionRepository regionRepository) {
@@ -61,7 +59,7 @@ public class ExtractByJsoupImpl {
 
 		Region regionProps = new Region(regionConstant.getCode(), regionConstant.getTitle());
 
-		RegionDTO regionDTO = new RegionDTO(regionProps.code, regionProps, countries);
+		RegionDTO regionDTO = new RegionDTO(regionProps.getCode(), regionProps, countries);
 
 		regionRepository.save(regionDTO);
 
@@ -74,13 +72,9 @@ public class ExtractByJsoupImpl {
 		Elements regionElements = data.select(idElement).first().select("a");
 
 		return regionElements.stream().filter(isCountryElement).map(elementToCountryProps)
-				.collect(Collectors.toCollection(country));
+				.collect(Collectors.toCollection(Property.newTreeSet));
 
 	}
-
-	private Comparator<Country> byCode = Comparator.comparing(Country::getCode);
-
-	private Supplier<TreeSet<Country>> country = () -> new TreeSet<Country>(byCode);
 
 	private Predicate<Element> isCountryElement = (element) -> element.attr("href").contains("/equities/")
 												   			   && !element.text().contains("Market Overview");

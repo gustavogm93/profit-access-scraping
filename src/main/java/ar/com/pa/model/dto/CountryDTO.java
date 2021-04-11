@@ -2,6 +2,7 @@ package ar.com.pa.model.dto;
 
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -17,7 +18,7 @@ import lombok.Data;
 public class CountryDTO {
 
 	@Id
-	private String id;
+	private final String id;
 
 	@Field(name = "country")
 	private final Country country;
@@ -26,17 +27,17 @@ public class CountryDTO {
 	private final Region region;
 
 	@Field(name = "Shares")
-	private Set<Share> shares;
+	private final Set<Share> shares;
 	
 	@Field(name = "MarketIndex")
 	private final Set<MarketIndex> marketIndexList;
 
 	public CountryDTO(String id, Country country, Region region,Set<Share> shares ,Set<MarketIndex> marketIndexList) {
-		this.id = id;
-		this.country = country;
-		this.region = region;
-		this.shares = shares;
-		this.marketIndexList = marketIndexList;
+		this.id = checkNotNull(id); 
+		this.country = checkNotNull(country);
+		this.region = checkNotNull(region);
+		this.shares = checkNotNull(shares);
+		this.marketIndexList = checkNotNull(marketIndexList);
 	}
 
 }

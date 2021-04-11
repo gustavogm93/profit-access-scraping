@@ -1,11 +1,11 @@
 package ar.com.pa.model.dto;
 
-import java.util.List;
 import java.util.Set;
 
-import org.springframework.data.annotation.Id;
+import static com.google.common.base.Preconditions.checkNotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.annotation.Id;
 import ar.com.pa.model.props.Country;
 import ar.com.pa.model.props.Region;
 import lombok.Data;
@@ -15,7 +15,7 @@ import lombok.Data;
 public class RegionDTO {
 	
 	@Id
-	private String id;
+	private final String id;
 	
 	@Field(name = "properties")
 	private final Region properties;
@@ -24,9 +24,9 @@ public class RegionDTO {
 	private final Set<Country> countries;
 
 	public RegionDTO(String id, Region properties, Set<Country> countries) {
-		this.id = id;
-		this.properties = properties;
-		this.countries = countries;
+		this.id = checkNotNull(id);
+		this.properties = checkNotNull(properties);
+		this.countries = checkNotNull(countries);
 	}
 
 

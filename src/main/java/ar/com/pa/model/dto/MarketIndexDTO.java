@@ -1,16 +1,11 @@
 package ar.com.pa.model.dto;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
-
-import org.jsoup.nodes.Element;
 import org.springframework.data.annotation.Id;
+import static com.google.common.base.Preconditions.checkNotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import com.google.common.base.Predicate;
-
 import ar.com.pa.model.props.MarketIndex;
 import ar.com.pa.model.props.Share;
 import lombok.Data;
@@ -23,24 +18,23 @@ public class MarketIndexDTO {
 	private String id;
 	
 	@Field(name = "CountryId")
-	private String countryId;
+	private final String countryId;
 	
 	@Field(name = "propierties")
-	private MarketIndex propierties;
+	private final MarketIndex propierties;
 	
 	@Field(name = "Shares")
-	private Set<Share> shares;
+	private final Set<Share> shares;
 	
 	public MarketIndexDTO(String id,String countryId, MarketIndex propierties, Set<Share> shares) {
-		this.id = id;
-		this.countryId = countryId;
-		this.propierties = propierties;
-		this.shares = shares;
+		this.id = checkNotNull(id);
+		this.countryId = checkNotNull(countryId);
+		this.propierties = checkNotNull(propierties);
+		this.shares = checkNotNull(shares);
 	}
 
 	public static Comparator<MarketIndexDTO> byTitle = Comparator.comparing(MarketIndexDTO::getTitle);
 
-	
 	public String getTitle() {
 		return this.propierties.getTitle();
 	}
