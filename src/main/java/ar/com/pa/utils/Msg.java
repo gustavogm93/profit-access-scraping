@@ -1,6 +1,6 @@
 package ar.com.pa.utils;
 
-import ar.com.pa.model.Property;
+import ar.com.pa.generics.Property;
 
 public class Msg {
 
