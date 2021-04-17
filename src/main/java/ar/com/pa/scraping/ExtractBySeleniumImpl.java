@@ -1,5 +1,6 @@
 package ar.com.pa.scraping;
 
+import java.net.URL;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
@@ -15,46 +16,51 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
-import Region.Region;
-import Region.RegionRepository;
-import ar.com.pa.marketIndex.MarketIndex;
 import ar.com.pa.marketIndex.MarketIndexDTO;
+import ar.com.pa.marketIndex.MarketIndexProp;
 import ar.com.pa.marketIndex.MarketIndexRepository;
-import ar.com.pa.country.Country;
 import ar.com.pa.country.CountryDTO;
+import ar.com.pa.country.CountryProp;
 import ar.com.pa.country.CountryRepository;
 import ar.com.pa.enums.utils.Url;
 import ar.com.pa.generics.Mapper;
 import ar.com.pa.generics.Property;
-import ar.com.pa.model.dto.*;
-import ar.com.pa.model.props.*;
-import ar.com.pa.queue.SystemMessage;
-import ar.com.pa.repository.*;
+import ar.com.pa.region.RegionDTO;
+import ar.com.pa.region.RegionProp;
+import ar.com.pa.region.RegionRepository;
 import ar.com.pa.share.Share;
 import ar.com.pa.share.ShareDTO;
 import ar.com.pa.share.ShareRepository;
 import ar.com.pa.utils.Msg;
 
 @Component
-public class ExtractBySeleniumImpl {
+public class ExtractBySeleniumImpl implements SeleniumScraping {
 
+	/**
+	 * Services
+	 */
 	private RegionRepository regionRepository;
+
+	private CountryRepository countryRepository;
 
 	private ShareRepository shareRepository;
 
 	private MarketIndexRepository marketIndexRepository;
-
-	private CountryRepository countryRepository;
-
-    private JmsTemplate jmsTemplate;
 	
-	@Value("${chrome.driver}")
-	private String chromeDriverPath;
+	/**
+	 * Selenium API
+	 */
+	private static WebDriver driver;
+
+	private static Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(6))
+	.pollingEvery(Duration.ofMillis(1200)).ignoring(org.openqa.selenium.NoSuchElementException.class);
 	
+	/**
+	 * D.O.M Elements
+	 */
 	@FindBy(how = How.ID, using = "countryID")
 	private WebElement spanCountryId;
 
@@ -67,9 +73,7 @@ public class ExtractBySeleniumImpl {
 	@FindBy(how = How.CSS, using = ".bold.left.noWrap.elp.plusIconTd")
 	private List<WebElement> shareElements;
 	
-	private static WebDriver driver;
 
-	private static Wait<WebDriver> wait;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExtractBySeleniumImpl.class);
 
@@ -79,10 +83,9 @@ public class ExtractBySeleniumImpl {
 		this.shareRepository = shareRepository;
 		this.marketIndexRepository = marketIndexRepository;
 		this.countryRepository = countryRepository;
-		this.jmsTemplate = jmsTemplate;
 	}
 
-	public void executor(String regionCode) {
+	public void executor(@Nullable String regionCode) {
 
 		logger.info(Msg.executor);		
 		initializeDriver();	
@@ -98,7 +101,6 @@ public class ExtractBySeleniumImpl {
 				} catch (Exception e) {
 					logger.error(Msg.error(country, e.getMessage()));
 					driver.quit();
-					jmsTemplate.convertAndSend("region", new SystemMessage(country, region.getProperties()));
 					initializeDriver();
 				}
 
@@ -109,19 +111,21 @@ public class ExtractBySeleniumImpl {
 	}
 
 	
-	private void initializeDriver() {
+	public void initializeDriver() {
+
+		URL chromeDriverPath = ExtractBySeleniumImpl.class
+	    .getClassLoader().getResource("driver/chromedriver.exe");
 		
-		logger.info(Msg.startDriver);
-		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+		System.setProperty("webdriver.chrome.driver", chromeDriverPath.getPath());
 		driver = new ChromeDriver();
 
 		PageFactory.initElements(driver, this);
-		logger.info(Msg.startDriverSuccess);
-		
+
 		wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(6))
 				.pollingEvery(Duration.ofMillis(1200)).ignoring(org.openqa.selenium.NoSuchElementException.class);
 		
 	}
+	
 	
 	private ExpectedCondition<WebElement> checkForTableShares() {
 
@@ -129,7 +133,7 @@ public class ExtractBySeleniumImpl {
 	}
 
 	
-	private void startFetchingProcess(Country country, Region region,WebDriver driver) throws Exception {
+	private void startFetchingProcess(CountryProp country, RegionProp region,WebDriver driver) throws Exception {
 		
 		// Go to Web
 		driver.get(String.format("%s%s", Url.equities, country.getCode()));
@@ -164,7 +168,7 @@ public class ExtractBySeleniumImpl {
 			var idMarketIndex = webElement.getAttribute("id");
 			var titleMarketIndex = webElement.getText();
 
-			MarketIndex marketIndex = new MarketIndex(idMarketIndex, titleMarketIndex);
+			MarketIndexProp marketIndex = new MarketIndexProp(idMarketIndex, titleMarketIndex);
 
 			webElement.click();
 			wait.until(checkForTableShares());
@@ -210,9 +214,9 @@ public class ExtractBySeleniumImpl {
 
 	}
 
-	private void saveCountryDTO(Country country, Region region, TreeSet<MarketIndexDTO> marketIndexListDTO) throws Exception {
+	private void saveCountryDTO(CountryProp country, RegionProp region, TreeSet<MarketIndexDTO> marketIndexListDTO) throws Exception {
 
-		TreeSet<MarketIndex> marketIndexList = new TreeSet<MarketIndex>(Property.byTitle);
+		TreeSet<MarketIndexProp> marketIndexList = new TreeSet<MarketIndexProp>(Property.byTitle);
 		for (MarketIndexDTO marketIndexDTO : marketIndexListDTO) {
 			marketIndexList.add(marketIndexDTO.getPropierties());
 		}

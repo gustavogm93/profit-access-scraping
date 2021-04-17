@@ -2,18 +2,12 @@ package ar.com.pa.generics;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.TreeSet;
-import java.util.function.Supplier;
-
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import ar.com.pa.country.Country;
-import lombok.Data;
 import static com.google.common.base.Preconditions.checkNotNull;
+import lombok.Data;
 
 @Data
 public class Property implements Serializable {
-
 
 		@Field(name = "code")
 		private final String code;
@@ -28,5 +22,5 @@ public class Property implements Serializable {
 
 		public static Comparator<Property> byTitle = Comparator.comparing(Property::getTitle);
 		public static Comparator<Property> byCode = Comparator.comparing(Property::getCode);
-		public static Supplier<TreeSet<Country>> newTreeSet= () -> new TreeSet<Country>(byCode);
+	
 }

@@ -1,6 +1,5 @@
 package ar.com.pa.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import Region.Region;
-import ar.com.pa.country.Country;
+import ar.com.pa.country.CountryProp;
 import ar.com.pa.generics.Property;
 import ar.com.pa.queue.SystemMessage;
+import ar.com.pa.region.RegionProp;
 
 @RestController
 public class PublishController {
@@ -23,8 +22,8 @@ public class PublishController {
     @PostMapping("/publishMessage")
     public ResponseEntity<String> publishMessage(@RequestBody Property systemMessage) {
         try {
-        	Region reg = new Region("12","America");
-        	Country cou = new Country("230","Argentina");
+        	RegionProp reg = new RegionProp("12","America");
+        	CountryProp cou = new CountryProp("230","Argentina");
         	SystemMessage sa = new SystemMessage(cou, reg);
             jmsTemplate.convertAndSend("region", sa);
 

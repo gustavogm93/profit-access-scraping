@@ -20,7 +20,7 @@ public class CountryDTO {
 	private final String id;
 
 	@Field(name = "country")
-	private final Country country;
+	private final CountryProp country;
 
 	@Field(name = "region")
 	private final RegionProp region;
@@ -31,7 +31,7 @@ public class CountryDTO {
 	@Field(name = "MarketIndex")
 	private final Set<MarketIndexProp> marketIndexList;
 
-	public CountryDTO(String id, Country country, RegionProp region,Set<Share> shares ,Set<MarketIndexProp> marketIndexList) {
+	public CountryDTO(String id, CountryProp country, RegionProp region,Set<Share> shares ,Set<MarketIndexProp> marketIndexList) {
 		this.id = checkNotNull(id); 
 		this.country = checkNotNull(country);
 		this.region = checkNotNull(region);

@@ -11,7 +11,6 @@ public interface SeleniumScraping {
 	public final long pollingEvery = 1200;
 
 	public void executor(String code);
-
 	public void initializeDriver();
 
 }

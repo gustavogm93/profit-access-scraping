@@ -16,16 +16,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import com.google.common.base.Strings;
-
-import Region.Region;
-import Region.RegionRepository;
-import ar.com.pa.country.Country;
+import ar.com.pa.country.CountryProp;
 import ar.com.pa.enums.utils.Url;
-import ar.com.pa.marketIndex.MarketIndex;
-import ar.com.pa.model.dto.*;
-import ar.com.pa.model.props.*;
+import ar.com.pa.marketIndex.MarketIndexProp;
 import ar.com.pa.queue.SystemMessage;
-import ar.com.pa.repository.*;
+import ar.com.pa.region.RegionDTO;
+import ar.com.pa.region.RegionProp;
+import ar.com.pa.region.RegionRepository;
 import ar.com.pa.summary.SummaryCountryData;
 import ar.com.pa.summary.SummaryMarketIndexData;
 import ar.com.pa.summary.SummaryRegionDataDTO;
@@ -112,7 +109,7 @@ public class GetSummaryRegionData implements SeleniumScraping{
 	}
 
 
-	private void startFetchingProcess(Country country, Region region, WebDriver driver) throws Exception {
+	private void startFetchingProcess(CountryProp country, RegionProp region, WebDriver driver) throws Exception {
 
 		// Go to Web
 		driver.get(String.format("%s%s", Url.equities, country.getCode()));
@@ -144,7 +141,7 @@ public class GetSummaryRegionData implements SeleniumScraping{
 			var idMarketIndex = webElement.getAttribute("id");
 			var titleMarketIndex = webElement.getText();
 
-			MarketIndex marketIndex = new MarketIndex(idMarketIndex, titleMarketIndex);
+			MarketIndexProp marketIndex = new MarketIndexProp(idMarketIndex, titleMarketIndex);
 
 			webElement.click();
 			wait.until(checkForTableShares());

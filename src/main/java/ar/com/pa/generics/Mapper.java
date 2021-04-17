@@ -3,7 +3,7 @@ package ar.com.pa.generics;
 import com.google.common.base.Function;
 
 import ar.com.pa.failed.FailedRegionDTO;
-import ar.com.pa.model.dto.RegionDTO;
+import ar.com.pa.region.RegionDTO;
 import ar.com.pa.share.Share;
 import ar.com.pa.share.ShareDTO;
 

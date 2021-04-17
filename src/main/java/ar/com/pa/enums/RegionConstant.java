@@ -1,25 +1,21 @@
 package ar.com.pa.enums;
 
 import java.util.Arrays;
-
-
 import com.google.common.collect.ImmutableList;
 
 public enum RegionConstant {
 
-	 America("1", "America"),
-	 Europe("2", "Europe"),
-	 Asia_Pacific("3", "Asia-Pacific"),
-	 Middle_East("4", "Middle-East"),
-	 Africa("5", "Africa");
+	 AMERICA("1", "America"),
+	 EUROPE("2", "Europe"),
+	 ASIA_PACIFIC("3", "Asia-Pacific"),
+	 MIDDLE_EAST("4", "Middle-East"),
+	 AFRICA("5", "Africa");
 	
 	public static final ImmutableList<RegionConstant> values = ImmutableList.copyOf(Arrays.asList(RegionConstant.values()));
 	
 	private final String code;
 	
 	private final String title;
-	
-	
 	
 	public String getCode() {
 		return this.code;

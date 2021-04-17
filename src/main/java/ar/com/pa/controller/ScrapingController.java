@@ -1,7 +1,7 @@
 package ar.com.pa.controller;
 
 import ar.com.pa.scraping.ExtractBySeleniumImpl;
-import ar.com.pa.scraping.GetRegionByJsoup;
+import ar.com.pa.scraping.ScrapingRegionConstant;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 
@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.*;
 @Data
 public class ScrapingController {
 
-	private GetRegionByJsoup jsonExtract;
+	private ScrapingRegionConstant jsonExtract;
 	
 	private ExtractBySeleniumImpl seleniumExtract;
 	
+	
 	private final ExecutorService executorService;
 	@Autowired
-	public ScrapingController(ExtractBySeleniumImpl scrapingResourcesImpl, GetRegionByJsoup jsonExtract, ExecutorService executorService) {
+	public ScrapingController(ExtractBySeleniumImpl scrapingResourcesImpl, ScrapingRegionConstant jsonExtract, ExecutorService executorService) {
 		this.seleniumExtract = scrapingResourcesImpl;
 		this.jsonExtract = jsonExtract;
 		this.executorService = executorService;
@@ -31,7 +32,7 @@ public class ScrapingController {
 
 	@GetMapping("/region")
 	public void getRegion() throws Exception {
-		jsonExtract.fetchRegion();
+		jsonExtract.executor();
 	}
 
 	@GetMapping("/get")

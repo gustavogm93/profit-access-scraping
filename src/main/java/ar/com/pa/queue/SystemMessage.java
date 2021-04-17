@@ -2,8 +2,8 @@ package ar.com.pa.queue;
 
 import java.io.Serializable;
 
-import Region.Region;
-import ar.com.pa.country.Country;
+import ar.com.pa.country.CountryProp;
+import ar.com.pa.region.RegionProp;
 import lombok.Data;
 
 @Data
@@ -11,10 +11,10 @@ public class SystemMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Country country;
-    private Region region;
+    private CountryProp country;
+    private RegionProp region;
     
-	public SystemMessage(Country country, Region region) {
+	public SystemMessage(CountryProp country, RegionProp region) {
 		this.country = country;
 		this.region = region;
 	}
