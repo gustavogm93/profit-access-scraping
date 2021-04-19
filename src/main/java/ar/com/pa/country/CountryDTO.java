@@ -1,18 +1,20 @@
 package ar.com.pa.country;
 
 import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import ar.com.pa.marketIndex.MarketIndexProp;
 import ar.com.pa.region.RegionProp;
-import ar.com.pa.share.Share;
+import ar.com.pa.share.ShareProp;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NonNull;
+
 
 @Document(collection = "Country")
+@AllArgsConstructor
 @Data
 public class CountryDTO {
 
@@ -20,23 +22,15 @@ public class CountryDTO {
 	private final String id;
 
 	@Field(name = "country")
-	private final CountryProp country;
+	@NonNull private final CountryProp properties;
 
 	@Field(name = "region")
-	private final RegionProp region;
+	@NonNull private final RegionProp region;
 
 	@Field(name = "Shares")
-	private final Set<Share> shares;
+	@NonNull private final Set<ShareProp> shares;
 	
 	@Field(name = "MarketIndex")
-	private final Set<MarketIndexProp> marketIndexList;
-
-	public CountryDTO(String id, CountryProp country, RegionProp region,Set<Share> shares ,Set<MarketIndexProp> marketIndexList) {
-		this.id = checkNotNull(id); 
-		this.country = checkNotNull(country);
-		this.region = checkNotNull(region);
-		this.shares = checkNotNull(shares);
-		this.marketIndexList = checkNotNull(marketIndexList);
-	}
+	@NonNull private final Set<MarketIndexProp> marketIndexList;
 
 }

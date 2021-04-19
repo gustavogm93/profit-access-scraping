@@ -2,30 +2,15 @@ package ar.com.pa.country;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+public interface CountryService {
 
-import lombok.AllArgsConstructor;
+	public List<CountryDTO> getAll();
 
-@AllArgsConstructor
-@Service
-public class CountryService {
-
-	private final CountryRepository countryRepository;
-
-	public List<CountryDTO> getAllCountries() {
-		return countryRepository.findAll();
-	}
-
-	public void addCountry(CountryDTO countryDTO) {
-		countryRepository.save(countryDTO);
-	}
+	public void add(CountryDTO countryDTO);
 	
-	public void deleteCountry(String code) {
-		if(!countryRepository.existsById(code)) {
-			throw new CountryNotFoundException(
-                    "Country with id " + code + " does not exists");
-		}
+	public void addAll(List<CountryDTO> countryDTO);
+	
+	public void delete(String code);
 			
-		countryRepository.deleteById(code);
-	}
+	public List<CountryDTO> findByTitle(String title);
 }

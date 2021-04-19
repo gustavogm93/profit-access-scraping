@@ -1,29 +1,21 @@
 package ar.com.pa.share;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NonNull;
 
-@Data
+@AllArgsConstructor
 @Document(collection = "Share")
+@Data
 public class ShareDTO {
 
 	@Id
 	private String id;
 	
 	@Field(name = "properties")
-	private Share properties;
-	
-
-	public ShareDTO(String id, Share share) {
-		this.id = id;
-		this.properties = share;
-		
-	}
-
-	
-	
-
+	@NonNull private ShareProp properties;
 	
 }

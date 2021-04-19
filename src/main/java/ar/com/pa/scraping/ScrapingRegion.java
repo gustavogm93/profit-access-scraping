@@ -22,15 +22,15 @@ import ar.com.pa.region.RegionProp;
 import ar.com.pa.region.RegionService;
 
 @Service
-public class ScrapingRegionConstant implements JsoupScraping {
+public class ScrapingRegion implements JsoupScraping {
 
-	private static final Logger logger = LoggerFactory.getLogger(ScrapingRegionConstant.class);
+	private static final Logger logger = LoggerFactory.getLogger(ScrapingRegion.class);
 	private static final String urlEquities = Url.equities;
 	
 	private RegionService regionService;
 
 	@Autowired
-	private ScrapingRegionConstant(RegionService regionService) {
+	private ScrapingRegion(RegionService regionService) {
 		this.regionService = regionService;
 	};
 	
@@ -54,7 +54,7 @@ public class ScrapingRegionConstant implements JsoupScraping {
 
 					RegionDTO regionDTO = new RegionDTO(region.getCode(), regionProps, countries);
 					
-					regionService.addRegion(regionDTO);
+					regionService.add(regionDTO);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 					throw e;
@@ -82,7 +82,7 @@ public class ScrapingRegionConstant implements JsoupScraping {
 		return RegionConstant.values;
 	}
 
-	public Elements getCountriesElementsInDocument(Document data, RegionConstant region) {
+	private Elements getCountriesElementsInDocument(Document data, RegionConstant region) {
 		
 		var idElement = String.format("#cdregion%s", region.getCode());
 
@@ -113,10 +113,6 @@ public class ScrapingRegionConstant implements JsoupScraping {
 		}
 
 	};
-
-
-
-
 
 
 

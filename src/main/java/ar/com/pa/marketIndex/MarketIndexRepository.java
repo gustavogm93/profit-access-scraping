@@ -5,6 +5,4 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface MarketIndexRepository  extends MongoRepository<MarketIndexDTO, String>{ 
-
-}
+public interface MarketIndexRepository  extends MongoRepository<MarketIndexDTO, String>{}

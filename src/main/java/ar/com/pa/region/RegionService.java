@@ -2,30 +2,16 @@ package ar.com.pa.region;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+public interface RegionService {
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
-@Service
-public class RegionService {
-
-	private final RegionRepository regionRepository;
-
-	public List<RegionDTO> getAllRegions() {
-		return regionRepository.findAll();
-	}
-
-	public void addRegion(RegionDTO regionDTO) {
-		regionRepository.save(regionDTO);
-	}
+	public List<RegionDTO> getAll();
 	
-	public void deleteRegion(String code) {
-		if(!regionRepository.existsById(code)) {
-			throw new RegionNotFoundException(
-                    "Region with id " + code + " does not exists");
-		}
-			
-		regionRepository.deleteById(code);
-	}
+	public List<RegionDTO> findByTitle(String title);
+	
+	public void add(RegionDTO regionDTO);
+	
+	public void addAll(List<RegionDTO> regionDTOList);
+	
+	public void delete(String code);
+	
 }
