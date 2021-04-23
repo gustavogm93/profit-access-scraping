@@ -11,9 +11,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import ar.com.pa.scraping.ScrapingFetchImpl;
 import ar.com.pa.service.mock.ScrappingFormatConstant;
 import ar.com.pa.service.mock.constantMock;
-import ar.com.pa.services.ScrapingFetchImpl;
 
 public class ScrapingFetchImplTest {
 
