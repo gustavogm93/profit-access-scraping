@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import ar.com.pa.region.RegionRepository;
+import ar.com.pa.collections.region.RegionRepository;
 import io.vavr.control.Try;
 
 @Component

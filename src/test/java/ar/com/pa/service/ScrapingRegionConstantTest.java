@@ -6,8 +6,9 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ar.com.pa.region.RegionDTO;
-import ar.com.pa.region.RegionService;
+
+import ar.com.pa.collections.region.RegionDTO;
+import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.scraping.ScrapingRegion;
 import junit.framework.TestCase;
 
