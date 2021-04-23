@@ -6,8 +6,8 @@ import java.util.List;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import ar.com.pa.company.CompanyDTO;
-import ar.com.pa.company.Instrument;
+import ar.com.pa.collections.company.CompanyDTO;
+import ar.com.pa.collections.company.Instrument;
 
 public interface ScrapingFetch{ 
 

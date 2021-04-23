@@ -15,12 +15,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ar.com.pa.company.CompanyDTO;
-import ar.com.pa.company.Industry;
-import ar.com.pa.company.Instrument;
+import ar.com.pa.collections.company.CompanyDTO;
+import ar.com.pa.collections.company.Industry;
+import ar.com.pa.collections.company.Instrument;
 import ar.com.pa.utils.MapperUtils;
 import ar.com.pa.utils.PatternResource;
-import ar.com.pa.utils.ValidateUtils;
+import ar.com.pa.utils.Validates;
+
 
 @Service
 public class ScrapingFetchImpl implements ScrapingFetch {
@@ -31,7 +32,7 @@ public class ScrapingFetchImpl implements ScrapingFetch {
 
 	private static int dateIndex = 4;
 
-	private ValidateUtils validateUtils;
+	private Validates validateUtils;
 
 	private MapperUtils mapperUtils;
 
@@ -39,7 +40,7 @@ public class ScrapingFetchImpl implements ScrapingFetch {
 	};
 
 	@Autowired
-	public ScrapingFetchImpl(ValidateUtils validateUtils, MapperUtils mapperUtils) {
+	public ScrapingFetchImpl(Validates validateUtils, MapperUtils mapperUtils) {
 		super();
 		this.validateUtils = validateUtils;
 		this.mapperUtils = mapperUtils;

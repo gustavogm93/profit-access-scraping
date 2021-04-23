@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.common.collect.ImmutableList;
-import ar.com.pa.country.CountryProp;
+import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.region.RegionDTO;
+import ar.com.pa.collections.region.RegionProp;
+import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.enums.RegionConstant;
 import ar.com.pa.enums.utils.Url;
-import ar.com.pa.region.RegionDTO;
-import ar.com.pa.region.RegionProp;
-import ar.com.pa.region.RegionService;
 
 @Service
 public class ScrapingRegion implements JsoupScraping {

@@ -5,8 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import ar.com.pa.country.CountryProp;
-import ar.com.pa.region.RegionProp;
+import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.region.RegionProp;
 import lombok.Data;
 
 @Document(collection = "Failed")

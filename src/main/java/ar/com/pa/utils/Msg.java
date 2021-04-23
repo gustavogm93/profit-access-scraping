@@ -4,9 +4,13 @@ import ar.com.pa.generics.Property;
 
 public class Msg {
 
+	
 	public final static String executor = "Executing process...";
 	public final static String startDriver = "Starting Chrome Driver...";
 	public final static String startDriverSuccess = "Chrome start success";
+	
+	public final static String fetchingAllRegions = "Getting all regions from...";
+	public final static String fetchingSpecificRegion = "Getting # regions...";
 	
 	public final static String fetchingCountry = "Getting country...";
 	public final static String saveCountry = "Start process of Save country";
@@ -27,4 +31,8 @@ public class Msg {
 
 		return String.format(("Error ocurred in country: %s: %s"),object.getTitle(),msg);
 	}
+	
+	
+
+	
 }

@@ -4,9 +4,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.concurrent.ExecutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ar.com.pa.region.RegionService;
-import ar.com.pa.scraping.ScrapingCountry;
+
+import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.scraping.ScrapingRegion;
+import ar.com.pa.scraping.selenium.InvestmentFetchCountry;
 import lombok.Data;
 
 
@@ -20,12 +21,12 @@ public class ScrapingController {
 	
 	private RegionService rs;
 	
-	private ScrapingCountry seleniumExtract;
+	private InvestmentFetchCountry seleniumExtract;
 	
 	
 	private final ExecutorService executorService;
 	@Autowired
-	public ScrapingController(ScrapingCountry scrapingResourcesImpl, ScrapingRegion jsonExtract, RegionService rs, ExecutorService executorService) {
+	public ScrapingController(InvestmentFetchCountry scrapingResourcesImpl, ScrapingRegion jsonExtract, RegionService rs, ExecutorService executorService) {
 		this.seleniumExtract = scrapingResourcesImpl;
 		this.jsonExtract = jsonExtract;
 		this.executorService = executorService;

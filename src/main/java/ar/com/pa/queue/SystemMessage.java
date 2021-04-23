@@ -2,8 +2,8 @@ package ar.com.pa.queue;
 
 import java.io.Serializable;
 
-import ar.com.pa.country.CountryProp;
-import ar.com.pa.region.RegionProp;
+import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.region.RegionProp;
 import lombok.Data;
 
 @Data

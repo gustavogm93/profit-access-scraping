@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.com.pa.country.CountryProp;
+import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.region.RegionProp;
 import ar.com.pa.generics.Property;
 import ar.com.pa.queue.SystemMessage;
-import ar.com.pa.region.RegionProp;
 
 @RestController
 public class PublishController {
