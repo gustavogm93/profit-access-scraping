@@ -14,20 +14,20 @@ import lombok.Data;
 import lombok.NonNull;
 
 @AllArgsConstructor
-@Document(collection = "Market-Index-constant")
+@Document(collection = "market-index-constant")
 @Data
 public class MarketIndexDTO {
 	
 	@Id
 	private final String id;
 	
-	@Field(name = "CountryId")
+	@Field(name = "countryId")
 	@NonNull private final String countryId;
 	
 	@Field(name = "propierties")
 	@NonNull private final MarketIndexProp propierties;
 	
-	@Field(name = "Shares")
+	@Field(name = "shares")
 	@NonNull private final Set<ShareProp> shares;
 
 

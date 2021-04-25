@@ -15,10 +15,11 @@ public class Msg {
 	public final static String fetchingCountry = "Getting country...";
 	public final static String saveCountry = "Start process of Save country";
 	
-	public final static String fetchingMarketIndex = "Getting to market Index List...";
+	public final static String fetchingMarketIndex = "Getting market Index List...";
+	public final static String loopingByMarketIndex = "Looping by market Index Options...";
 	public final static String saveMarketIndex = "Start process of Save country";
 	
-	public final static String fetchingShares = "Getting to shares...";
+	public final static String fetchingShares = "Getting shares...";
 	public final static String saveShares = "Save shares...";
 	
 	public static < T extends Property > String compound(T object, String msg) {

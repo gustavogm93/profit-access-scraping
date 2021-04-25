@@ -1,4 +1,4 @@
-package ar.com.pa.collections.summary;
+package ar.com.pa.collections.quantity;
 
 import java.util.List;
 

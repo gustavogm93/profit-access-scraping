@@ -1,7 +1,8 @@
-package ar.com.pa.scraping;
+package ar.com.pa.scraping.selenium;
 
 import java.net.URL;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -12,11 +13,12 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.UnexpectedTagNameException;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.pa.scraping.selenium.InvestmentFetchCountry;
 import ar.com.pa.utils.Msg;
 
 
@@ -43,7 +45,7 @@ public class SeleniumBase  {
 
 		log.info(Msg.executor);
 
-		String chromeDriverPath = InvestmentFetchCountry.class.getClassLoader().getResource(ChromeDriverPathResource)
+		String chromeDriverPath = SeleniumBase.class.getClassLoader().getResource(ChromeDriverPathResource)
 				.getPath();
 
 		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
@@ -51,7 +53,9 @@ public class SeleniumBase  {
 
 	}
 
-	
+	/**
+	 * Method for Init Page's elements and fluent wait.
+	 */
 	protected void setUpSeleniumDriver() {
 		PageFactory.initElements(driver, this);
 
@@ -59,12 +63,16 @@ public class SeleniumBase  {
 				.pollingEvery(Duration.ofSeconds(POLLING_MEDIUM))
 				.ignoring(org.openqa.selenium.NoSuchElementException.class);
 	}
-
-	private void changeImplicitWait(int value, TimeUnit timeUnit) {
+	
+	protected void getPage(String url) {
+		driver.get(url);
+	}
+	
+	protected void changeImplicitWait(int value, TimeUnit timeUnit) {
 		driver.manage().timeouts().implicitlyWait(value, timeUnit);
 	}
 
-	private void restoreDefaultImplicitWait() {
+	protected void restoreDefaultImplicitWait() {
 		driver.manage().timeouts().implicitlyWait(TIMEOUT_MEDIUM, TimeUnit.SECONDS);
 	}
 
@@ -96,7 +104,6 @@ public class SeleniumBase  {
 
 	/**
 	 * Method to check if WebElement is displayed on the page
-	 *
 	 * @return true if element is displayed, otherwise return false
 	 */
 	protected boolean isElementDisplayed(WebElement element) {
@@ -107,13 +114,50 @@ public class SeleniumBase  {
 			return false;
 		}
 	}
-
-	private ExpectedCondition<WebElement> checkForElement(WebElement webElement) {
+	
+	  /**
+	   * An expectation for checking that an element, known to be present on the DOM of a page, is
+	   * visible. Visibility means that the element is not only displayed but also has a height and
+	   * width that is greater than 0.
+	   *
+	   * @param element the WebElement
+	   * @return the (same) WebElement once it is visible
+	   */
+	protected ExpectedCondition<WebElement> checkVisibilityOf(WebElement webElement) {
 
 		return ExpectedConditions.visibilityOf(webElement);
 	}
+	
+	protected ExpectedCondition<List<WebElement>> checkVisibilityOfAllElements(List<WebElement> webElements) {
 
-	protected void wait(WebElement webElement) {
-		wait.until(checkForElement(webElement));
+		return ExpectedConditions.visibilityOfAllElements(webElements);
 	}
+	  /**
+	   * An expectation for checking the element to be invisible
+	   *
+	   * @param element used to check its invisibility
+	   * @return Boolean true when elements is not visible anymore
+	   */
+	protected static ExpectedCondition<Boolean> checkInvisibilityOf(WebElement webElement) {
+
+		return ExpectedConditions.invisibilityOf(webElement);
+	}
+	
+	  /**
+	   * Constructor. A check is made that the given element is, indeed, a SELECT tag. If it is not,
+	   * then an UnexpectedTagNameException is thrown.
+	   *
+	   * @param element SELECT element to wrap
+	   * @throws UnexpectedTagNameException when element is not a SELECT
+	   */
+	protected Select buildSelect(WebElement webElement) {
+		try {
+			return new Select(webElement);
+		} catch (UnexpectedTagNameException e) {
+			log.error(e.getMessage());
+			throw e;
+		}
+		
+	}
+
 }

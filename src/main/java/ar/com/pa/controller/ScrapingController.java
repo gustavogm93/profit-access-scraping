@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.scraping.ScrapingRegion;
-import ar.com.pa.scraping.selenium.InvestmentFetchCountry;
+import ar.com.pa.scraping.selenium.InvestingFetchCountry;
 import lombok.Data;
 
 
@@ -21,12 +21,12 @@ public class ScrapingController {
 	
 	private RegionService rs;
 	
-	private InvestmentFetchCountry seleniumExtract;
+	private InvestingFetchCountry seleniumExtract;
 	
 	
 	private final ExecutorService executorService;
 	@Autowired
-	public ScrapingController(InvestmentFetchCountry scrapingResourcesImpl, ScrapingRegion jsonExtract, RegionService rs, ExecutorService executorService) {
+	public ScrapingController(InvestingFetchCountry scrapingResourcesImpl, ScrapingRegion jsonExtract, RegionService rs, ExecutorService executorService) {
 		this.seleniumExtract = scrapingResourcesImpl;
 		this.jsonExtract = jsonExtract;
 		this.executorService = executorService;

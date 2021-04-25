@@ -5,4 +5,4 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface SummaryScrapingRegionRepository extends MongoRepository<SummaryScrapingRegion, String>{}
+public interface ScrapingRegionRepository extends MongoRepository<ScrapingRegion, String>{}
