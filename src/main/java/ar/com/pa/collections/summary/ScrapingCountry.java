@@ -3,31 +3,38 @@ package ar.com.pa.collections.summary;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import ar.com.pa.collections.country.CountryProp;
-import ar.com.pa.collections.marketIndex.MarketIndexProp;
-import ar.com.pa.collections.share.ShareProp;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import nonapi.io.github.classgraph.json.Id;
 
 @Data
+@AllArgsConstructor
+@Document(collection = "country-scraping-data")
 public class ScrapingCountry {
 	
 	@Id
 	private String _id;
 	
 	@Field(name = "country")
-	@NotNull private CountryProp country;
+	@NotNull private ScrapedData country;
 	
 	@Field(name = "market-Index-list")
-	private List<MarketIndexProp> marketIndexList;
+	@NotNull private List<ScrapedData> marketIndexList;
 	
 	@Field(name = "share-list")
-	private List<ShareProp> shares;
+	@NotNull private List<ScrapedData> shares;
+	
+	@Field(name = "coverage")
+	@NotNull private int coverage = 0;
 	
 	@Field(name = "createdAt")
-	private Date createdAt;
+	@NotNull private Date createdAt;
 	
-	@Field(name = "LastModifiedAt")
-    private Date lastModifiedAt;
+	@Field(name = "lastModifiedAt")
+	@NotNull private Date lastModifiedAt;
+	
+
 }

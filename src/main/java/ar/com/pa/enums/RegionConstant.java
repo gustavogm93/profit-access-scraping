@@ -1,6 +1,7 @@
 package ar.com.pa.enums;
 
 import java.util.Arrays;
+
 import com.google.common.collect.ImmutableList;
 
 public enum RegionConstant {
@@ -27,4 +28,15 @@ public enum RegionConstant {
 		this.code = code;
 		this.title = title;
 	}
+	
+	public static boolean isValidRegion(String regionTitle) {
+		
+		boolean isValid = values.stream().anyMatch((regionFinal) -> regionFinal.getTitle().equalsIgnoreCase(regionTitle));
+		
+		return isValid;		
+	}
+	
+	
+	
+
 }

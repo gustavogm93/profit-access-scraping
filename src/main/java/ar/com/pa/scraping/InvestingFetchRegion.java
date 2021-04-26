@@ -1,6 +1,7 @@
 package ar.com.pa.scraping;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import com.google.common.base.Function;
@@ -14,24 +15,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.common.collect.ImmutableList;
-import ar.com.pa.collections.country.CountryProp;
-import ar.com.pa.collections.region.RegionDTO;
-import ar.com.pa.collections.region.RegionProp;
-import ar.com.pa.collections.region.RegionService;
+import ar.com.pa.collections.summary.ScrapedCoverageData;
+import ar.com.pa.collections.summary.ScrapedData;
+import ar.com.pa.collections.summary.ScrapingRegion;
+import ar.com.pa.collections.summary.ScrapingRegionService;
 import ar.com.pa.enums.RegionConstant;
 import ar.com.pa.enums.utils.Url;
 
 @Service
-public class ScrapingRegion implements JsoupScraping {
+public class InvestingFetchRegion implements JsoupScraping {
 
-	private static final Logger logger = LoggerFactory.getLogger(ScrapingRegion.class);
+	private static final Logger logger = LoggerFactory.getLogger(InvestingFetchRegion.class);
 	private static final String urlEquities = Url.equities;
 	
-	private RegionService regionService;
+	private ScrapingRegionService scrapingRegionService;
 
 	@Autowired
-	private ScrapingRegion(RegionService regionService) {
-		this.regionService = regionService;
+	private InvestingFetchRegion(ScrapingRegionService scrapingRegionService) {
+		this.scrapingRegionService = scrapingRegionService;
 	};
 	
 	
@@ -48,19 +49,20 @@ public class ScrapingRegion implements JsoupScraping {
 					
 					Elements countriesElements = getCountriesElementsInDocument(document, region);
 					
-					TreeSet<CountryProp> countries = elementsToTreeSet(countriesElements);
+					List<ScrapedCoverageData> countriesScrapedCoverageData = elementsToCountryScrapedCoverageData(countriesElements);
 					
-					RegionProp regionProps = new RegionProp(region.getCode(), region.getTitle());
-
-					RegionDTO regionDTO = new RegionDTO(region.getCode(), regionProps, countries);
+					ScrapedData regionScrapedData = new ScrapedData(region.getCode(), region.getTitle());
 					
-					regionService.add(regionDTO);
+					ScrapingRegion scrapingRegion = new ScrapingRegion(region.getCode(), regionScrapedData, countriesScrapedCoverageData);
+							
+					scrapingRegionService.add(scrapingRegion);
+					
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 					throw e;
 				}
 
-			logger.info("Save regionDTO");
+			logger.info("Save Scraped Regions");
 		});
 
 	}
@@ -91,28 +93,34 @@ public class ScrapingRegion implements JsoupScraping {
 		return regionElements;
 	}
 	
-	public TreeSet<CountryProp> elementsToTreeSet(Elements elements) {
+	
+	public List<ScrapedCoverageData> elementsToCountryScrapedCoverageData(Elements elements) {
 		
 		return elements.stream()
 				 .filter(isCountryElement)
-				 .map(elementToCountryProps)
-			     .collect(Collectors.toCollection(()-> new TreeSet<CountryProp>(CountryProp.byCode)));
+				 .map(elementToCountryScrapedData)
+			     .collect(Collectors.toList());
+		
 	}
 
 	private Predicate<Element> isCountryElement = (element) -> element.attr("href").contains("/equities/")
 			&& !element.text().contains("Market Overview");
 
-	private Function<Element, CountryProp> elementToCountryProps = new Function<Element, CountryProp>() {
+	
+	private Function<Element, ScrapedCoverageData> elementToCountryScrapedData = new Function<Element, ScrapedCoverageData>() {
 
-		public CountryProp apply(Element element) {
+		public ScrapedCoverageData apply(Element element) {
 
 			var codeCountry = element.attr("href").split("/")[2];
 			var titleCountry = element.text();
 
-			return new CountryProp(codeCountry, titleCountry);
+			return new ScrapedCoverageData(codeCountry, titleCountry);
 		}
 
 	};
+
+
+
 
 
 

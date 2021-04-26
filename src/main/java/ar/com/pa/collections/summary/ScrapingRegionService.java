@@ -2,6 +2,7 @@ package ar.com.pa.collections.summary;
 
 import java.util.List;
 
+
 public interface ScrapingRegionService {
 
 	public List<ScrapingRegion> getAll();
@@ -12,6 +13,7 @@ public interface ScrapingRegionService {
 	
 	public void delete(String code);
 	
-	public List<ScrapingRegion> findByTitle(String title);
+	public ScrapingRegion findByTitle(String title);
 	
+
 }

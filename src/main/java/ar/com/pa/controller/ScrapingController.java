@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import ar.com.pa.collections.region.RegionService;
-import ar.com.pa.scraping.ScrapingRegion;
+import ar.com.pa.collections.summary.ScrapingRegionService;
+import ar.com.pa.scraping.InvestingFetchRegion;
 import ar.com.pa.scraping.selenium.InvestingFetchCountry;
 import lombok.Data;
 
@@ -17,16 +18,16 @@ import lombok.Data;
 @Data
 public class ScrapingController {
 
-	private ScrapingRegion jsonExtract;
+	private InvestingFetchRegion jsonExtract;
 	
-	private RegionService rs;
+	private ScrapingRegionService rs;
 	
 	private InvestingFetchCountry seleniumExtract;
 	
-	
 	private final ExecutorService executorService;
+	
 	@Autowired
-	public ScrapingController(InvestingFetchCountry scrapingResourcesImpl, ScrapingRegion jsonExtract, RegionService rs, ExecutorService executorService) {
+	public ScrapingController(InvestingFetchCountry scrapingResourcesImpl, InvestingFetchRegion jsonExtract, ScrapingRegionService rs, ExecutorService executorService) {
 		this.seleniumExtract = scrapingResourcesImpl;
 		this.jsonExtract = jsonExtract;
 		this.executorService = executorService;
@@ -36,6 +37,7 @@ public class ScrapingController {
 	@GetMapping("/region")
 	public void getRegion() throws Exception {
 		jsonExtract.executor();
+		
 	}
 
 	@GetMapping("/get")

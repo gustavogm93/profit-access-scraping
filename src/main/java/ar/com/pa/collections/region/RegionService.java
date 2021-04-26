@@ -6,7 +6,7 @@ public interface RegionService {
 
 	public List<RegionDTO> getAll();
 	
-	public List<RegionDTO> findByTitle(String title);
+	public RegionDTO findByTitle(String title);
 	
 	public List<RegionDTO> findByCode(String code);
 	

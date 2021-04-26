@@ -1,11 +1,16 @@
 package ar.com.pa.collections.summary;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.jsoup.nodes.Element;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Predicate;
+
 import ar.com.pa.collections.share.ShareNotFoundException;
 import lombok.AllArgsConstructor;
 
@@ -22,12 +27,12 @@ public class ScrapingRegionServiceImpl implements ScrapingRegionService {
 		return ScrapingRegionRepository.findAll();
 	}
 
-	public void add(ScrapingRegion ShareDTO) {
-		ScrapingRegionRepository.save(ShareDTO);
+	public void add(ScrapingRegion scrapedRegion) {
+		ScrapingRegionRepository.save(scrapedRegion);
 	}
 	
-	public void addAll(List<ScrapingRegion> ShareDTOList) {
-		ScrapingRegionRepository.saveAll(ShareDTOList);
+	public void addAll(List<ScrapingRegion> scapedRegionList) {
+		ScrapingRegionRepository.saveAll(scapedRegionList);
 	}
 	
 	public void delete(String code) {
@@ -39,14 +44,30 @@ public class ScrapingRegionServiceImpl implements ScrapingRegionService {
 		ScrapingRegionRepository.deleteById(code);
 	}
 	
-	public List<ScrapingRegion> findByTitle(String title) {
+	public ScrapingRegion findByTitle(String title) {
 		Query query = new Query();
 		
 		Criteria columnCriteria = Criteria.where("properties.title").is(title);
 		
 		query.addCriteria(columnCriteria);
 		
-		return this.mongoTemplate.find(query, ScrapingRegion.class);
+		return this.mongoTemplate.findOne(query, ScrapingRegion.class);
 	}
 
+	
+	public List<ScrapedCoverageData> getCountriesByRegionTitle(String title) {
+		Query query = new Query();
+		
+		Criteria columnCriteria = Criteria.where("properties.title").is(title);
+		
+		query.addCriteria(columnCriteria);
+		
+		ScrapingRegion region =  this.mongoTemplate.findOne(query, ScrapingRegion.class);
+		
+		return region.getCountries();
+	}
+
+
+
+	
 }

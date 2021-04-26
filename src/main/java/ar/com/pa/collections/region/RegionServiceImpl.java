@@ -38,14 +38,14 @@ public class RegionServiceImpl implements RegionService {
 		regionRepository.deleteById(code);
 	}
 
-	public List<RegionDTO> findByTitle(String title) {
+	public RegionDTO findByTitle(String title) {
 		Query query = new Query();
 		
 		Criteria columnCriteria = Criteria.where("properties.title").is(title);
 		
 		query.addCriteria(columnCriteria);
 		
-		return this.mongoTemplate.find(query, RegionDTO.class);
+		return this.mongoTemplate.findOne(query, RegionDTO.class);
 	}
 
 	public List<RegionDTO> findByCode(String code) {
