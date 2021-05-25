@@ -1,8 +1,5 @@
 package ar.com.pa.collections.company;
 
-import ar.com.pa.queue.CompanyOperationMessage;
-import ar.com.pa.queue.StarterMessage;
-import ar.com.pa.scraping.ScrapingFetchImpl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CompanyService {
-
+	/*
 	public ScrapingFetchImpl ScrapingFetch;
 
 	@Autowired
@@ -84,5 +81,5 @@ public class CompanyService {
 	public void sender(Flow companyOperation) {
 
 	}
-
+*/
 }

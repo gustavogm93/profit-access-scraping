@@ -5,7 +5,8 @@ import ar.com.pa.generics.Property;
 public class Msg {
 
 	
-	public final static String executor = "Executing process...";
+	public final static String executor = "Starting Chrome Driver...";
+	public final static String setUpDriver = "Set up Chrome Driver...";
 	public final static String startDriver = "Starting Chrome Driver...";
 	public final static String startDriverSuccess = "Chrome start success";
 	

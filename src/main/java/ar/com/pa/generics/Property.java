@@ -9,7 +9,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class Property implements Serializable {
+public class Property {
 
 		@Field(name = "code")
 		@NonNull private final String code;

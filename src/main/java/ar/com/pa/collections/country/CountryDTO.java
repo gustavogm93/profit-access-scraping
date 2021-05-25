@@ -10,7 +10,6 @@ import ar.com.pa.collections.region.RegionProp;
 import ar.com.pa.collections.share.ShareProp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
 
 
 @Document(collection = "country-constant")
@@ -22,15 +21,17 @@ public class CountryDTO {
 	private final String id;
 
 	@Field(name = "country")
-	@NonNull private final CountryProp properties;
+	private final CountryProp properties;
 
 	@Field(name = "region")
-	@NonNull private final RegionProp region;
+    private final RegionProp region;
 
-	@Field(name = "Shares")
-	@NonNull private final Set<ShareProp> shares;
+	@Field(name = "shares")
+	private final Set<ShareProp> shares;
 	
-	@Field(name = "MarketIndex")
-	@NonNull private final Set<MarketIndexProp> marketIndexList;
+	@Field(name = "marketIndex")
+	private final Set<MarketIndexProp> marketIndexList;
 
+	@Field(name = "isCovered")
+	private boolean isCovered;
 }

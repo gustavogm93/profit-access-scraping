@@ -41,7 +41,7 @@ public class RegionServiceImpl implements RegionService {
 	public List<RegionDTO> findByTitle(String title) {
 		Query query = new Query();
 		
-		Criteria columnCriteria = Criteria.where("properties.title").is(title);
+		Criteria columnCriteria = Criteria.where("properties.title").regex(title,"i");
 		
 		query.addCriteria(columnCriteria);
 		

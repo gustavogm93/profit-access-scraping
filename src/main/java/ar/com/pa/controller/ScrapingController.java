@@ -1,48 +1,70 @@
 package ar.com.pa.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.concurrent.ExecutorService;
+import io.vavr.collection.HashSet;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.TreeSet;
+import com.google.common.collect.Sets;
 
-import ar.com.pa.collections.region.RegionService;
-import ar.com.pa.scraping.ScrapingRegion;
-import ar.com.pa.scraping.selenium.InvestmentFetchCountry;
+import ar.com.pa.collections.marketIndex.MarketIndexDTO;
+import ar.com.pa.collections.marketIndex.MarketIndexProp;
+import ar.com.pa.collections.share.ShareProp;
+import ar.com.pa.generics.Property;
+import ar.com.pa.scraping.ScrapingCountryStrategy;
+import ar.com.pa.scraping.ScrapingCoverageStrategy;
+import ar.com.pa.scraping.ScrapingRegionStrategy;
 import lombok.Data;
 
 
 @RestController
-@RequestMapping("/scrapping")
-@Tag(name = "Scrapping API")
+@RequestMapping("/scraping")
+@Tag(name = "Scraping API")
 @Data
 public class ScrapingController {
 
-	private ScrapingRegion jsonExtract;
+	private ScrapingRegionStrategy scrapingRegion;
 	
-	private RegionService rs;
+	private ScrapingCountryStrategy scrapingCountry;
 	
-	private InvestmentFetchCountry seleniumExtract;
+	private ScrapingCoverageStrategy scrapingCoverageCountry;
 	
-	
-	private final ExecutorService executorService;
 	@Autowired
-	public ScrapingController(InvestmentFetchCountry scrapingResourcesImpl, ScrapingRegion jsonExtract, RegionService rs, ExecutorService executorService) {
-		this.seleniumExtract = scrapingResourcesImpl;
-		this.jsonExtract = jsonExtract;
-		this.executorService = executorService;
-		this.rs = rs;
+	public ScrapingController(ScrapingCountryStrategy scrapingCountry, ScrapingRegionStrategy scrapingRegion, ScrapingCoverageStrategy scrapingCoverageCountry ) {
+		this.scrapingCountry = scrapingCountry;
+		this.scrapingRegion = scrapingRegion;
+		this.scrapingCoverageCountry = scrapingCoverageCountry;
 	}
 
 	@GetMapping("/region")
-	public void getRegion() throws Exception {
-		jsonExtract.executor();
+	public void getRegionExtractedData() throws Exception {
+		scrapingRegion.executor();
 	}
 
-	@GetMapping("/get")
-	public void fetchStudent(@RequestParam(name = "region") String region) {
-		seleniumExtract.executor(region);
+	@GetMapping("/country")
+	public void getCountryExtractedData(@RequestParam(name = "region") String region) {
+		scrapingCountry.executor(region);
 	}
 	
 
+	@GetMapping("coverage/country")
+	public void getCoverageCountryExtractedData(@RequestParam(name = "region") String region) {
+		scrapingCoverageCountry.executor(region);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

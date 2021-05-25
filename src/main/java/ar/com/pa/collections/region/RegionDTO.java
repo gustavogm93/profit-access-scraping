@@ -28,6 +28,9 @@ public class RegionDTO  {
 	@Field(name = "countries")
 	@NonNull private final Set<CountryProp> countries;
 
+	@Field(name = "isCovered")
+	private boolean isCovered;
+	
 	public String getTitle() {
 		return this.properties.getTitle();
 	}

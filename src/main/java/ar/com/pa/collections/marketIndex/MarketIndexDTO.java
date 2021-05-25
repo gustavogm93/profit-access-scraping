@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import ar.com.pa.collections.share.ShareProp;
+import io.vavr.collection.TreeSet;
 
 import org.springframework.data.annotation.Id;
 
@@ -14,7 +15,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 @AllArgsConstructor
-@Document(collection = "Market-Index-constant")
+@Document(collection = "market-Index-constant")
 @Data
 public class MarketIndexDTO {
 	
@@ -33,6 +34,27 @@ public class MarketIndexDTO {
 
 	public String getTitle() {
 		return this.propierties.getTitle();
-	}
+	}	
+	
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        
+        if (obj == null)
+            return false;
+        
+        if (getClass() != obj.getClass())
+            return false;
+        
+        MarketIndexDTO other = (MarketIndexDTO) obj;
 
+            if (other.id != this.id)
+                return false;
+
+            if (other.countryId != this.countryId)
+                return false;
+            
+        return true;
+    }
 }
