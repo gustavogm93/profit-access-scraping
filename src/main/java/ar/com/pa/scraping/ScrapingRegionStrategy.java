@@ -55,7 +55,7 @@ public class ScrapingRegionStrategy implements JsoupBase {
 					
 					RegionProp regionProps = new RegionProp(region.getCode(), region.getTitle());
 
-					RegionDTO regionDTO = new RegionDTO(region.getCode(), regionProps, countries, false);
+					RegionDTO regionDTO = new RegionDTO(region.getCode(), regionProps, countries);
 					
 					regionService.add(regionDTO);
 				} catch (Exception e) {

@@ -2,33 +2,32 @@ package ar.com.pa.collections.coverage;
 
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
+@Document(collection = "coverage-region-constant")
 @AllArgsConstructor
 @Data
-public class CoverageCountry {
+public class CoverageRegion {
 
 	@Id
-	private final String id;
+	@NonNull private final String id;
 
 	@Field(name = "title")
 	@NonNull private final String title;
 	
-	@Field(name = "coverageMarketIndex")
-	private final List<CoverageMarketIndex> coverageMarketIndex;
-	
-	@Field(name = "totalShares")
-	@NonNull private final Integer totalShares;
+	@Field(name = "countries")
+	private List<CoverageCountry> countries;
 	
 	@Field(name = "coverage")
-	@NonNull private Integer coverage;
+	private Integer coverage;
 	
 	@Field(name = "lastUpdate")
 	@NonNull private Date lastUpdate;
 }
-
-//QUE TODOS TENGAN PROPERTYES COMPARTIDAS

@@ -16,7 +16,7 @@ import ar.com.pa.utils.Msg;
 
 @Component
 public class ScrapingCoverageStrategy extends InvestmentEquityPage {
-
+/*
 	private CoverageCountryService coverageCountryService;
 
 	private RegionService regionService;
@@ -126,7 +126,7 @@ public class ScrapingCoverageStrategy extends InvestmentEquityPage {
 
 		if (optionalCoverageMarketIndexOfGeneralCountry.isPresent()) {
 			CoverageMarketIndex coverageMarketIndexOfGeneralCountry = optionalCoverageMarketIndexOfGeneralCountry.get();
-			int sharesQuantityOfCountry = coverageMarketIndexOfGeneralCountry.getSharesQuantity();
+			Integer sharesQuantityOfCountry = coverageMarketIndexOfGeneralCountry.getTotalShares();
 			return sharesQuantityOfCountry;
 		}
 
@@ -140,13 +140,13 @@ public class ScrapingCoverageStrategy extends InvestmentEquityPage {
 	private void buildAndSaveCoverageCountry(CountryProp country, RegionProp region,
 			List<CoverageMarketIndex> coverageMarketIndexList) throws Exception {
 
-		int sharesQuantityByCountry = getSharesByCountry(coverageMarketIndexList);
+		Integer sharesQuantityByCountry = getSharesByCountry(coverageMarketIndexList);
 
 		CoverageCountry coverageCountry = new CoverageCountry(country.getCode(), country.getTitle(),
-				coverageMarketIndexList, sharesQuantityByCountry);
+				coverageMarketIndexList, sharesQuantityByCountry, sharesQuantityByCountry);
 
 		coverageCountryService.add(coverageCountry);
 
 	}
-
+*/
 }

@@ -23,7 +23,7 @@ import ar.com.pa.utils.Msg;
 
 @Component 
 public class ScrapingCountryStrategy extends InvestmentEquityPage  {
-	
+	/*
 	private RegionService regionService;
 
 	private CountryService countryService;
@@ -85,7 +85,7 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 			return region;
 	}
 
-	public static Predicate<RegionDTO> notHaveCoverage = (region) -> !region.isCovered();
+	public static Predicate<RegionDTO> notHaveCoverage = (region) -> region.getCoverage() < 95;
 	
 
 	private void fetchProcess(CountryProp country, RegionProp region) throws Exception {
@@ -195,45 +195,43 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 		
 		var countryId = countryToAdd.getCode();
 		
-		boolean isCovered = getCountryCoverage(country.getCode(), shares, marketIndexes);
+		int coverage = getCountryCoverage(country.getCode(), shares, marketIndexes);
 		
-		updateRegionCoverage(region, isCovered);
-		
-		CountryDTO newCountryDTO = new CountryDTO(countryId, countryToAdd, region, shares, marketIndexes, isCovered);
+		CountryDTO newCountryDTO = new CountryDTO(countryId, countryToAdd, region, shares, marketIndexes, coverage);
 		
 		countryService.add(newCountryDTO);
+		
+		updateRegionCoverage(region, coverage);
 		
 	}
 	
 	
-	public boolean getCountryCoverage(String countryCode, Set<ShareProp> shares, TreeSet<MarketIndexProp> marketIndexes) {
+	public int getCountryCoverage(String countryCode, Set<ShareProp> shares, TreeSet<MarketIndexProp> marketIndexes) {
 		
 		Optional<CoverageCountry> optionalCoverageCountry = coverageCountryService.findByCode(countryCode).stream().findFirst();
 			
 		if(optionalCoverageCountry.isPresent()) {
 			CoverageCountry coverageCountry = optionalCoverageCountry.get();
 			
-			if(shares.size() < coverageCountry.getSharesTotalQuantity() * 0.95)
-			return false;
-			
-			return true;
+			return (shares.size() * 100 ) / coverageCountry.getSharesTotalQuantity();
 		}
 		
-		return false;
+		log.error("Not Coverage Country: {}",countryCode);
+		return 0;
 
 	}
 	
-	public void updateRegionCoverage(RegionProp region, boolean isCovered) {
+	public void updateRegionCoverage(RegionProp region, int coverage) {
 		
 		Optional<RegionDTO> optionalRegion = regionService.findByCode(region.getCode()).stream().findFirst();
 		
 		if(optionalRegion.isPresent()) {
 			RegionDTO regionDTO = optionalRegion.get();
-			regionDTO.setCovered(isCovered);
+			regionDTO.setCoverage(coverage);
 			
 			regionService.add(regionDTO);
 		}
 
 	}
-	
+	*/
 }

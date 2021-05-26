@@ -11,8 +11,6 @@ public class CoverageMarketIndex {
 
 	private final String title;
 	
-	private final Integer sharesQuantity; 
+	private final Integer totalShares; 
 	
 }
-//TODO Logs,
-//TODO Handling errores

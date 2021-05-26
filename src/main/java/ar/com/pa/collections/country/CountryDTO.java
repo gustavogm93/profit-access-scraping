@@ -32,6 +32,6 @@ public class CountryDTO {
 	@Field(name = "marketIndex")
 	private final Set<MarketIndexProp> marketIndexList;
 
-	@Field(name = "isCovered")
-	private boolean isCovered;
+	@Field(name = "coverage")
+	private int coverage;
 }

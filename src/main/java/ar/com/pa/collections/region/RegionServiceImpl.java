@@ -57,4 +57,8 @@ public class RegionServiceImpl implements RegionService {
 		
 		return this.mongoTemplate.find(query, RegionDTO.class);
 	}
+	
+	public void updateRegion() {
+		
+	}
 }

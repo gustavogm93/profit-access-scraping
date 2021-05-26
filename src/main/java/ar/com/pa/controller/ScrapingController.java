@@ -44,7 +44,7 @@ public class ScrapingController {
 	public void getRegionExtractedData() throws Exception {
 		scrapingRegion.executor();
 	}
-
+/*
 	@GetMapping("/country")
 	public void getCountryExtractedData(@RequestParam(name = "region") String region) {
 		scrapingCountry.executor(region);
@@ -55,7 +55,7 @@ public class ScrapingController {
 	public void getCoverageCountryExtractedData(@RequestParam(name = "region") String region) {
 		scrapingCoverageCountry.executor(region);
 	}
-	
+	*/
 	
 	
 	

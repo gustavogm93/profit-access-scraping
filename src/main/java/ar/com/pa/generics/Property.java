@@ -1,14 +1,11 @@
 package ar.com.pa.generics;
 
-import java.io.Serializable;
 import java.util.Comparator;
 import org.springframework.data.mongodb.core.mapping.Field;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
 @Data
-@AllArgsConstructor
 public class Property {
 
 		@Field(name = "code")
@@ -19,5 +16,7 @@ public class Property {
 
 		public static Comparator<Property> byTitle = Comparator.comparing(Property::getTitle);
 		public static Comparator<Property> byCode = Comparator.comparing(Property::getCode);
+		
+		
 	
 }
