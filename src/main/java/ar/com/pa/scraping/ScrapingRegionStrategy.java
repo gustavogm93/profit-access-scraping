@@ -1,11 +1,14 @@
 package ar.com.pa.scraping;
 
-import java.io.IOException;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.region.RegionDTO;
+import ar.com.pa.collections.region.RegionProp;
+import ar.com.pa.collections.region.RegionService;
+import ar.com.pa.enums.RegionConstant;
+import ar.com.pa.enums.utils.Url;
+import ar.com.pa.scraping.jsoup.JsoupBase;
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,49 +17,49 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.google.common.collect.ImmutableList;
-import ar.com.pa.collections.country.CountryProp;
-import ar.com.pa.collections.region.RegionDTO;
-import ar.com.pa.collections.region.RegionProp;
-import ar.com.pa.collections.region.RegionService;
-import ar.com.pa.enums.RegionConstant;
-import ar.com.pa.enums.utils.Url;
-import ar.com.pa.scraping.jsoup.JsoupBase;
+
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 @Service
-public class ScrapingRegionStrategy implements JsoupBase {
+public class ScrapingRegionStrategy<element> implements JsoupBase {
 
 	private static final Logger logger = LoggerFactory.getLogger(ScrapingRegionStrategy.class);
 	private static final String urlEquities = Url.equities;
 	
-	private RegionService regionService;
+	private final RegionService regionService;
 
 	@Autowired
 	private ScrapingRegionStrategy(RegionService regionService) {
 		this.regionService = regionService;
-	};
-	
-	
+	}
+
+
 	public void executor() throws IOException {
 		logger.info("Getting regionDTO");
 
 		Document document = getDocument(urlEquities);
-		
+
 		ImmutableList<RegionConstant> regions = getConstantsToFetch();
-		
-		regions.stream().forEach((region) -> {
+
+		regions.forEach((region) -> {
 
 				try {
-					
+
 					Elements countriesElements = getCountriesElementsInDocument(document, region);
-					
+
 					Set<CountryProp> countries = elementsToCountrySet(countriesElements);
-					
+
 					RegionProp regionProps = new RegionProp(region.getCode(), region.getTitle());
 
 					RegionDTO regionDTO = new RegionDTO(region.getCode(), regionProps, countries);
-					
+
 					regionService.add(regionDTO);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
@@ -70,7 +73,7 @@ public class ScrapingRegionStrategy implements JsoupBase {
 
 
 	public Document getDocument(String urlEquities) throws IOException {
-		Document doc = null;
+		Document doc;
 		try {
 			doc = Jsoup.connect(urlEquities).get();
 		} catch (IOException e) {
@@ -79,45 +82,44 @@ public class ScrapingRegionStrategy implements JsoupBase {
 		}
 		return doc;
 	}
+
 	
-	
-	public ImmutableList<RegionConstant> getConstantsToFetch() {
+	private ImmutableList<RegionConstant> getConstantsToFetch() {
 		return RegionConstant.values;
 	}
 
 	private Elements getCountriesElementsInDocument(Document data, RegionConstant region) {
 		
-		var idElement = String.format("#cdregion%s", region.getCode());
+		String idElement = String.format("#cdregion%s", region.getCode());
 
-		Elements regionElements = data.select(idElement)
-									  .first()
-									  .select("a");
-		
-		return regionElements;
+		return  data.select(idElement)
+				.first()
+				.select("a");
 	}
 	
-	public TreeSet<CountryProp> elementsToCountrySet(Elements elements) {
+	private TreeSet<CountryProp> elementsToCountrySet(Elements elements) {
 		
 		return elements.stream()
 				 .filter(isCountryElement)
-				 .map(elementToCountryProps)
-			     .collect(Collectors.toCollection(()-> new TreeSet<CountryProp>(CountryProp.byCode)));
+				 .map(this::elementToCountryProps)
+			     .collect(Collectors.toCollection(()-> new TreeSet<>(CountryProp.byCode)));
 	}
 
-	private Predicate<Element> isCountryElement = (element) -> element.attr("href").contains("/equities/")
-			&& !element.text().contains("Market Overview");
+	private final Predicate<Element> isCountryElement;
+	{
+		isCountryElement = (element) -> element.attr("href").contains("/equities/")
+				&& !element.text().contains("Market Overview");
+	}
 
-	private Function<Element, CountryProp> elementToCountryProps = new Function<Element, CountryProp>() {
+	private Pair<String, String> getTitleAndCodeCountry (Element element){
 
-		public CountryProp apply(Element element) {
-
-			var codeCountry = element.attr("href").split("/")[2];
-			var titleCountry = element.text();
+			String titleCountry = element.text();
+			String codeCountry = Objects.requireNonNull(element).attr("href").split("/")[2];
 
 			return new CountryProp(codeCountry, titleCountry);
 		}
 
-	};
+	}
 
 
 

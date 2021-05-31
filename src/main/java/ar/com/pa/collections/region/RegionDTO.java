@@ -1,5 +1,6 @@
 package ar.com.pa.collections.region;
 
+import java.util.Comparator;
 import java.util.Set;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -23,8 +24,6 @@ public class RegionDTO {
 	@NonNull
 	private final Set<CountryProp> countries;
 
-	@Field(name = "coverage")
-	private int coverage;
 
 	public String getTitle() {
 		return this.properties.getTitle();
@@ -53,11 +52,15 @@ public class RegionDTO {
             if (other.id != this.id)
                 return false;
             
-            if (other.properties.getCode() != this.properties.getCode())
+            if (!other.properties.getCode().equals(this.properties.getCode()))
                 return false;
             
             
         return true;
     }
+    
+	public static Comparator<RegionDTO> byTitle = Comparator.comparing(RegionDTO::getTitle);
+	
+	public static Comparator<RegionDTO> byCode = Comparator.comparing(RegionDTO::getTitle);
 
 }

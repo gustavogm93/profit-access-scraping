@@ -1,6 +1,7 @@
 package ar.com.pa.collections.region;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -56,9 +57,16 @@ public class RegionServiceImpl implements RegionService {
 		query.addCriteria(columnCriteria);
 		
 		return this.mongoTemplate.find(query, RegionDTO.class);
-	}
-	
-	public void updateRegion() {
 		
 	}
+
+	public boolean verifyIfExistByCode(String regionCode) {
+		Optional<RegionDTO> optionalRegion = this.findByCode(regionCode).stream().findFirst();
+		
+		return optionalRegion.isPresent(); 
+	}
+	
+	
+	
+
 }

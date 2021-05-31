@@ -5,4 +5,4 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface CoverageCountryRepository extends MongoRepository<CoverageCountry, String>{}
+public interface CoverageRegionRepository extends MongoRepository<CoverageRegion, String>{}

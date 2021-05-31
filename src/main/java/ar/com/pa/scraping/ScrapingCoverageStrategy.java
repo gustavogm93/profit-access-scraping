@@ -2,6 +2,8 @@ package ar.com.pa.scraping;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,28 +15,30 @@ import ar.com.pa.collections.coverage.*;
 import ar.com.pa.collections.region.*;
 import ar.com.pa.scraping.selenium.InvestmentEquityPage;
 import ar.com.pa.utils.Msg;
+import static ar.com.pa.collections.coverage.CoverageCountry.*;
+
 
 @Component
 public class ScrapingCoverageStrategy extends InvestmentEquityPage {
-/*
-	private CoverageCountryService coverageCountryService;
+
+	private CoverageRegionService coverageRegionService;
 
 	private RegionService regionService;
 
 	private static final Logger log = LoggerFactory.getLogger(ScrapingCoverageStrategy.class);
 
-	private ScrapingCoverageStrategy(RegionService regionService, CoverageCountryService coverageCountryService) {
+	private ScrapingCoverageStrategy(RegionService regionService, CoverageRegionService coverageRegionService) {
 		this.regionService = regionService;
-		this.coverageCountryService = coverageCountryService;
+		this.coverageRegionService = coverageRegionService;
 	}
 
-	public void executor(@Nullable String regionTitle) {
+	public void executor(String regionCode) {
 
 		startSeleniumDriver();
 		setUpSeleniumDriver();
 
-		ImmutableList<RegionDTO> regions = getConstantsToFetch(regionTitle);
-
+		List<CountryProp> countries = getNotCoveredCountries(regionCode);
+		
 		regions.stream().forEach(region -> {
 
 			region.getCountries().stream().limit(1).forEach(country -> {
@@ -53,20 +57,51 @@ public class ScrapingCoverageStrategy extends InvestmentEquityPage {
 			driver.close();
 		});
 
+	}//TODO: COUNTRIES NOT PROP, WOULD BE ID ONLY 
+
+	private List<CountryProp> getNotCoveredCountries(String regionCode) throws Exception {
+
+		CoverageRegion coverageRegion;
+		
+		log.info("Getting countries in Region: {}", regionCode);
+		Optional<RegionDTO> optionalRegion = regionService.findByCode(regionCode).stream().findFirst();
+		
+		if(optionalRegion.isEmpty()) 
+			throw new Exception("Region doesn't exist, pull from investment through scraping region");
+		
+		Optional<CoverageRegion> optionalCoverageRegion = getCoverageRegion(regionCode).stream().findFirst();
+				
+		if(optionalCoverageRegion.isEmpty()) 
+			throw new Exception("Coverage Region doesn't exist, pull from investment through scraping coverage");
+		
+		 coverageRegion = optionalCoverageRegion.get();
+		 
+		if(coverageRegion.getCoverage() == 100) 
+			throw new Exception("Region covered");
+		
+		
+		ImmutableList<CountryProp> countries = coverageRegion.getCountries().stream().filter(withoutCoverage)
+																			.map(getCountryProp)
+																			.collect(ImmutableList.toImmutableList());
+		if(countries.isEmpty())
+			throw new Exception("countries are covered");
+		
+		
+		return countries;
+
 	}
+	
+	
 
-	public ImmutableList<RegionDTO> getConstantsToFetch(@Nullable String regionTitle) {
-
-		if (Objects.isNull(regionTitle) || regionTitle.isEmpty()) {
-			log.info("Getting list of all regions..");
-			return ImmutableList.copyOf(regionService.getAll());
-		}
-
-		log.info("Getting countries in Region: {}", regionTitle);
-		return ImmutableList.copyOf(regionService.findByTitle(regionTitle));
-
+	private List<CoverageRegion> getCoverageRegion (String regionTitle){
+		List<CoverageRegion> coverageRegionList = coverageRegionService.findByTitle(regionTitle);
+		
+		return coverageRegionList;
 	}
-
+	
+	
+	
+	
 	private void fetchProcess(CountryProp country, RegionProp region) throws Exception {
 		
 		log.info("Starting fetching process of country: {} ", country.getTitle());
@@ -148,5 +183,5 @@ public class ScrapingCoverageStrategy extends InvestmentEquityPage {
 		coverageCountryService.add(coverageCountry);
 
 	}
-*/
+	
 }

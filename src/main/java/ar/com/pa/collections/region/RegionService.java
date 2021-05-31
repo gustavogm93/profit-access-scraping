@@ -16,4 +16,6 @@ public interface RegionService {
 	
 	public void delete(String code);
 	
+	public boolean verifyIfExistByCode(String regionCode);
+	
 }

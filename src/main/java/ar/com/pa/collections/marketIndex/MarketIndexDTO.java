@@ -4,6 +4,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import ar.com.pa.collections.share.ShareProp;
 import org.springframework.data.annotation.Id;
+
+import java.util.Comparator;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,21 +20,22 @@ public class MarketIndexDTO {
 	private final String id;
 
 	@Field(name = "CountryId")
-	@NonNull
 	private final String countryId;
 
 	@Field(name = "propierties")
-	@NonNull
 	private final MarketIndexProp propierties;
 
 	@Field(name = "Shares")
-	@NonNull
 	private final Set<ShareProp> shares;
 
 	public String getTitle() {
 		return this.propierties.getTitle();
 	}
 
+	public String getCode() {
+		return this.propierties.getCode();
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -46,9 +49,18 @@ public class MarketIndexDTO {
 
 		MarketIndexDTO other = (MarketIndexDTO) obj;
 
-		if (other.id.equalsIgnoreCase(this.id))
+		if (!other.id.equals(this.id))
 			return false;
 
+		if (!other.propierties.getCode().equals(this.propierties.getCode()))
+			return false;
+		
 		return true;
 	}
+	
+	public static Comparator<MarketIndexDTO> byTitle = Comparator.comparing(MarketIndexDTO::getTitle);
+	
+	public static Comparator<MarketIndexDTO> byCode = Comparator.comparing(MarketIndexDTO::getTitle);
+	
+	
 }

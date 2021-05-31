@@ -13,7 +13,6 @@ import static ar.com.pa.generics.Mapper.*;
 import com.google.common.collect.ImmutableList;
 import ar.com.pa.collections.country.*;
 import ar.com.pa.collections.coverage.CoverageCountry;
-import ar.com.pa.collections.coverage.CoverageCountryService;
 import ar.com.pa.collections.marketIndex.*;
 import ar.com.pa.collections.region.*;
 import ar.com.pa.collections.share.ShareProp;
@@ -31,7 +30,10 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 	private CoverageCountryService coverageCountryService;
 
 	private MarketIndexService marketIndexService;
-
+	
+	//TODO: del fetch procces por parametro a private RegionProp = currentRegion; 
+	//TODO: Loop Through countries
+	 
 	private static final Logger log = LoggerFactory.getLogger(ScrapingCountryStrategy.class);
 
 	private ScrapingCountryStrategy(RegionService regionService, MarketIndexService marketIndexService,
