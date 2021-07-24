@@ -31,7 +31,7 @@ public class ScrapingCoverageStrategy extends InvestmentEquityPage {
 		this.regionService = regionService;
 		this.coverageRegionService = coverageRegionService;
 	}
-
+/*
 	public void executor(String regionCode) {
 
 		startSeleniumDriver();
@@ -183,5 +183,5 @@ public class ScrapingCoverageStrategy extends InvestmentEquityPage {
 		coverageCountryService.add(coverageCountry);
 
 	}
-	
+*/
 }

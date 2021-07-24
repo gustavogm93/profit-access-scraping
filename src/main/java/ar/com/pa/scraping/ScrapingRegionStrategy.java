@@ -7,7 +7,6 @@ import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.enums.RegionConstant;
 import ar.com.pa.enums.utils.Url;
 import ar.com.pa.scraping.jsoup.JsoupBase;
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -101,7 +100,7 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 		
 		return elements.stream()
 				 .filter(isCountryElement)
-				 .map(this::elementToCountryProps)
+				 .map(this::getTitleAndCodeCountry)
 			     .collect(Collectors.toCollection(()-> new TreeSet<>(CountryProp.byCode)));
 	}
 
@@ -111,7 +110,7 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 				&& !element.text().contains("Market Overview");
 	}
 
-	private Pair<String, String> getTitleAndCodeCountry (Element element){
+	private CountryProp getTitleAndCodeCountry (Element element){
 
 			String titleCountry = element.text();
 			String codeCountry = Objects.requireNonNull(element).attr("href").split("/")[2];
@@ -124,4 +123,4 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 
 
 
-}
+
