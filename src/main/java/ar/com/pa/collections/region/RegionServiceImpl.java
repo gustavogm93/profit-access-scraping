@@ -1,14 +1,13 @@
 package ar.com.pa.collections.region;
 
-import java.util.List;
-import java.util.Optional;
-
+import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service

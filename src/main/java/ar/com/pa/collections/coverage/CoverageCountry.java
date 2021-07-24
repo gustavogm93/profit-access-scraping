@@ -16,40 +16,41 @@ import java.util.function.Predicate;
 @Data
 public class CoverageCountry {
 
-	@Id
-	@NonNull private final String id;
+    @Id
+    @NonNull
+    private final String id;
 
-	@Field(name = "country")
-	private final CountryProp properties;
-	
-	@Field(name = "coverageMarketIndex")
-	private final List<CoverageMarketIndex> coverageMarketIndex;
-	
-	@Field(name = "totalShares")
-	@NonNull private final Integer totalShares;
-	
-	@Field(name = "coverage")
-	@NonNull private Integer coverage;
-	
-	@Field(name = "lastUpdate")
-	@NonNull private Date lastUpdate;
+    @Field(name = "totalMarketIndex")
+    @NonNull
+    private final Integer totalMarketIndex;
+
+    @Field(name = "totalShares")
+    @NonNull
+    private final Integer totalShares;
+
+    @Field(name = "coverageMarketIndex")
+    private final Integer coverageMarketIndex;
+
+    @Field(name = "coverageShares")
+    private final Integer coverageShares;
+
+    @Field(name = "coverage")
+    @NonNull
+    private Integer coverage;
+
+    @Field(name = "scrapedAt")
+    @NonNull
+    private Date scrapedAt;
 
 
+    public static Predicate<CoverageCountry> withoutCoverage = (coverageCountry) -> {
+        return coverageCountry.getCoverage() <= 95;
+    };
 
-public static Predicate<CoverageCountry> withoutCoverage = (coverageCountry) -> {
-	return coverageCountry.getCoverage() <= 95;
-};
+    public boolean isCoveraged() {
+        return this.coverage <= 90;
+    }
 
-
-public static Function<CoverageCountry, CountryProp> getCountryProp = new Function<CoverageCountry, CountryProp>() {
-
-	public CountryProp apply(CoverageCountry coverageCountry) {
-
-		return coverageCountry.properties;
-	}
-
-};
-
+    //TODO: Coverage get return
 }
 
-//QUE TODOS TENGAN PROPERTYES COMPARTIDAS

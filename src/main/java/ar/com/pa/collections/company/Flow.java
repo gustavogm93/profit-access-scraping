@@ -1,12 +1,12 @@
 package ar.com.pa.collections.company;
 
+import ar.com.pa.enums.utils.SummaryType;
+import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import ar.com.pa.enums.utils.SummaryType;
-import lombok.Data;
 
 @Data
 @Document(collection="Flow")

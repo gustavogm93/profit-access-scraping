@@ -1,16 +1,15 @@
 package ar.com.pa.collections.coverage;
 
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import ar.com.pa.collections.region.RegionProp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Date;
+import java.util.List;
 
 @Document(collection = "coverage-region-constant")
 @AllArgsConstructor

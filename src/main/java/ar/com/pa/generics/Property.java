@@ -1,9 +1,10 @@
 package ar.com.pa.generics;
 
-import java.util.Comparator;
-import org.springframework.data.mongodb.core.mapping.Field;
 import lombok.Data;
 import lombok.NonNull;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Comparator;
 
 @Data
 public class Property {

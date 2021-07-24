@@ -1,13 +1,13 @@
 package ar.com.pa.collections.share;
 
 
-import java.util.List;
-
+import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service

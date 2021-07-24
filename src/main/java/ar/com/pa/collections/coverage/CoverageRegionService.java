@@ -1,8 +1,8 @@
 package ar.com.pa.collections.coverage;
 
-import java.util.List;
-
 import ar.com.pa.collections.country.CountryProp;
+
+import java.util.List;
 
 public interface CoverageRegionService {
 

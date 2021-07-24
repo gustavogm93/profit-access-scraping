@@ -1,14 +1,14 @@
 package ar.com.pa.collections.summary;
 
-import java.util.Set;
-import javax.validation.constraints.NotNull;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import ar.com.pa.collections.region.RegionProp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import nonapi.io.github.classgraph.json.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Data
 @Document(collection = "summary-scraping-data-region")

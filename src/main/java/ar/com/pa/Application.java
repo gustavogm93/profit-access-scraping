@@ -1,12 +1,7 @@
 package ar.com.pa;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import org.springframework.boot.*;
-
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 
 

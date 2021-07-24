@@ -1,7 +1,8 @@
 package ar.com.pa.scraping.jsoup;
 
-import java.io.IOException;
 import org.jsoup.nodes.Document;
+
+import java.io.IOException;
 
 public interface JsoupBase {
 

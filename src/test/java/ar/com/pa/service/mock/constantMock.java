@@ -1,11 +1,8 @@
 package ar.com.pa.service.mock;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.assertj.core.util.Arrays;
 
 
 public class constantMock {

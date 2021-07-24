@@ -1,21 +1,12 @@
 package ar.com.pa.scraping;
 
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
+import ar.com.pa.collections.coverage.CoverageRegionService;
+import ar.com.pa.collections.region.RegionService;
+import ar.com.pa.scraping.selenium.InvestmentEquityPage;
 import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-import com.google.common.collect.ImmutableList;
-import ar.com.pa.collections.country.*;
-import ar.com.pa.collections.coverage.*;
-import ar.com.pa.collections.region.*;
-import ar.com.pa.scraping.selenium.InvestmentEquityPage;
-import ar.com.pa.utils.Msg;
-import static ar.com.pa.collections.coverage.CoverageCountry.*;
 
 
 @Component

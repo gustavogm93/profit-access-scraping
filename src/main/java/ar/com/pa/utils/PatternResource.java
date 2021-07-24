@@ -1,9 +1,9 @@
 package ar.com.pa.utils;
 
+import org.springframework.stereotype.Service;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.springframework.stereotype.Service;
 
 
 @Service

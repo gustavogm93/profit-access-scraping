@@ -1,14 +1,16 @@
 package ar.com.pa.collections.country;
 
-import java.util.Set;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import ar.com.pa.collections.coverage.CoverageCountry;
 import ar.com.pa.collections.marketIndex.MarketIndexProp;
 import ar.com.pa.collections.region.RegionProp;
 import ar.com.pa.collections.share.ShareProp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Set;
 
 @Document(collection = "country-constant")
 @AllArgsConstructor
@@ -30,7 +32,8 @@ public class CountryDTO {
 	@Field(name = "marketIndex")
 	private final Set<MarketIndexProp> marketIndexList;
 
-	
+	@Field(name = "coverage")
+	private CoverageCountry coverage;
 	
 	 @Override
 	 public int hashCode() {

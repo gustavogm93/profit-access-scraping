@@ -1,14 +1,11 @@
 package ar.com.pa.generics;
 
 
-import com.google.common.base.Function;
-
 import ar.com.pa.collections.marketIndex.MarketIndexDTO;
 import ar.com.pa.collections.marketIndex.MarketIndexProp;
-import ar.com.pa.collections.region.RegionDTO;
 import ar.com.pa.collections.share.ShareDTO;
 import ar.com.pa.collections.share.ShareProp;
-import ar.com.pa.failed.FailedRegionDTO;
+import com.google.common.base.Function;
 
 public class Mapper {
 

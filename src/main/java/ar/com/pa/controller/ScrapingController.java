@@ -1,13 +1,14 @@
 package ar.com.pa.controller;
 
+import ar.com.pa.scraping.ScrapingRegionStrategy;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import ar.com.pa.scraping.ScrapingRegionStrategy;
-import lombok.Data;
 
 
 @RestController
@@ -16,8 +17,11 @@ import lombok.Data;
 @Data
 public class ScrapingController {
 
+	@Value("${chrome.driver.path}")
+	private String ChromeDriverPathResource;
+
 	private ScrapingRegionStrategy scrapingRegion;
-	/*
+
 	private ScrapingCountryStrategy scrapingCountry;
 	
 	private ScrapingCoverageStrategy scrapingCoverageCountry;
@@ -28,47 +32,22 @@ public class ScrapingController {
 		this.scrapingRegion = scrapingRegion;
 		this.scrapingCoverageCountry = scrapingCoverageCountry;
 	}
-	*/
-	@Autowired
-	public ScrapingController(ScrapingRegionStrategy s) {
-		this.scrapingRegion = s;
-	}
-	
-	
+
 	@GetMapping("/region")
 	public void getRegionExtractedData() throws Exception {
-		//scrapingRegion.executor();
-		
-		List<Integer> a = List.of(1,2,3);
-		List<Integer> b = Collections.emptyList();
-		
-		for (Integer integer : a) {
-			System.out.println(integer);
-		}
-		
-		for (Integer integer : b) {
-			System.out.println(integer);
-		}
-		System.out.println("ya paso");
-		
+		scrapingRegion.executor();
 	}
 
-
-
-
-	
-/*
 	@GetMapping("/country")
 	public void getCountryExtractedData(@RequestParam(name = "region") String region) {
 		scrapingCountry.executor(region);
 	}
-	
 
 	@GetMapping("coverage/country")
 	public void getCoverageCountryExtractedData(@RequestParam(name = "region") String region) {
 		scrapingCoverageCountry.executor(region);
 	}
-	*/
+
 	
 	
 	

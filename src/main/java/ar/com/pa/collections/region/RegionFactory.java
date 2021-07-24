@@ -1,10 +1,8 @@
 package ar.com.pa.collections.region;
 
-import java.util.Set;
-
-
 import ar.com.pa.collections.country.CountryProp;
-import ar.com.pa.generics.Property;
+
+import java.util.Set;
 
 public class RegionFactory {
 

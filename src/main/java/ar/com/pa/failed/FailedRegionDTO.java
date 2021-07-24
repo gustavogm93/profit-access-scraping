@@ -1,13 +1,13 @@
 package ar.com.pa.failed;
 
-import java.util.Set;
+import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.region.RegionProp;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import ar.com.pa.collections.country.CountryProp;
-import ar.com.pa.collections.region.RegionProp;
-import lombok.Data;
+import java.util.Set;
 
 @Document(collection = "Failed")
 @Data

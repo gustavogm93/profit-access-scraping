@@ -1,12 +1,10 @@
 package ar.com.pa.collections.share;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import ar.com.pa.collections.country.CountryDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @AllArgsConstructor
 @Data

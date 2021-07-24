@@ -1,8 +1,8 @@
 package ar.com.pa.collections.share;
 
-import java.util.Comparator;
-
 import ar.com.pa.generics.Property;
+
+import java.util.Comparator;
 
 public class ShareProp extends Property{
 

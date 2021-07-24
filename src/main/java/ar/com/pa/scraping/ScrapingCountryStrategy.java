@@ -1,47 +1,49 @@
 package ar.com.pa.scraping;
 
 
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import org.openqa.selenium.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
-import static ar.com.pa.generics.Mapper.*;
-import com.google.common.collect.ImmutableList;
-import ar.com.pa.collections.country.*;
+import ar.com.pa.collections.country.CountryDTO;
+import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.country.CountryService;
 import ar.com.pa.collections.coverage.CoverageCountry;
-import ar.com.pa.collections.marketIndex.*;
-import ar.com.pa.collections.region.*;
+import ar.com.pa.collections.marketIndex.MarketIndexDTO;
+import ar.com.pa.collections.marketIndex.MarketIndexProp;
+import ar.com.pa.collections.marketIndex.MarketIndexService;
+import ar.com.pa.collections.region.RegionDTO;
+import ar.com.pa.collections.region.RegionProp;
+import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.collections.share.ShareProp;
 import ar.com.pa.generics.Property;
 import ar.com.pa.scraping.selenium.InvestmentEquityPage;
 import ar.com.pa.utils.Msg;
+import com.google.common.collect.ImmutableList;
+import com.mongodb.lang.Nullable;
+import org.openqa.selenium.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static ar.com.pa.generics.Mapper.MarketIndexDtoToMarketIndexProp;
 
 @Component 
 public class ScrapingCountryStrategy extends InvestmentEquityPage  {
-	/*
+
 	private RegionService regionService;
 
 	private CountryService countryService;
 
-	private CoverageCountryService coverageCountryService;
-
 	private MarketIndexService marketIndexService;
-	
-	//TODO: del fetch procces por parametro a private RegionProp = currentRegion; 
-	//TODO: Loop Through countries
 	 
 	private static final Logger log = LoggerFactory.getLogger(ScrapingCountryStrategy.class);
 
 	private ScrapingCountryStrategy(RegionService regionService, MarketIndexService marketIndexService,
-		CountryService countryService, CoverageCountryService coverageCountryService) {
+		CountryService countryService) {
 		this.regionService = regionService;
 		this.marketIndexService = marketIndexService;
 		this.countryService = countryService;
-		this.coverageCountryService = coverageCountryService;
 	}
 
 	public void executor(@Nullable String regionTitle) {
@@ -235,5 +237,5 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 		}
 
 	}
-	*/
+
 }

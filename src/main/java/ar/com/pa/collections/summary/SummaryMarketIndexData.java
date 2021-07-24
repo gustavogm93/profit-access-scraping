@@ -1,9 +1,9 @@
 package ar.com.pa.collections.summary;
 
-import java.util.Comparator;
-
 import ar.com.pa.collections.marketIndex.MarketIndexProp;
 import lombok.Data;
+
+import java.util.Comparator;
 
 @Data
 public class SummaryMarketIndexData {

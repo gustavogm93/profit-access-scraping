@@ -1,15 +1,14 @@
 package ar.com.pa.collections.marketIndex;
 
+import ar.com.pa.collections.share.ShareProp;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import ar.com.pa.collections.share.ShareProp;
-import org.springframework.data.annotation.Id;
 
 import java.util.Comparator;
 import java.util.Set;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
 
 @AllArgsConstructor
 @Document(collection = "market-Index-constant")

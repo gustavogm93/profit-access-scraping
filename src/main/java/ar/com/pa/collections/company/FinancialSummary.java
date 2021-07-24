@@ -1,8 +1,8 @@
 package ar.com.pa.collections.company;
 
-import java.util.List;
-
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class FinancialSummary {

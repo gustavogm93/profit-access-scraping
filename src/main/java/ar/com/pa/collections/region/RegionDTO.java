@@ -1,13 +1,14 @@
 package ar.com.pa.collections.region;
 
-import java.util.Comparator;
-import java.util.Set;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 import ar.com.pa.collections.country.CountryProp;
-import org.springframework.data.annotation.Id;
 import lombok.Data;
 import lombok.NonNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Comparator;
+import java.util.Set;
 
 @Document(collection = "region-constant")
 @Data
@@ -24,6 +25,8 @@ public class RegionDTO {
 	@NonNull
 	private final Set<CountryProp> countries;
 
+	@Field(name = "coverage")
+	private int coverage;
 
 	public String getTitle() {
 		return this.properties.getTitle();
@@ -34,6 +37,7 @@ public class RegionDTO {
 		this.id = id;
 		this.properties = properties;
 		this.countries = countries;
+		this.coverage = 0;
 	}
 
     @Override

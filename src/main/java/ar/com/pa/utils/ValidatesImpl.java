@@ -1,9 +1,9 @@
 package ar.com.pa.utils;
 
-import java.util.Arrays;
-
-import org.springframework.stereotype.Component;
 import ar.com.pa.enums.financialsummary.FinancialSummary;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Component
 public class ValidatesImpl implements Validates {

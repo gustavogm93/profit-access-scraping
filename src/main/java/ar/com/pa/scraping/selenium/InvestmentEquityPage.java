@@ -1,7 +1,6 @@
 package ar.com.pa.scraping.selenium;
 
-import java.util.List;
-
+import ar.com.pa.enums.utils.Url;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,8 +11,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.pa.enums.utils.Url;
-import ar.com.pa.scraping.ScrapingCoverageStrategy;
+import java.util.List;
 
 public class InvestmentEquityPage extends SeleniumBase {
 

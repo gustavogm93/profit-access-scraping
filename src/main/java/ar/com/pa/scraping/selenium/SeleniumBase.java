@@ -1,8 +1,6 @@
 package ar.com.pa.scraping.selenium;
 
-import java.net.URL;
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
+import ar.com.pa.utils.Msg;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -16,8 +14,11 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
-import ar.com.pa.utils.Msg;
+import java.net.URL;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 public class SeleniumBase {
 
@@ -33,7 +34,8 @@ public class SeleniumBase {
 
 	protected int IMPLICIT_MEDIUM = 8;
 
-	protected final static String ChromeDriverPathResource = "driver/chromedriver.exe";
+	@Value("${chrome.driver.path}")
+	private String ChromeDriverPathResource;
 
 	private final static Logger log = LoggerFactory.getLogger(SeleniumBase.class);
 

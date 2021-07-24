@@ -1,12 +1,10 @@
 package ar.com.pa.collections.coverage;
 
-import static ar.com.pa.collections.coverage.CoverageCountry.getCountryProp;
-import static ar.com.pa.collections.coverage.CoverageCountry.withoutCoverage;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.region.RegionService;
+import ar.com.pa.collections.share.ShareNotFoundException;
+import com.google.common.collect.ImmutableList;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -14,14 +12,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Collections;
+import java.util.List;
 
-import ar.com.pa.collections.country.CountryProp;
-import ar.com.pa.collections.region.RegionDTO;
-import ar.com.pa.collections.region.RegionService;
-import ar.com.pa.collections.share.ShareNotFoundException;
-import ar.com.pa.scraping.ScrapingCoverageStrategy;
-import lombok.AllArgsConstructor;
+import static ar.com.pa.collections.coverage.CoverageCountry.getCountryProp;
+import static ar.com.pa.collections.coverage.CoverageCountry.withoutCoverage;
 
 @AllArgsConstructor
 @Service

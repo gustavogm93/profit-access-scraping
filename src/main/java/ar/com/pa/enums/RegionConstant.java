@@ -1,7 +1,8 @@
 package ar.com.pa.enums;
 
-import java.util.Arrays;
 import com.google.common.collect.ImmutableList;
+
+import java.util.Arrays;
 
 public enum RegionConstant {
 
