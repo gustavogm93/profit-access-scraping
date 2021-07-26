@@ -1,6 +1,7 @@
 package ar.com.pa.collections.region;
 
 import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.coverage.CoverageRegion;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
@@ -26,7 +27,7 @@ public class RegionDTO {
 	private final Set<CountryProp> countries;
 
 	@Field(name = "coverage")
-	private int coverage;
+	private CoverageRegion coverage;
 
 	public String getTitle() {
 		return this.properties.getTitle();
@@ -37,7 +38,6 @@ public class RegionDTO {
 		this.id = id;
 		this.properties = properties;
 		this.countries = countries;
-		this.coverage = 0;
 	}
 
     @Override

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
-import static ar.com.pa.collections.coverage.CoverageCountry.getCountryProp;
+
 import static ar.com.pa.collections.coverage.CoverageCountry.withoutCoverage;
 
 @AllArgsConstructor
@@ -114,7 +114,7 @@ public class CoverageRegionServiceImpl implements CoverageRegionService {
 	private ImmutableList<CountryProp> getCountriesUncoveraged(CoverageRegion coverageRegion) {
 		ImmutableList<CountryProp> countries = coverageRegion.getCountries().stream()
 				.filter(withoutCoverage)
-				.map(getCountryProp)
+				.map(CoverageCountry::getProperties)
 				.collect(ImmutableList.toImmutableList());
 		
 		return countries;

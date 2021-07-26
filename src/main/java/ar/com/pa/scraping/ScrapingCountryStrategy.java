@@ -89,7 +89,7 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 			return region;
 	}
 
-	public static Predicate<RegionDTO> notHaveCoverage = (region) -> region.getCoverage() < 95;
+	public static Predicate<RegionDTO> notHaveCoverage = (region) -> region.getCoverage() < 80;
 	
 
 	private void fetchProcess(CountryProp country, RegionProp region) throws Exception {

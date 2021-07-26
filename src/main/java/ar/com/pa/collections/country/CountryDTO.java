@@ -6,14 +6,15 @@ import ar.com.pa.collections.region.RegionProp;
 import ar.com.pa.collections.share.ShareProp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 @Document(collection = "country-constant")
-@AllArgsConstructor
 @Data
 public class CountryDTO {
 
@@ -34,8 +35,17 @@ public class CountryDTO {
 
 	@Field(name = "coverage")
 	private CoverageCountry coverage;
-	
-	 @Override
+
+	public CountryDTO(String id, CountryProp properties, RegionProp region, Set<ShareProp> shares, Set<MarketIndexProp> marketIndexList) {
+		this.id = id;
+		this.properties = properties;
+		this.region = region;
+		this.shares = shares;
+		this.marketIndexList = marketIndexList;
+	}
+
+
+	@Override
 	 public int hashCode() {
 	 final int prime = 31;
 	 int result = 1;
@@ -61,4 +71,5 @@ public class CountryDTO {
 
 		return true;
 	}
+
 }

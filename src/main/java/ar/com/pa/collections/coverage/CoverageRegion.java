@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "coverage-region-constant")
 @AllArgsConstructor
 @Data
 public class CoverageRegion {
@@ -23,13 +22,14 @@ public class CoverageRegion {
 	@NonNull private RegionProp properties;
 	
 	@Field(name = "countries")
-	private List<CoverageCountry> countries;
+	private Integer totalCountries;
 	
 	@Field(name = "coverage")
 	private Integer coverage;
-	
-	@Field(name = "lastUpdate")
-	@NonNull private Date lastUpdate;
+
+	@Field(name = "scrapedAt")
+	@NonNull
+	private Date scrapedAt;
 }
 
 //Country id solo aca y tabla separada para countries
