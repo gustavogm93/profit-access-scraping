@@ -62,7 +62,11 @@ public class RegionDTO {
             
         return true;
     }
-    
+
+    public Integer countCountries(){
+		return this.countries.size();
+	}
+
 	public static Comparator<RegionDTO> byTitle = Comparator.comparing(RegionDTO::getTitle);
 	
 	public static Comparator<RegionDTO> byCode = Comparator.comparing(RegionDTO::getTitle);

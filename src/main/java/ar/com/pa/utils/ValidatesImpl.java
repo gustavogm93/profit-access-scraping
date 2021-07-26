@@ -1,9 +1,11 @@
 package ar.com.pa.utils;
 
+import ar.com.pa.enums.RegionConstant;
 import ar.com.pa.enums.financialsummary.FinancialSummary;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 @Component
 public class ValidatesImpl implements Validates {
@@ -69,7 +71,10 @@ public class ValidatesImpl implements Validates {
 
 		return true;
 	}
+	public boolean isValidRegion(String region){
+		return RegionConstant.values.stream().map(regConst ->  regConst.getCode().toLowerCase())
+									  .anyMatch(regTitle -> regTitle.equals(region.toLowerCase()));
 
-	
+	}
 	
 }

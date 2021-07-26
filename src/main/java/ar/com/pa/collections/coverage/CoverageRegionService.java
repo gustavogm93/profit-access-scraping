@@ -1,9 +1,11 @@
 package ar.com.pa.collections.coverage;
 
 import ar.com.pa.collections.country.CountryProp;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface CoverageRegionService {
 
 	public List<CoverageRegion> getAll();

@@ -16,12 +16,10 @@ import java.util.Collections;
 import java.util.List;
 
 
-import static ar.com.pa.collections.coverage.CoverageCountry.withoutCoverage;
-
 @AllArgsConstructor
 @Service
-public class CoverageRegionServiceImpl implements CoverageRegionService {
-
+public class CoverageRegionServiceImpl { //implements CoverageRegionService {
+/*
 	private final CoverageRegionRepository coverageRegionRepository;
 
 	private final MongoTemplate mongoTemplate;
@@ -123,7 +121,7 @@ public class CoverageRegionServiceImpl implements CoverageRegionService {
 	
 	
 	
-	
+*/
 	
 
 }

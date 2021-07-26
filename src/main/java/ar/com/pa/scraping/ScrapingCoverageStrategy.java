@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ScrapingCoverageStrategy extends InvestmentEquityPage {
-
+/*
 	private CoverageRegionService coverageRegionService;
 
 	private RegionService regionService;
+
 
 	private static final Logger log = LoggerFactory.getLogger(ScrapingCoverageStrategy.class);
 
@@ -22,7 +23,7 @@ public class ScrapingCoverageStrategy extends InvestmentEquityPage {
 		this.regionService = regionService;
 		this.coverageRegionService = coverageRegionService;
 	}
-/*
+
 	public void executor(String regionCode) {
 
 		startSeleniumDriver();

@@ -11,6 +11,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.sql.SQLOutput;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -44,7 +45,6 @@ public class CountryDTO {
 		this.marketIndexList = marketIndexList;
 	}
 
-
 	@Override
 	 public int hashCode() {
 	 final int prime = 31;
@@ -71,5 +71,7 @@ public class CountryDTO {
 
 		return true;
 	}
+
+	Predicate<CountryDTO> isCovered = (c) -> c.coverage.getIsCovered();
 
 }

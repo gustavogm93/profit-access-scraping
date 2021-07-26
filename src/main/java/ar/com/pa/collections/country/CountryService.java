@@ -13,4 +13,9 @@ public interface CountryService {
 	public void delete(String code);
 			
 	public List<CountryDTO> findByTitle(String title);
-}
+
+	public List<CountryDTO> getCountriesCoveredByRegion(String region) throws Exception;
+
+	public List<CountryDTO> getCountriesUncoveredByRegion(String region) throws Exception;
+
+	}

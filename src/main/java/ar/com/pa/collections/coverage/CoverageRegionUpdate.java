@@ -1,6 +1,13 @@
 package ar.com.pa.collections.coverage;
 
-public class CoverageRegionUpdate {
+import ar.com.pa.collections.country.CountryService;
 
+public class CoverageRegionUpdate {
+    private CountryService countryService;
+
+public static void update(){
+
+
+}
 
 }

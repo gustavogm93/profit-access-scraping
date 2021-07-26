@@ -30,7 +30,7 @@ import static ar.com.pa.generics.Mapper.MarketIndexDtoToMarketIndexProp;
 
 @Component 
 public class ScrapingCountryStrategy extends InvestmentEquityPage  {
-
+/*
 	private RegionService regionService;
 
 	private CountryService countryService;
@@ -89,7 +89,7 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 			return region;
 	}
 
-	public static Predicate<RegionDTO> notHaveCoverage = (region) -> region.getCoverage() < 80;
+	public static Predicate<RegionDTO> notHaveCoverage = (region) -> region.getCoverage().getTotalCoverage() < 80;
 	
 
 	private void fetchProcess(CountryProp country, RegionProp region) throws Exception {
@@ -237,5 +237,5 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 		}
 
 	}
-
+*/
 }

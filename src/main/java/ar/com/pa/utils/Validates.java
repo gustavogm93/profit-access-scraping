@@ -1,5 +1,7 @@
 package ar.com.pa.utils;
 
+import java.util.Locale;
+
 public interface Validates {
 	
 	/**
@@ -27,7 +29,8 @@ public interface Validates {
 	 */ 
 	public boolean isSummaryObject(String str);
 
-	
+	public boolean isValidRegion(String region);
+
 	public boolean isDate(String s);
 	
 	public void stringIsNumeric(String id) throws NumberFormatException;
