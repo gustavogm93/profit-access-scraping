@@ -1,11 +1,6 @@
 package ar.com.pa.scraping;
 
-import ar.com.pa.collections.coverage.CoverageRegionService;
-import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.scraping.selenium.InvestmentEquityPage;
-import org.openqa.selenium.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 

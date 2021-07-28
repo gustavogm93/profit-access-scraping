@@ -1,14 +1,8 @@
-package ar.com.pa.collections.coverage;
+package ar.com.pa.collections.region;
 
-import ar.com.pa.collections.country.CountryProp;
-import ar.com.pa.collections.region.RegionDTO;
-import ar.com.pa.collections.region.RegionProp;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;

@@ -4,7 +4,7 @@ package ar.com.pa.scraping;
 import ar.com.pa.collections.country.CountryDTO;
 import ar.com.pa.collections.country.CountryProp;
 import ar.com.pa.collections.country.CountryService;
-import ar.com.pa.collections.coverage.CoverageCountry;
+import ar.com.pa.collections.country.CoverageCountry;
 import ar.com.pa.collections.marketIndex.MarketIndexDTO;
 import ar.com.pa.collections.marketIndex.MarketIndexProp;
 import ar.com.pa.collections.marketIndex.MarketIndexService;
@@ -17,6 +17,7 @@ import ar.com.pa.scraping.selenium.InvestmentEquityPage;
 import ar.com.pa.utils.Msg;
 import com.google.common.collect.ImmutableList;
 import com.mongodb.lang.Nullable;
+import org.apache.poi.ss.formula.functions.Count;
 import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import static ar.com.pa.collections.region.RegionDTO.byNotCoveraged;
 
 import static ar.com.pa.generics.Mapper.MarketIndexDtoToMarketIndexProp;
 
@@ -46,12 +48,13 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 		this.countryService = countryService;
 	}
 
-	public void executor(@Nullable String regionTitle) {
+	public void executor(@Nullable String regionTitle) throws Exception {
 
 		startSeleniumDriver();
 		setUpSeleniumDriver();
 
-		ImmutableList<RegionDTO> regions = getConstantsToFetch(regionTitle);
+		ImmutableList<RegionDTO> regions = getRegionToFetch(regionTitle);
+		ImmutableList<CountryDTO> countries = getCountriesToFetch(regions);
 
 		regions.stream().forEach(region -> {
 
@@ -72,25 +75,41 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 
 	}
 
-	public ImmutableList<RegionDTO> getConstantsToFetch(@Nullable String regionTitle) {
+	public ImmutableList<RegionDTO> getRegionToFetch(@Nullable String regionTitle) {
 		
 		if (Objects.isNull(regionTitle) || regionTitle.isEmpty()) {
 			log.info("Getting list of all regions..");
 			
-			ImmutableList<RegionDTO> region = regionService.getAll().stream().filter(notHaveCoverage).collect(ImmutableList.toImmutableList());
+			ImmutableList<RegionDTO> region = regionService.getAll().stream().filter(byNotCoveraged).collect(ImmutableList.toImmutableList());
 			
 			return region;
 		}
 		
 			log.info(String.format("Getting %s",regionTitle));
 			
-			ImmutableList<RegionDTO> region = regionService.findByTitle(regionTitle).stream().filter(notHaveCoverage).collect(ImmutableList.toImmutableList());
+			ImmutableList<RegionDTO> region = regionService.findByTitle(regionTitle).stream().filter(byNotCoveraged).collect(ImmutableList.toImmutableList());
 			
 			return region;
 	}
 
-	public static Predicate<RegionDTO> notHaveCoverage = (region) -> region.getCoverage().getTotalCoverage() < 80;
-	
+	public ImmutableList<CountryDTO> getCountriesToFetch(ImmutableList<RegionDTO> regions) throws Exception {
+
+		if(regions.size() == 0) {
+			log.info("not found Region when get countries to fetch");
+			return ImmutableList.copyOf(Collections.emptyList());
+		}
+
+		if(regions.size() == 1) {
+			log.info("getting uncovered countries from {} region when get countries to fetch", regions.get(0).getTitle());
+			return countryService.getCountriesUncoveredByRegion(regions.get(0).getCode());
+		}
+
+			List<String> regionsCode = regions.stream().map(RegionDTO::getCode).toList();
+
+			return countryService.getSeveralsCountriesUncoveredFromRegions(regionsCode);
+
+		}
+
 
 	private void fetchProcess(CountryProp country, RegionProp region) throws Exception {
 
@@ -153,7 +172,7 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 		log.info(Msg.saveShares);
 		return shareList;
 	}
-
+	//var country has only title
 	private CountryProp getCountryToSave(CountryProp country, WebDriver driver) {
 		var countryID = driver.findElement(By.id("countryID")).getAttribute("value");
 		return new CountryProp(countryID, country.getTitle());
@@ -189,10 +208,13 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 			.getCode().equalsIgnoreCase("all");
 
 
-	private void buildAndSaveCountry(CountryProp country, RegionProp region, List<MarketIndexDTO> MarketIndexList) throws Exception {
+	private void buildCountry(CountryProp country, RegionProp region, List<MarketIndexDTO> MarketIndexList) throws Exception {
 		
 		CountryProp countryToAdd = getCountryToSave(country, driver);
-		
+
+		CountryDTO coutry = countryService.findByCode(countryToAdd.getCode());
+
+
 	    TreeSet<MarketIndexProp> marketIndexes = getMarketIndexesByCountry(MarketIndexList);
 		 
 		Set<ShareProp> shares = getSharesByCountry(MarketIndexList);
@@ -201,14 +223,29 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 		
 		int coverage = getCountryCoverage(country.getCode(), shares, marketIndexes);
 		
-		CountryDTO newCountryDTO = new CountryDTO(countryId, countryToAdd, region, shares, marketIndexes, coverage);
+		CountryDTO newCountryDTO = CountryDTO.createNewCountry(countryId, countryToAdd, region, shares, marketIndexes);
 		
 		countryService.add(newCountryDTO);
 		
 		updateRegionCoverage(region, coverage);
 		
 	}
-	
+
+	private void createNewCountryToSave(CountryProp countryProp, RegionProp region, List<MarketIndexDTO> MarketIndexList) throws Exception {
+		Set<ShareProp> shares = getSharesByCountry(MarketIndexList);
+		TreeSet<MarketIndexProp> marketIndexes = getMarketIndexesByCountry(MarketIndexList);
+		CountryDTO newCountry = CountryDTO.createNewCountry(countryProp.getCode(), countryProp, region, shares, marketIndexes);
+		countryService.add(newCountry);
+	}
+//TODO: Good Refactor of this. coverage update country and region;
+	private void getCountryUpdateCoverageToSave(CountryDTO countryToUpdate,CountryProp countryProp, RegionProp region, List<MarketIndexDTO> MarketIndexList) throws Exception {
+		Set<ShareProp> shares = getSharesByCountry(MarketIndexList);
+		TreeSet<MarketIndexProp> marketIndexes = getMarketIndexesByCountry(MarketIndexList);
+		CountryDTO newCountry = CountryDTO.createNewCountry(countryProp.getCode(), countryProp, region, shares, marketIndexes);
+		countryService.add(newCountry);
+	}
+
+
 	
 	public int getCountryCoverage(String countryCode, Set<ShareProp> shares, TreeSet<MarketIndexProp> marketIndexes) {
 		

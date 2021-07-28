@@ -1,17 +1,15 @@
 package ar.com.pa.collections.country;
 
-import ar.com.pa.collections.coverage.CoverageCountry;
 import ar.com.pa.collections.marketIndex.MarketIndexProp;
 import ar.com.pa.collections.region.RegionProp;
 import ar.com.pa.collections.share.ShareProp;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.checkerframework.checker.units.qual.C;
+import org.apache.poi.ss.formula.functions.Count;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.sql.SQLOutput;
+import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -37,12 +35,26 @@ public class CountryDTO {
 	@Field(name = "coverage")
 	private CoverageCountry coverage;
 
-	public CountryDTO(String id, CountryProp properties, RegionProp region, Set<ShareProp> shares, Set<MarketIndexProp> marketIndexList) {
+	private CountryDTO(String id, CountryProp properties, RegionProp region, Set<ShareProp> shares,
+					   Set<MarketIndexProp> marketIndexList) {
 		this.id = id;
 		this.properties = properties;
 		this.region = region;
 		this.shares = shares;
 		this.marketIndexList = marketIndexList;
+	}
+
+
+	public static CountryDTO createNewCountry(String id, CountryProp properties, RegionProp region, Set<ShareProp> shares, Set<MarketIndexProp> marketIndexList) {
+		CountryDTO country = new CountryDTO(id,properties,region,shares,marketIndexList);
+		CoverageCountry coverageCountry = CoverageCountry.buildCoverageBaseToCompare(marketIndexList.size(), shares.size());
+		country.setCoverage(coverageCountry);
+		return country;
+	}
+
+	public static CountryDTO generateCoverage(CountryDTO countryBase) {
+
+		return new CountryDTO(id,properties,region,shares,marketIndexList);
 	}
 
 	@Override

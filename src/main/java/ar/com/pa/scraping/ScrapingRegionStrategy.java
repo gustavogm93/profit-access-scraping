@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.plaf.synth.Region;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
@@ -56,7 +57,7 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 
 					RegionProp regionProps = new RegionProp(region.getCode(), region.getTitle());
 
-					RegionDTO regionDTO = new RegionDTO(region.getCode(), regionProps, countries);
+					RegionDTO regionDTO = RegionDTO.createRegion(region.getCode(), regionProps, countries);
 
 					regionService.add(regionDTO);
 				} catch (Exception e) {

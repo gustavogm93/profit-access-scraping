@@ -1,7 +1,6 @@
 package ar.com.pa.collections.region;
 
 import ar.com.pa.collections.country.CountryProp;
-import ar.com.pa.collections.coverage.CoverageRegion;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
@@ -10,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Comparator;
 import java.util.Set;
+import java.util.function.Predicate;
 
 @Document(collection = "region-constant")
 @Data
@@ -32,6 +32,7 @@ public class RegionDTO {
 	public String getTitle() {
 		return this.properties.getTitle();
 	}
+	public String getCode() { return this.properties.getCode(); }
 
 	private RegionDTO(String id, @NonNull RegionProp properties, @NonNull Set<CountryProp> countries) {
 		super();
@@ -77,5 +78,7 @@ public class RegionDTO {
 	public static Comparator<RegionDTO> byTitle = Comparator.comparing(RegionDTO::getTitle);
 	
 	public static Comparator<RegionDTO> byCode = Comparator.comparing(RegionDTO::getTitle);
+
+	public static Predicate<RegionDTO> byNotCoveraged = (region) -> region.getCoverage().getTotalCoverage() < 80;
 
 }

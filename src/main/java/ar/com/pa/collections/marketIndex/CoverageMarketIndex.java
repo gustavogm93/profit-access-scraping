@@ -1,4 +1,4 @@
-package ar.com.pa.collections.coverage;
+package ar.com.pa.collections.marketIndex;
 
 import ar.com.pa.collections.marketIndex.MarketIndexProp;
 import lombok.AllArgsConstructor;

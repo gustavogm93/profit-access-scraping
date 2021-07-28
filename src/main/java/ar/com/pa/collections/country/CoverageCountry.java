@@ -1,21 +1,15 @@
-package ar.com.pa.collections.coverage;
+package ar.com.pa.collections.country;
 
-import ar.com.pa.collections.country.CountryProp;
 import ar.com.pa.collections.marketIndex.MarketIndexProp;
 import ar.com.pa.collections.share.ShareProp;
-import ar.com.pa.generics.Property;
 import ar.com.pa.utils.GenerateUUID;
-import com.google.common.base.Function;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 
 
 @Data
@@ -32,14 +26,14 @@ public class CoverageCountry {
     @NonNull
     private Integer totalShares;
 
+    @Field(name = "coverage")
+    private Integer totalCoverage;
+
     @Field(name = "coverageMarketIndex")
     private Integer coverageMarketIndex;
 
     @Field(name = "coverageShares")
     private Integer coverageShares;
-
-    @Field(name = "coverage")
-    private Integer totalCoverage;
 
     @Field(name = "isCovered")
     private Boolean isCovered = false;
