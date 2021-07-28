@@ -30,7 +30,7 @@ import static ar.com.pa.generics.Mapper.MarketIndexDtoToMarketIndexProp;
 
 @Component 
 public class ScrapingCountryStrategy extends InvestmentEquityPage  {
-/*
+
 	private RegionService regionService;
 
 	private CountryService countryService;
@@ -237,5 +237,5 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 		}
 
 	}
-*/
+
 }

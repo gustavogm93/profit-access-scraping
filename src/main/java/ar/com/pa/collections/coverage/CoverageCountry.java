@@ -47,12 +47,16 @@ public class CoverageCountry {
     @Field(name = "isCoverageBase")
     private Boolean isCoverageBase = false;
 
+    @Field(name = "firstScraping")
+    @NonNull
+    private Boolean firstScraping;
+
     @Field(name = "scrapedAt")
     @NonNull
     private Date scrapedAt;
 
 
-    public CoverageCountry(@NonNull Integer marketIndexes, @NonNull Integer shares) {
+    private CoverageCountry(@NonNull Integer marketIndexes, @NonNull Integer shares) {
         this.id = GenerateUUID.generateUniqueId();
         this.totalMarketIndex = marketIndexes;
         this.totalShares = shares;

@@ -33,11 +33,18 @@ public class RegionDTO {
 		return this.properties.getTitle();
 	}
 
-	public RegionDTO(String id, @NonNull RegionProp properties, @NonNull Set<CountryProp> countries) {
+	private RegionDTO(String id, @NonNull RegionProp properties, @NonNull Set<CountryProp> countries) {
 		super();
 		this.id = id;
 		this.properties = properties;
 		this.countries = countries;
+	}
+
+	public static RegionDTO createRegion(String id, @NonNull RegionProp properties, @NonNull Set<CountryProp> countries) {
+		RegionDTO region = new RegionDTO(id,properties,countries);
+		CoverageRegion coverageRegion = CoverageRegion.createCoverage(properties, countries.size());
+		region.setCoverage(coverageRegion);
+		return region;
 	}
 
     @Override

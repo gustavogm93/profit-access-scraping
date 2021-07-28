@@ -59,7 +59,7 @@ public class CountryServiceImpl implements CountryService {
 			throw new Exception("Invalid region");
 
 		Criteria isRegionCriteria = Criteria.where("region.title").is(region);
-		Criteria isCoveredCriteria = Criteria.where("isCovered").is(true);
+		Criteria isCoveredCriteria = Criteria.where("coverage.isCovered").is(true);
 
 		query.addCriteria(isRegionCriteria);
 		query.addCriteria(isCoveredCriteria);
@@ -75,7 +75,7 @@ public class CountryServiceImpl implements CountryService {
 			throw new Exception("Invalid region");
 
 		Criteria isRegionCriteria = Criteria.where("region.title").is(region);
-		Criteria isCoveredCriteria = Criteria.where("isCovered").is(false);
+		Criteria isCoveredCriteria = Criteria.where("coverage.isCovered").is(false);
 
 		query.addCriteria(isRegionCriteria);
 		query.addCriteria(isCoveredCriteria);

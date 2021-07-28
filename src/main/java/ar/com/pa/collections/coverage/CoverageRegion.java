@@ -1,6 +1,7 @@
 package ar.com.pa.collections.coverage;
 
 import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.region.RegionDTO;
 import ar.com.pa.collections.region.RegionProp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,28 +25,28 @@ public class CoverageRegion {
 	@Field(name = "countries")
 	private Integer totalCountries;
 
-	@Field(name = "coverageCountries")
-	private Integer coverageCountries;
-
 	@Field(name = "totalCoverage")
 	private Integer totalCoverage;
+
+	@Field(name = "firstScraping")
+	@NonNull
+	private Boolean firstScraping;
 
 	@Field(name = "scrapedAt")
 	private Date scrapedAt;
 
-	public CoverageRegion(Integer totalCountries) {
+	CoverageRegion(@NonNull RegionProp properties, Integer totalCountries) {
+		this.properties = properties;
 		this.totalCountries = totalCountries;
 		this.scrapedAt = new Date();
 	}
 
-	public static CoverageRegion build(Integer countriesQuantity){
-		CoverageRegion coverageRegion = new CoverageRegion(countriesQuantity);
-		return coverageRegion;
+	public static CoverageRegion createCoverage(@NonNull RegionProp properties, Integer countriesQuantity){
+		return new CoverageRegion(properties, countriesQuantity);
 	}
 
-	public void setCoverageCountries(Integer countryCoveragedQuantity){
-		this.coverageCountries = countryCoveragedQuantity * 100 / this.totalCoverage;
+	public void setTotalCoverage(Integer countryCoveragedQuantity){
+		this.totalCoverage = countryCoveragedQuantity * 100 / this.totalCoverage;
 	}
-
 
 }

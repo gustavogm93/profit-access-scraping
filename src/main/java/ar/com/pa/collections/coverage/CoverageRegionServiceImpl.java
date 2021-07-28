@@ -1,6 +1,7 @@
 package ar.com.pa.collections.coverage;
 
 import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.country.CountryService;
 import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.collections.share.ShareNotFoundException;
 import com.google.common.collect.ImmutableList;
@@ -18,110 +19,26 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class CoverageRegionServiceImpl { //implements CoverageRegionService {
-/*
-	private final CoverageRegionRepository coverageRegionRepository;
+public class CoverageRegionServiceImpl {
 
-	private final MongoTemplate mongoTemplate;
-	
-	private RegionService regionService;
-	
-	private static final Integer COVERAGE_ACCEPTED = 100;
-	
-	private static final Logger log = LoggerFactory.getLogger(CoverageRegionServiceImpl.class);
-	
-	public List<CoverageRegion> getAll() {
-		return coverageRegionRepository.findAll();
-	}
+    private CountryService countryService;
+    private RegionService regionService;
 
-	public void add(CoverageRegion coverageCountry) {
-		coverageRegionRepository.save(coverageCountry);
-	}
-	
-	public void addAll(List<CoverageRegion> coverageRegionList) {
-		coverageRegionRepository.saveAll(coverageRegionList);
-	}
-	
-	public void delete(String code) {
-		if(!coverageRegionRepository.existsById(code)) {
-			throw new ShareNotFoundException(
-                    "Coverage Region index with id " + code + " does not exists");
-		}
-			
-		coverageRegionRepository.deleteById(code);
-	}
-	
-	public List<CoverageRegion> findByTitle(String title) {
-		Query query = new Query();
-		
-		Criteria columnCriteria = Criteria.where("properties.title").regex(title,"i");
-		
-		query.addCriteria(columnCriteria);
-		
-		return this.mongoTemplate.find(query, CoverageRegion.class).stream().collect(ImmutableList.toImmutableList());
-	}
+    public static CoverageRegion createCoverageRegion(Integer totalCountries){
+        return new CoverageRegion(totalCountries);
+    }
 
-	public List<CoverageRegion> findByCode(String code) {
-		Query query = new Query();
-		
-		Criteria columnCriteria = Criteria.where("_id").regex(code,"i");
-		
-		query.addCriteria(columnCriteria);
-		
-		return this.mongoTemplate.find(query, CoverageRegion.class).stream().collect(ImmutableList.toImmutableList());
-	}
-	
-	//TODO: Testing
-	public List<CountryProp> getNotCoveredCountriesFromCoverageRegion(String regionCode) throws Exception {
-		CoverageRegion coverageRegion;
-		
-		log.info("Getting countries in Region: {}", regionCode);
+    public static CoverageRegion createCoverage(Integer countriesQuantity){
+        CoverageRegion coverageRegion = new CoverageRegion(countriesQuantity);
 
-		if(regionService.verifyIfExistByCode(regionCode) == false) 
-			return Collections.emptyList();
-			//throw new Exception("Region doesn't exist, pull from investment through scraping region");
-		
-	//FACTORY SIMPLE Y COMPLETA DEPENDIENDO DEL COVERAGE | TEMPORAL O NO	
-		List<CoverageRegion> optionalCoverageRegion = this.findByTitle(regionCode);
-				
-		if(optionalCoverageRegion.isEmpty()) 
-			throw new Exception("Coverage Region doesn't exist, pull from investment through scraping coverage");
-		
-		 coverageRegion = optionalCoverageRegion.get(0);
-		 
+        return coverageRegion;
+    }
+    //String regionToUpdate, String regionToCompare
+    public static CoverageRegion updateCoverage(String regionToUpdate, String regionToCompare){
+        CoverageRegion coverageRegion = new CoverageRegion(countriesQuantity);
 
-		 if(verifyIfRegionIsCovered(coverageRegion) == false)
-				throw new Exception("Covered Region");
+        return coverageRegion;
+    }
 
-		
-		List <CountryProp> countries = getCountriesUncoveraged(coverageRegion); 
-				
-		if(countries.isEmpty())
-			throw new Exception("countries are covered");
-		
-		
-		return countries;
-
-	}
-
-	
-	private boolean verifyIfRegionIsCovered(CoverageRegion coverageRegion) {
-		return coverageRegion.getCoverage() == COVERAGE_ACCEPTED;
-	}
-	
-	private ImmutableList<CountryProp> getCountriesUncoveraged(CoverageRegion coverageRegion) {
-		ImmutableList<CountryProp> countries = coverageRegion.getCountries().stream()
-				.filter(withoutCoverage)
-				.map(CoverageCountry::getProperties)
-				.collect(ImmutableList.toImmutableList());
-		
-		return countries;
-	}
-	
-	
-	
-	
-*/
-	
 
 }
