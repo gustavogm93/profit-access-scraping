@@ -1,15 +1,13 @@
 package ar.com.pa.collections.country;
 
-import ar.com.pa.collections.marketIndex.MarketIndexProp;
-import ar.com.pa.collections.share.ShareProp;
 import ar.com.pa.utils.GenerateUUID;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
-import java.util.Set;
 
 
 @Data
@@ -26,7 +24,7 @@ public class CoverageCountry {
     @NonNull
     private Integer totalShares;
 
-    @Field(name = "coverage")
+    @Field(name = "totalCoverage")
     private Integer totalCoverage;
 
     @Field(name = "coverageMarketIndex")
@@ -38,36 +36,26 @@ public class CoverageCountry {
     @Field(name = "isCovered")
     private Boolean isCovered = false;
 
-    @Field(name = "isCoverageBase")
-    private Boolean isCoverageBase = false;
-
-    @Field(name = "firstScraping")
+    @Field(name = "lastScrapedAt")
     @NonNull
-    private Boolean firstScraping;
-
-    @Field(name = "scrapedAt")
-    @NonNull
-    private Date scrapedAt;
+    private Date lastScrapedAt;
 
 
     private CoverageCountry(@NonNull Integer marketIndexes, @NonNull Integer shares) {
         this.id = GenerateUUID.generateUniqueId();
         this.totalMarketIndex = marketIndexes;
         this.totalShares = shares;
-        this.scrapedAt = new Date();
+        this.isCoverageBase = isCoverageBase;
+        this.lastScrapedAt = new Date();
     }
 
     public static CoverageCountry buildCoverageBaseToCompare(Integer totalMarketIndex, Integer totalShares) {
-     CoverageCountry coverageCountryBase = new CoverageCountry(totalMarketIndex, totalShares);
-     coverageCountryBase.setIsCoverageBase(true);
-     return coverageCountryBase;
+        return new CoverageCountry(totalMarketIndex, totalShares, true);
     }
 
-    public static CoverageCountry buildCoverage(Set<MarketIndexProp> marketIndexes, Set<ShareProp> shares) {
-        CoverageCountry coverage = new CoverageCountry(marketIndexes.size(), shares.size());
-        return coverage;
+    public static CoverageCountry createNewCoverage(){
+            return new CoverageCountry(0,0, )
     }
-
     public void compareAndFill(CoverageCountry coverageBase) throws Exception {
         if(!coverageBase.getIsCoverageBase())
             throw new Exception("You can't Compare to not Coverage base");
@@ -79,18 +67,39 @@ public class CoverageCountry {
         this.generateShareCoverage(coverageBase);
     }
 
+
     public void generateShareCoverage(CoverageCountry coverageCountryBase) throws Exception {
         if(this.isCoverageBase)
             throw new Exception("You can't generate a Coverage from base");
 
-        this.coverageShares = this.totalShares * 100 / coverageCountryBase.totalShares;
+        if(coverageCountryBase.getTotalShares().equals(this.totalShares))
+            this.coverageShares = 100;
+
+        if(coverageCountryBase.getTotalShares() > this.totalShares) {
+            this.coverageShares = this.totalShares * 100 / coverageCountryBase.totalShares;
+            this.totalShares = coverageCountryBase.totalShares;
+        }
+        if(coverageCountryBase.getTotalShares() < this.totalShares)
+            this.coverageShares = coverageCountryBase.totalShares  * 100 / this.totalShares;
+
     }
 
     public void generateMarketIndexCoverage(CoverageCountry coverageCountryBase) throws Exception {
+
         if(this.isCoverageBase)
             throw new Exception("You can't generate a Coverage from base");
 
-        this.coverageShares = this.totalMarketIndex * 100 / coverageCountryBase.totalMarketIndex;
+        if(coverageCountryBase.totalMarketIndex.equals(this.totalMarketIndex))
+            this.coverageMarketIndex = 100;
+
+        if(coverageCountryBase.totalMarketIndex > this.totalMarketIndex) {
+            this.coverageMarketIndex = this.totalMarketIndex * 100 / coverageCountryBase.coverageMarketIndex;
+            this.totalMarketIndex = coverageCountryBase.totalMarketIndex;
+        }
+
+        if(coverageCountryBase.totalMarketIndex < this.totalMarketIndex)
+            this.coverageMarketIndex = coverageCountryBase.totalMarketIndex  * 100 / this.totalMarketIndex;
+
     }
 
     public void setTotalCoverage(){
@@ -98,6 +107,8 @@ public class CoverageCountry {
         if(this.totalCoverage >= 90)
             this.isCovered = true;
     }
+
+
 
 }
 

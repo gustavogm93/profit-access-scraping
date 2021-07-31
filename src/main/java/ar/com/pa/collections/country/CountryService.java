@@ -20,6 +20,9 @@ public interface CountryService {
 
 	public ImmutableList<CountryDTO> getCountriesUncoveredByRegion(String region) throws Exception;
 
-	public ImmutableList<CountryDTO> getSeveralsCountriesUncoveredFromRegions(List<String> regions);
+	public ImmutableList<CountryDTO> getCountriesUncoveredFromRegions(List<String> regions);
+
+	public List<CountryDTO> getCountriesByRegion(String regionCode);
+
 	public CountryDTO findByCode(String code) throws Exception;
 	}

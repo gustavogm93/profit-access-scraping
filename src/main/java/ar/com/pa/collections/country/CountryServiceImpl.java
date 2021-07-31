@@ -3,15 +3,17 @@ package ar.com.pa.collections.country;
 import ar.com.pa.utils.Validates;
 import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
-@AllArgsConstructor
+
 @Service
 public class CountryServiceImpl implements CountryService {
 
@@ -20,7 +22,14 @@ public class CountryServiceImpl implements CountryService {
 	private final MongoTemplate mongoTemplate;
 
 	private final Validates validate;
-	
+
+	@Autowired
+	public CountryServiceImpl(CountryRepository countryRepository, MongoTemplate mongoTemplate, Validates validate) {
+		this.countryRepository = countryRepository;
+		this.mongoTemplate = mongoTemplate;
+		this.validate = validate;
+	}
+
 	public List<CountryDTO> getAll() {
 		return countryRepository.findAll();
 	}
@@ -71,6 +80,15 @@ public class CountryServiceImpl implements CountryService {
 
 	}
 
+	public List<CountryDTO> getCountriesByRegion(String regionCode) {
+		Query query = new Query();
+
+		Criteria isRegionCriteria = Criteria.where("region.code").is(regionCode);
+		query.addCriteria(isRegionCriteria);
+
+		return this.mongoTemplate.find(query, CountryDTO.class);
+	}
+
 	public List<CountryDTO> getCountriesCoveredByRegion(String region) throws Exception {
 		Query query = new Query();
 		region = region.toLowerCase();
@@ -103,7 +121,7 @@ public class CountryServiceImpl implements CountryService {
 		return ImmutableList.copyOf(this.mongoTemplate.find(query, CountryDTO.class));
 	}
 
-	public ImmutableList<CountryDTO> getSeveralsCountriesUncoveredFromRegions(List<String> regions) {
+	public ImmutableList<CountryDTO> getCountriesUncoveredFromRegions(List<String> regions) {
 	if(regions.size() == 0)
 		return ImmutableList.copyOf(Collections.emptyList());
 

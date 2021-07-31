@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import static ar.com.pa.collections.region.RegionDTO.byNotCoveraged;
@@ -106,7 +107,7 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 
 			List<String> regionsCode = regions.stream().map(RegionDTO::getCode).toList();
 
-			return countryService.getSeveralsCountriesUncoveredFromRegions(regionsCode);
+			return countryService.getCountriesUncoveredFromRegions(regionsCode);
 
 		}
 
@@ -214,11 +215,17 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 
 		CountryDTO coutry = countryService.findByCode(countryToAdd.getCode());
 
-
 	    TreeSet<MarketIndexProp> marketIndexes = getMarketIndexesByCountry(MarketIndexList);
 		 
 		Set<ShareProp> shares = getSharesByCountry(MarketIndexList);
-		
+
+		if(country == null){
+			createNewCountry(countryToAdd, region, shares, marketIndexes);
+		}else{
+
+			CompletableFuture<Boolean> a = regionService.updateCoverageRegion(region.getCode());
+		}
+
 		var countryId = countryToAdd.getCode();
 		
 		int coverage = getCountryCoverage(country.getCode(), shares, marketIndexes);
@@ -231,14 +238,13 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 		
 	}
 
-	private void createNewCountryToSave(CountryProp countryProp, RegionProp region, List<MarketIndexDTO> MarketIndexList) throws Exception {
-		Set<ShareProp> shares = getSharesByCountry(MarketIndexList);
-		TreeSet<MarketIndexProp> marketIndexes = getMarketIndexesByCountry(MarketIndexList);
+	private void createNewCountry(CountryProp countryProp, RegionProp region,
+											Set<ShareProp> shares, TreeSet<MarketIndexProp> marketIndexes) {
 		CountryDTO newCountry = CountryDTO.createNewCountry(countryProp.getCode(), countryProp, region, shares, marketIndexes);
 		countryService.add(newCountry);
 	}
-//TODO: Good Refactor of this. coverage update country and region;
-	private void getCountryUpdateCoverageToSave(CountryDTO countryToUpdate,CountryProp countryProp, RegionProp region, List<MarketIndexDTO> MarketIndexList) throws Exception {
+	//TODO: COVERAGE UPDATE CONSTRUCTOR in service
+	private void updateCoverageAndPersist(CountryDTO countryToUpdate, CountryProp countryProp, RegionProp region, List<MarketIndexDTO> MarketIndexList) throws Exception {
 		Set<ShareProp> shares = getSharesByCountry(MarketIndexList);
 		TreeSet<MarketIndexProp> marketIndexes = getMarketIndexesByCountry(MarketIndexList);
 		CountryDTO newCountry = CountryDTO.createNewCountry(countryProp.getCode(), countryProp, region, shares, marketIndexes);
@@ -248,7 +254,7 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 
 	
 	public int getCountryCoverage(String countryCode, Set<ShareProp> shares, TreeSet<MarketIndexProp> marketIndexes) {
-		
+
 		Optional<CoverageCountry> optionalCoverageCountry = coverageCountryService.findByCode(countryCode).stream().findFirst();
 			
 		if(optionalCoverageCountry.isPresent()) {

@@ -29,14 +29,15 @@ public class CoverageRegion {
 	@Field(name = "scrapedAt")
 	private Date scrapedAt;
 
-	CoverageRegion(@NonNull RegionProp properties, Integer totalCountries) {
+	CoverageRegion(@NonNull RegionProp properties, Integer totalCountries, boolean firstScraping) {
 		this.properties = properties;
 		this.totalCountries = totalCountries;
+		this.firstScraping = firstScraping;
 		this.scrapedAt = new Date();
 	}
 
 	public static CoverageRegion createCoverage(@NonNull RegionProp properties, Integer countriesQuantity){
-		return new CoverageRegion(properties, countriesQuantity);
+		return new CoverageRegion(properties, countriesQuantity, true);
 	}
 
 	public void setTotalCoverage(Integer countryCoveragedQuantity){

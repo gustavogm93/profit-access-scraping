@@ -48,6 +48,14 @@ public class RegionDTO {
 		return region;
 	}
 
+	public void updateCoverage(int totalCoverage) throws Exception {
+		if(totalCoverage < this.coverage.getTotalCoverage())
+			throw new Exception("Region has more than the total coverage provided");
+
+		this.coverage.setTotalCoverage(totalCoverage);
+	}
+
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

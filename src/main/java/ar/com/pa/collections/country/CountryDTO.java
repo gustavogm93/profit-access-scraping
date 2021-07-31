@@ -4,6 +4,7 @@ import ar.com.pa.collections.marketIndex.MarketIndexProp;
 import ar.com.pa.collections.region.RegionProp;
 import ar.com.pa.collections.share.ShareProp;
 import lombok.Data;
+import lombok.NonNull;
 import org.apache.poi.ss.formula.functions.Count;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,40 +22,47 @@ public class CountryDTO {
 	private final String id;
 
 	@Field(name = "country")
-	private final CountryProp properties;
+	@NonNull private final CountryProp properties;
 
 	@Field(name = "region")
-    private final RegionProp region;
+	@NonNull private final RegionProp region;
 
 	@Field(name = "shares")
-	private final Set<ShareProp> shares;
+	private Set<ShareProp> shares;
 	
 	@Field(name = "marketIndex")
-	private final Set<MarketIndexProp> marketIndexList;
+	private Set<MarketIndexProp> marketIndexList;
 
 	@Field(name = "coverage")
-	private CoverageCountry coverage;
+	@NonNull private CoverageCountry coverage;
 
-	private CountryDTO(String id, CountryProp properties, RegionProp region, Set<ShareProp> shares,
-					   Set<MarketIndexProp> marketIndexList) {
+	private CountryDTO(String id, CountryProp properties, RegionProp region) {
 		this.id = id;
 		this.properties = properties;
 		this.region = region;
-		this.shares = shares;
-		this.marketIndexList = marketIndexList;
 	}
 
 
-	public static CountryDTO createNewCountry(String id, CountryProp properties, RegionProp region, Set<ShareProp> shares, Set<MarketIndexProp> marketIndexList) {
-		CountryDTO country = new CountryDTO(id,properties,region,shares,marketIndexList);
+	public static CountryDTO createNewCountry(String id, @NonNull CountryProp properties, @NonNull RegionProp region) {
+		CountryDTO country = new CountryDTO(id,properties,region);
 		CoverageCountry coverageCountry = CoverageCountry.buildCoverageBaseToCompare(marketIndexList.size(), shares.size());
 		country.setCoverage(coverageCountry);
 		return country;
 	}
 
-	public static CountryDTO generateCoverage(CountryDTO countryBase) {
 
-		return new CountryDTO(id,properties,region,shares,marketIndexList);
+
+
+
+
+
+	public void updateCoverage(CoverageCountry newCoverage) throws Exception {
+		if(newCoverage.getIsCoverageBase())
+			throw new Exception("You can't generate a Coverage from base");
+
+		this.coverage.generateShareCoverage(newCoverage);
+		this.coverage.generateMarketIndexCoverage(newCoverage);
+		this.coverage.setTotalCoverage();
 	}
 
 	@Override
