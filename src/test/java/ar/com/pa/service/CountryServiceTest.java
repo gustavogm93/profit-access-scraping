@@ -29,8 +29,6 @@ public class CountryServiceTest {
     private CountryRepository repository;
     @Test
     public void awaitAsync() throws Exception {
-        int a = 4;
-        a = countryService.asyncA(4);
-        System.out.println(a);
+
     }
 }

@@ -1,8 +1,9 @@
 package ar.com.pa.collections.country;
 
+import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.utils.Validates;
 import com.google.common.collect.ImmutableList;
-import lombok.AllArgsConstructor;
+import com.mongodb.client.ClientSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -18,14 +19,15 @@ import java.util.List;
 public class CountryServiceImpl implements CountryService {
 
 	private final CountryRepository countryRepository;
-
+	private final RegionService regionService;
 	private final MongoTemplate mongoTemplate;
 
 	private final Validates validate;
 
 	@Autowired
-	public CountryServiceImpl(CountryRepository countryRepository, MongoTemplate mongoTemplate, Validates validate) {
+	public CountryServiceImpl(CountryRepository countryRepository, RegionService regionService, MongoTemplate mongoTemplate, Validates validate) {
 		this.countryRepository = countryRepository;
+		this.regionService = regionService;
 		this.mongoTemplate = mongoTemplate;
 		this.validate = validate;
 	}
@@ -34,14 +36,19 @@ public class CountryServiceImpl implements CountryService {
 		return countryRepository.findAll();
 	}
 
-	public void add(CountryDTO countryDTO) {
-		countryRepository.save(countryDTO);
+	@Async
+	public void add(CountryDTO country) throws Exception {
+		countryRepository.save(country);
+		regionService.updateCoverageRegion(country.getRegion().getCode());
+
 	}
-	
+
+	@Async
 	public void addAll(List<CountryDTO> countryDTO) {
 		countryRepository.saveAll(countryDTO);
 	}
-	
+
+	@Async
 	public void delete(String code) {
 		if(!countryRepository.existsById(code)) {
 			throw new CountryNotFoundException(
@@ -132,5 +139,6 @@ public class CountryServiceImpl implements CountryService {
 			query.addCriteria(regionsAndUncoveragedCriteria);
 			return ImmutableList.copyOf(this.mongoTemplate.find(query, CountryDTO.class));
 	}
+	
 
 }

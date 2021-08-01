@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @AllArgsConstructor
 @Service
@@ -78,8 +77,7 @@ public class RegionServiceImpl implements RegionService {
 	}
 
 	@Async
-	public CompletableFuture<Boolean> updateCoverageRegion(String regionCode) throws Exception {
-	//async
+	public void updateCoverageRegion(String regionCode) throws Exception {
 		try {
 			List<CountryDTO> countries = countryService.getCountriesByRegion(regionCode);
 			int coverageCountryPercentage = 0;
@@ -92,19 +90,11 @@ public class RegionServiceImpl implements RegionService {
 
 			region.updateCoverage(totalCoverageRegion);
 
-			return CompletableFuture.supplyAsync(() -> {
-				this.add(region);
-				return true;
-			});
-
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			CompletableFuture.supplyAsync(() -> {
-				return true;
-			});
+				throw new Exception(e);
+			};
 		}
-		CompletableFuture<Boolean> a = new CompletableFuture<>();
-		return a;
 }
 
 }

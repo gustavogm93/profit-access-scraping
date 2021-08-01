@@ -1,5 +1,6 @@
 package ar.com.pa.collections.country;
 
+import ar.com.pa.generics.StateCoverage;
 import ar.com.pa.utils.GenerateUUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,58 +37,68 @@ public class CoverageCountry {
     @Field(name = "isCovered")
     private Boolean isCovered = false;
 
+    @Field(name = "state")
+    private StateCoverage state;
+
     @Field(name = "lastScrapedAt")
     @NonNull
     private Date lastScrapedAt;
 
-
-    private CoverageCountry(@NonNull Integer marketIndexes, @NonNull Integer shares) {
+    private CoverageCountry(@NonNull Integer marketIndexes, @NonNull Integer shares, StateCoverage state) {
         this.id = GenerateUUID.generateUniqueId();
         this.totalMarketIndex = marketIndexes;
         this.totalShares = shares;
-        this.isCoverageBase = isCoverageBase;
+        this.state = state;
         this.lastScrapedAt = new Date();
     }
 
-    public static CoverageCountry buildCoverageBaseToCompare(Integer totalMarketIndex, Integer totalShares) {
-        return new CoverageCountry(totalMarketIndex, totalShares, true);
-    }
-
     public static CoverageCountry createNewCoverage(){
-            return new CoverageCountry(0,0, )
+         CoverageCountry coverageCountry = new CoverageCountry(0,0, StateCoverage.NEW);
+         coverageCountry.totalCoverage = 0;
+        return coverageCountry;
     }
-    public void compareAndFill(CoverageCountry coverageBase) throws Exception {
-        if(!coverageBase.getIsCoverageBase())
-            throw new Exception("You can't Compare to not Coverage base");
 
-        if(this.getIsCoverageBase())
-            throw new Exception("You can't compare a Coverage base to a Coverage Base");
+    public static CoverageCountry createBaseCoverage(Integer totalMarketIndex, Integer totalShares){
+        CoverageCountry coverageCountry = new CoverageCountry(totalMarketIndex,totalShares, StateCoverage.BASE);
+        coverageCountry.totalCoverage = 0;
+        return coverageCountry;
+    }
+
+    public static CoverageCountry createUpdatedCoverage(Integer totalMarketIndex, Integer totalShares, CoverageCountry coverageBase) throws Exception {
+        CoverageCountry coverageCountry = new CoverageCountry(totalMarketIndex,totalShares, StateCoverage.UPDATED);
+        coverageCountry.compareAndFill(coverageBase);
+        return coverageCountry;
+    }
+
+    private void compareAndFill(CoverageCountry coverageBase) throws Exception {
+        if(coverageBase.state != StateCoverage.BASE)
+            throw new Exception("Comparing with a not coverage BASE");
 
         this.generateMarketIndexCoverage(coverageBase);
         this.generateShareCoverage(coverageBase);
     }
 
 
-    public void generateShareCoverage(CoverageCountry coverageCountryBase) throws Exception {
-        if(this.isCoverageBase)
-            throw new Exception("You can't generate a Coverage from base");
+    private void generateShareCoverage(CoverageCountry coverageCountryBase) throws Exception {
+        if(this.state != StateCoverage.UPDATED)
+            throw new Exception("This is not updated coverage, you can't update this");
 
         if(coverageCountryBase.getTotalShares().equals(this.totalShares))
             this.coverageShares = 100;
 
         if(coverageCountryBase.getTotalShares() > this.totalShares) {
-            this.coverageShares = this.totalShares * 100 / coverageCountryBase.totalShares;
+            this.coverageShares = (this.totalShares * 100) / coverageCountryBase.totalShares;
             this.totalShares = coverageCountryBase.totalShares;
         }
         if(coverageCountryBase.getTotalShares() < this.totalShares)
             this.coverageShares = coverageCountryBase.totalShares  * 100 / this.totalShares;
 
+        setTotalCoverage();
     }
 
-    public void generateMarketIndexCoverage(CoverageCountry coverageCountryBase) throws Exception {
-
-        if(this.isCoverageBase)
-            throw new Exception("You can't generate a Coverage from base");
+    private void generateMarketIndexCoverage(CoverageCountry coverageCountryBase) throws Exception {
+        if(this.state != StateCoverage.UPDATED)
+            throw new Exception("This is not updated coverage, you can't update this");
 
         if(coverageCountryBase.totalMarketIndex.equals(this.totalMarketIndex))
             this.coverageMarketIndex = 100;
@@ -100,10 +111,16 @@ public class CoverageCountry {
         if(coverageCountryBase.totalMarketIndex < this.totalMarketIndex)
             this.coverageMarketIndex = coverageCountryBase.totalMarketIndex  * 100 / this.totalMarketIndex;
 
+        setTotalCoverage();
     }
 
     public void setTotalCoverage(){
-        this.totalCoverage = this.coverageShares + this.coverageMarketIndex / 2;
+        if(this.coverageShares == 0 || this.coverageMarketIndex == 0) {
+            this.totalCoverage = 0;
+            this.isCovered = false;
+        }
+
+        this.totalCoverage = (this.coverageShares + this.coverageMarketIndex) / 2;
         if(this.totalCoverage >= 90)
             this.isCovered = true;
     }

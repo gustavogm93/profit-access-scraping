@@ -3,6 +3,7 @@ package ar.com.pa.collections.country;
 import ar.com.pa.collections.marketIndex.MarketIndexProp;
 import ar.com.pa.collections.region.RegionProp;
 import ar.com.pa.collections.share.ShareProp;
+import ar.com.pa.utils.GenerateUUID;
 import lombok.Data;
 import lombok.NonNull;
 import org.apache.poi.ss.formula.functions.Count;
@@ -36,34 +37,39 @@ public class CountryDTO {
 	@Field(name = "coverage")
 	@NonNull private CoverageCountry coverage;
 
-	private CountryDTO(String id, CountryProp properties, RegionProp region) {
-		this.id = id;
+	private String generateId(CountryProp properties){
+		return String.format("%s-%s",properties.getCode(), properties.getTitle().substring(0,2));
+	}
+
+	private CountryDTO(CountryProp properties, RegionProp region) {
+		this.id = generateId(properties);
 		this.properties = properties;
 		this.region = region;
 	}
 
 
-	public static CountryDTO createNewCountry(String id, @NonNull CountryProp properties, @NonNull RegionProp region) {
-		CountryDTO country = new CountryDTO(id,properties,region);
-		CoverageCountry coverageCountry = CoverageCountry.buildCoverageBaseToCompare(marketIndexList.size(), shares.size());
+	public static CountryDTO createNewCountry(@NonNull CountryProp properties, @NonNull RegionProp region) {
+		CountryDTO country = new CountryDTO(properties,region);
+		CoverageCountry coverageCountry = CoverageCountry.createNewCoverage();
+		country.setCoverage(coverageCountry);
+		return country;
+	}
+
+	public static CountryDTO createBaseCountry(@NonNull CountryProp properties, @NonNull RegionProp region) {
+		CountryDTO country = new CountryDTO(properties,region);
+		CoverageCountry coverageCountry = CoverageCountry.createNewCoverage();
 		country.setCoverage(coverageCountry);
 		return country;
 	}
 
 
-
-
-
-
-
-	public void updateCoverage(CoverageCountry newCoverage) throws Exception {
-		if(newCoverage.getIsCoverageBase())
-			throw new Exception("You can't generate a Coverage from base");
-
-		this.coverage.generateShareCoverage(newCoverage);
-		this.coverage.generateMarketIndexCoverage(newCoverage);
-		this.coverage.setTotalCoverage();
+	public CountryDTO updateCountry(@NonNull CountryProp properties, @NonNull RegionProp region) {
+		CountryDTO country = new CountryDTO(properties,region);
+		CoverageCountry coverageCountry = CoverageCountry.createNewCoverage();
+		country.setCoverage(coverageCountry);
+		return country;
 	}
+
 
 	@Override
 	 public int hashCode() {
@@ -94,4 +100,11 @@ public class CountryDTO {
 
 	Predicate<CountryDTO> isCovered = (c) -> c.coverage.getIsCovered();
 
+	public String getCode(){
+		return this.getProperties().getCode();
+	}
+
+	public String getTitle(){
+		return this.getProperties().getTitle();
+	}
 }

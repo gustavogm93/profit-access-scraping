@@ -1,7 +1,6 @@
 package ar.com.pa.collections.region;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public interface RegionService {
 
@@ -16,5 +15,5 @@ public interface RegionService {
 	public void addAll(List<RegionDTO> regionDTOList);
 	
 	public void delete(String code);
-	public CompletableFuture<Boolean> updateCoverageRegion(String regionCode) throws Exception;
+	public void updateCoverageRegion(String regionCode) throws Exception;
 }

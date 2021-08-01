@@ -1,6 +1,8 @@
 package ar.com.pa.scraping;
 
+import ar.com.pa.collections.country.CountryDTO;
 import ar.com.pa.collections.country.CountryProp;
+import ar.com.pa.collections.country.CountryService;
 import ar.com.pa.collections.region.RegionDTO;
 import ar.com.pa.collections.region.RegionProp;
 import ar.com.pa.collections.region.RegionService;
@@ -8,6 +10,7 @@ import ar.com.pa.enums.RegionConstant;
 import ar.com.pa.enums.utils.Url;
 import ar.com.pa.scraping.jsoup.JsoupBase;
 import com.google.common.collect.ImmutableList;
+import org.apache.poi.ss.formula.functions.Count;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -34,11 +37,13 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 	
 	private final RegionService regionService;
 
-	@Autowired
-	private ScrapingRegionStrategy(RegionService regionService) {
-		this.regionService = regionService;
-	}
+	private final CountryService countryService;
 
+	@Autowired
+	private ScrapingRegionStrategy(RegionService regionService, CountryService countryService) {
+		this.regionService = regionService;
+		this.countryService = countryService;
+	}
 
 	public void executor() throws IOException {
 		logger.info("Getting regionDTO");
@@ -57,15 +62,20 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 
 					RegionProp regionProps = new RegionProp(region.getCode(), region.getTitle());
 
+					countries.stream().map(countryProp -> CountryDTO.createNewCountry(countryProp, regionProps))
+									  .forEach(countryService::add);
+
 					RegionDTO regionDTO = RegionDTO.createRegion(region.getCode(), regionProps, countries);
 
 					regionService.add(regionDTO);
+
+					logger.info("Save regionDTO");
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 					throw e;
 				}
 
-			logger.info("Save regionDTO");
+
 		});
 
 	}
@@ -88,32 +98,26 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 	}
 
 	private Elements getCountriesElementsInDocument(Document data, RegionConstant region) {
-		
-		String idElement = String.format("#cdregion%s", region.getCode());
 
+		String idElement = String.format("#cdregion%s", region.getCode());
 		return  data.select(idElement)
 				.first()
-				.select("a");
+				.select("span[data-country-name]");
 	}
 	
 	private TreeSet<CountryProp> elementsToCountrySet(Elements elements) {
 		
 		return elements.stream()
-				 .filter(isCountryElement)
 				 .map(this::getTitleAndCodeCountry)
 			     .collect(Collectors.toCollection(()-> new TreeSet<>(CountryProp.byCode)));
 	}
 
-	private final Predicate<Element> isCountryElement;
-	{
-		isCountryElement = (element) -> element.attr("href").contains("/equities/")
-				&& !element.text().contains("Market Overview");
-	}
 
 	private CountryProp getTitleAndCodeCountry (Element element){
 
-			String titleCountry = element.text();
-			String codeCountry = Objects.requireNonNull(element).attr("href").split("/")[2];
+			String titleCountry = element.attr("data-country-name");
+
+			String codeCountry = element.attr("data-cid");
 
 			return new CountryProp(codeCountry, titleCountry);
 		}

@@ -8,7 +8,7 @@ public interface CountryService {
 
 	public List<CountryDTO> getAll();
 
-	public void add(CountryDTO countryDTO);
+	public void add(CountryDTO countryDTO) throws Exception;
 	
 	public void addAll(List<CountryDTO> countryDTO);
 	

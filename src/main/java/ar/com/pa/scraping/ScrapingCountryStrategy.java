@@ -55,37 +55,34 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 		setUpSeleniumDriver();
 
 		ImmutableList<RegionDTO> regions = getRegionToFetch(regionTitle);
-		ImmutableList<CountryDTO> countries = getCountriesToFetch(regions);
+		checkRegionIsCovered(regions);
 
-		regions.stream().forEach(region -> {
+		log.info("Region: {} is Uncovered, go through scraping for get countries (market index, shares)", regionTitle);
+		for (RegionDTO region: regions) {
+			ImmutableList<CountryDTO> countries = getCountriesToFetch(region);
 
-			region.getCountries().stream().limit(1).forEach(country -> {
-
+			countries.forEach(country -> {
 				try {
-					fetchProcess(country, region.getProperties());
+					fetchProcess(country, region);
 				} catch (Exception e) {
-					log.error(Msg.error(country, e.getMessage()));
+					log.error("An error was occurred when scraping {}, error: {}",country, e.getMessage());
 					closeSeleniumDriver();
 					startSeleniumDriver();
 					setUpSeleniumDriver();
 				}
-
 			});
-			driver.close();
-		});
-
+		}
+		driver.close();
 	}
-
 	public ImmutableList<RegionDTO> getRegionToFetch(@Nullable String regionTitle) {
 		
 		if (Objects.isNull(regionTitle) || regionTitle.isEmpty()) {
 			log.info("Getting list of all regions..");
-			
+
 			ImmutableList<RegionDTO> region = regionService.getAll().stream().filter(byNotCoveraged).collect(ImmutableList.toImmutableList());
 			
 			return region;
 		}
-		
 			log.info(String.format("Getting %s",regionTitle));
 			
 			ImmutableList<RegionDTO> region = regionService.findByTitle(regionTitle).stream().filter(byNotCoveraged).collect(ImmutableList.toImmutableList());
@@ -93,28 +90,16 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 			return region;
 	}
 
-	public ImmutableList<CountryDTO> getCountriesToFetch(ImmutableList<RegionDTO> regions) throws Exception {
+	public ImmutableList<CountryDTO> getCountriesToFetch(RegionDTO region) throws Exception {
 
-		if(regions.size() == 0) {
-			log.info("not found Region when get countries to fetch");
-			return ImmutableList.copyOf(Collections.emptyList());
-		}
-
-		if(regions.size() == 1) {
-			log.info("getting uncovered countries from {} region when get countries to fetch", regions.get(0).getTitle());
-			return countryService.getCountriesUncoveredByRegion(regions.get(0).getCode());
-		}
-
-			List<String> regionsCode = regions.stream().map(RegionDTO::getCode).toList();
-
-			return countryService.getCountriesUncoveredFromRegions(regionsCode);
-
+			log.info("getting uncovered countries from {} region when get countries to fetch", region.getTitle());
+			return countryService.getCountriesUncoveredByRegion(region.getCode());
 		}
 
 
-	private void fetchProcess(CountryProp country, RegionProp region) throws Exception {
+	private void fetchProcess(CountryDTO country, RegionDTO region) throws Exception {
 
-		goToCountryPage(country.getCode());
+		goToCountryPage(country.getTitle());
 		
 		List<MarketIndexDTO> MarketIndexList = fetchMarketIndexes(driver);
 
@@ -240,7 +225,7 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 
 	private void createNewCountry(CountryProp countryProp, RegionProp region,
 											Set<ShareProp> shares, TreeSet<MarketIndexProp> marketIndexes) {
-		CountryDTO newCountry = CountryDTO.createNewCountry(countryProp.getCode(), countryProp, region, shares, marketIndexes);
+		CountryDTO newCountry = CountryDTO.create(countryProp, region, shares, marketIndexes);
 		countryService.add(newCountry);
 	}
 	//TODO: COVERAGE UPDATE CONSTRUCTOR in service
@@ -279,6 +264,14 @@ public class ScrapingCountryStrategy extends InvestmentEquityPage  {
 			regionService.add(regionDTO);
 		}
 
+	}
+
+	public void checkRegionIsCovered(List<RegionDTO> regions) throws Exception {
+		if(regions.size() == 0) {
+			String exceptionMessage = regionTitle != null ? String.format("Region: %s was covered", regionTitle)
+					: "All Regions was Covered";
+			throw new Exception(exceptionMessage);
+		}
 	}
 
 }
