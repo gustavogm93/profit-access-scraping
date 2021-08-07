@@ -3,29 +3,33 @@ package ar.com.pa.collections.country;
 import ar.com.pa.collections.region.RegionService;
 import ar.com.pa.utils.Validates;
 import com.google.common.collect.ImmutableList;
-import com.mongodb.client.ClientSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class CountryServiceImpl implements CountryService {
 
 	private final CountryRepository countryRepository;
+
 	private final RegionService regionService;
+
 	private final MongoTemplate mongoTemplate;
 
 	private final Validates validate;
 
 	@Autowired
-	public CountryServiceImpl(CountryRepository countryRepository, RegionService regionService, MongoTemplate mongoTemplate, Validates validate) {
+	public CountryServiceImpl(CountryRepository countryRepository, @Lazy RegionService regionService, MongoTemplate mongoTemplate, Validates validate) {
 		this.countryRepository = countryRepository;
 		this.regionService = regionService;
 		this.mongoTemplate = mongoTemplate;
@@ -37,7 +41,24 @@ public class CountryServiceImpl implements CountryService {
 	}
 
 	@Async
-	public void add(CountryDTO country) throws Exception {
+	public void add(CountryDTO country){
+		countryRepository.save(country);
+	}
+
+	public void testTransaction(CountryDTO country) throws Exception {
+		int i = 2;
+		countryRepository.save(country);
+		/*if(i + 1 == 3)
+			throw new Exception("ERROR");*/
+
+		Optional<CountryDTO> a = countryRepository.findById(country.getId());
+		System.out.println(a);
+
+	}
+
+
+	@Async
+	public void addAndUpdate(CountryDTO country) throws Exception {
 		countryRepository.save(country);
 		regionService.updateCoverageRegion(country.getRegion().getCode());
 

@@ -45,7 +45,7 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 		this.countryService = countryService;
 	}
 
-	public void executor() throws IOException {
+	public void executor() throws Exception, IOException {
 		logger.info("Getting regionDTO");
 
 		Document document = getDocument(urlEquities);
@@ -62,8 +62,17 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 
 					RegionProp regionProps = new RegionProp(region.getCode(), region.getTitle());
 
-					countries.stream().map(countryProp -> CountryDTO.createNewCountry(countryProp, regionProps))
-									  .forEach(countryService::add);
+					/*countries.stream().map(countryProp -> CountryDTO.createNewCountry(countryProp, regionProps))
+									  .forEach(countryService::testTransaction);*/
+					int i = 0;
+					for (CountryProp country : countries) {
+						i++;
+					if(i == 1) {
+						CountryDTO ctr = CountryDTO.createNewCountry(country, regionProps);
+						countryService.testTransaction(ctr);
+						break;
+					}
+					}
 
 					RegionDTO regionDTO = RegionDTO.createRegion(region.getCode(), regionProps, countries);
 
@@ -72,7 +81,7 @@ public class ScrapingRegionStrategy<element> implements JsoupBase {
 					logger.info("Save regionDTO");
 				} catch (Exception e) {
 					logger.error(e.getMessage());
-					throw e;
+
 				}
 
 

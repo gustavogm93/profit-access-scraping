@@ -5,6 +5,7 @@ import ar.com.pa.collections.country.CountryService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
 @Service
 public class RegionServiceImpl implements RegionService {
 
@@ -24,6 +24,12 @@ public class RegionServiceImpl implements RegionService {
 	private final MongoTemplate mongoTemplate;
 
 	private static final Logger logger = LoggerFactory.getLogger(RegionServiceImpl.class);
+
+	public RegionServiceImpl(RegionRepository regionRepository, @Lazy CountryService countryService, MongoTemplate mongoTemplate) {
+		this.regionRepository = regionRepository;
+		this.countryService = countryService;
+		this.mongoTemplate = mongoTemplate;
+	}
 
 	@Async
 	public List<RegionDTO> getAll() {
@@ -97,4 +103,4 @@ public class RegionServiceImpl implements RegionService {
 		}
 }
 
-}
+
