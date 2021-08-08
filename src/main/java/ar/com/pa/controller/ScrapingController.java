@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/scraping")
 @Tag(name = "Scraping API")
 @Data
+@Component
 public class ScrapingController {
 
 	@Value("${chrome.driver.path}")

@@ -5,6 +5,7 @@ import ar.com.pa.collections.country.CountryService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -25,9 +26,11 @@ public class RegionServiceImpl implements RegionService {
 
 	private static final Logger logger = LoggerFactory.getLogger(RegionServiceImpl.class);
 
+	@Autowired
 	public RegionServiceImpl(RegionRepository regionRepository, @Lazy CountryService countryService, MongoTemplate mongoTemplate) {
 		this.regionRepository = regionRepository;
 		this.countryService = countryService;
+
 		this.mongoTemplate = mongoTemplate;
 	}
 

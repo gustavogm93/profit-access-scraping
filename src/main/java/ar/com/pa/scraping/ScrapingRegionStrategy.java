@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class ScrapingRegionStrategy<element> implements JsoupBase {
+public class ScrapingRegionStrategy implements JsoupBase {
 
 	private static final Logger logger = LoggerFactory.getLogger(ScrapingRegionStrategy.class);
 	private static final String urlEquities = Url.equities;
